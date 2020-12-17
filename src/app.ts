@@ -1,5 +1,6 @@
-const hello = (str: string): string => {
-    return `Hello ${str}!`
-}
+import * as http from 'http'
+import { requestHanlder } from './routes'
 
-console.log(hello('World'))
+const server = http.createServer(requestHanlder)
+
+server.listen(4000)

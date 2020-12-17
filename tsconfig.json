@@ -15,7 +15,7 @@
             "dom.iterable",
             "scripthost"
         ],
-        "module": "esnext",
+        "module": "commonjs",
         "moduleResolution": "node",
         "noEmit": false,
         "noImplicitAny": false,
@@ -31,5 +31,5 @@
     },
     "exclude": [
         "node_modules"
-    ],
+    ]
 }
