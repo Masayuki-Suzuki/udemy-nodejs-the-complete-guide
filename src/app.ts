@@ -1,5 +1,14 @@
-const hello = (str: string): string => {
-    return `Hello ${str}!`
-}
+import express from 'express'
 
-console.log(hello('World'))
+const app = express()
+
+app.use((req, res, next) => {
+    console.log('In middle ware!')
+    next()
+})
+
+app.use((req, res) => {
+    res.send('<h1 style="font-family: sans-serif;">Hello World!</h1>')
+})
+
+app.listen(4000)
