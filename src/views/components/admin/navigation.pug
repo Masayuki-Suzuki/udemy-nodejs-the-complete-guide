@@ -1,0 +1,23 @@
+header
+    nav.bg-gray-800
+        .max-w-7xl.mx-auto.px-4(class="sm:px-6 lg:px-8")
+            .flex.items-center.justify-between.h-16
+                .flex.itemscenter
+                    .flex-shrinl-0
+                        img.h-8.w-8(src="/images/logo.png" alt="Logo")
+                    .hidden(class="md:block")
+                        .ml-10.flex.items-baseline.space-x-4
+                            a.px-3.py-2.rounded-md.text-sm(
+                                href="/admin/dashboard"
+                                class=(path === "dashboard" ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white")
+                            )
+                                | Dashboard
+                            a.px-3.py-2.rounded-md.text-sm.font-medium(
+                                href="/admin/products"
+                                class=(path === "products" ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white")
+                            )
+                                | Products
+    .bg-white.shadow
+        .max-w-7xl.mx-auto.py-6.px-4(class="sm:px-6 lg:px-8")
+            h1.text-3xl.font-bold.leading-tight.text-gray-800
+                | #{ pageTitle }
