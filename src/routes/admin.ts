@@ -3,10 +3,8 @@ import express from 'express'
 import { rootPath } from '../utils/rootPath'
 
 type Product = {
-    title: string
+    product_name: string
 }
-
-type RequestAddProduct = Request
 
 const router = express.Router()
 const getFilePath = (filename: string): string => {
@@ -16,11 +14,15 @@ const getFilePath = (filename: string): string => {
 const products: Product[] = []
 
 router.get('/add-product', (req, res) => {
-    res.sendFile(getFilePath('add-product'))
+    res.render('./admin/add-product', {
+        title: 'Add Product',
+        path: 'add-product',
+        pageTitle: 'Add Product'
+    })
 })
 
 router.get('/products', (req, res) => {
-    res.render('./admin/dashboard', {
+    res.render('./admin/products', {
         title: 'Products list',
         path: 'products',
         pageTitle: 'Products'
@@ -42,9 +44,8 @@ router.get('/', (req, res) => {
 router.post(
     '/product',
     (req: express.Request<unknown, unknown, Product>, res) => {
-        console.log(req.body.title)
-        products.push({ title: req.body.title })
-        res.redirect('/')
+        products.push({ product_name: req.body.product_name })
+        res.redirect('/admin/products')
     }
 )
 
