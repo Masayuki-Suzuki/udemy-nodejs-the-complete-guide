@@ -1,12 +1,9 @@
 import { Request, Response } from 'express'
+import { Product, ProductType } from '../models/product'
 
-type Product = {
-    product_name: string
-}
+type PostAddProductRequest = Request<unknown, unknown, ProductType>
 
-type PostAddProductRequest = Request<unknown, unknown, Product>
-
-export const products: Product[] = []
+const product = new Product()
 
 export const getAddProductPage = (req: Request, res: Response): void => {
     res.render('./admin/add-product', {
@@ -18,9 +15,10 @@ export const getAddProductPage = (req: Request, res: Response): void => {
 
 export const getProductPage = (req: Request, res: Response): void => {
     res.render('./admin/products', {
-        title: 'Products list',
+        title: 'Product List',
         path: 'products',
-        pageTitle: 'Products'
+        pageTitle: 'Products',
+        products: product.getProduct()
     })
 }
 
@@ -37,7 +35,7 @@ export const redirectToDashboard = (req: Request, res: Response): void => {
 }
 
 export const postAddProduct = (req: PostAddProductRequest, res: Response) => {
-    products.push({ product_name: req.body.product_name })
+    product.addProduct(req.body)
     res.redirect('/admin/products')
 }
 
