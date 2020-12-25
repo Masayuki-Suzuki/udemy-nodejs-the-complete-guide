@@ -2,6 +2,11 @@
     {
         "title": "MacoBook Pro 14\"",
         "description": "This is a super-powerful laptop for all creators, developers, and so on.",
-        "price": "4000"
+        "price": "$4,000.00"
+    },
+    {
+        "title": "MacoBook Pro 17\"",
+        "description": "This is the most powerful MacoBook",
+        "price": "$6,000.00"
     }
 ]

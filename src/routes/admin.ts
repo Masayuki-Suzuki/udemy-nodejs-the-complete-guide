@@ -5,6 +5,8 @@ const router = express.Router()
 
 router.get('/add-product', ProductsController.getAddProductPage)
 
+router.get('/edit-product', ProductsController.getEditProductPage)
+
 router.get('/products', ProductsController.getProductPage)
 
 router.get('/dashboard', ProductsController.getDashboardPage)

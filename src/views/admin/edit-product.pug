@@ -1,0 +1,12 @@
+extends ../partials/layout-admin
+
+block content
+
+    .container.max-w-7xl.m-auto.px-8
+
+        p.mb-5.py-4
+            a.text-blue-600.capitalize(href="/admin/products") < products
+
+        .fields
+            form(action="/admin/product" method="post")
+                .shadow.overflow-hidden.max-w-3xl.mx-auto(class="sm:rounded-md")

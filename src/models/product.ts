@@ -1,11 +1,12 @@
 import path from 'path'
 import fs from 'fs'
 import { rootPath } from '../utils/rootPath'
+import currencyFormatter from '../utils/currencyFormatter'
 
 export type ProductType = {
     title: string
     description: string
-    price: number
+    price: number | string
 }
 
 export class Product {
@@ -36,6 +37,11 @@ export class Product {
                 if (!err) {
                     this.products = JSON.parse(fileContent) as ProductType[]
                 }
+
+                product.price = currencyFormatter(
+                    parseInt(product.price as string, 10)
+                )
+
                 this.products.push(product)
                 fs.writeFile(
                     this.filePath,
@@ -48,3 +54,5 @@ export class Product {
         )
     }
 }
+
+export default new Product()
