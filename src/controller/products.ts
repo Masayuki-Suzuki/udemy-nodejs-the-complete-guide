@@ -24,20 +24,8 @@ export const getProductPage = (req: Request, res: Response): void => {
         title: 'Product List',
         path: 'products',
         pageTitle: 'Products',
-        products: product.getProduct()
+        products: product.getProducts()
     })
-}
-
-export const getDashboardPage = (req: Request, res: Response): void => {
-    res.render('./admin/dashboard', {
-        title: 'Admin Dashboard',
-        path: 'dashboard',
-        pageTitle: 'Dashboard'
-    })
-}
-
-export const redirectToDashboard = (req: Request, res: Response): void => {
-    res.redirect('/admin/dashboard')
 }
 
 export const postAddProduct = (req: PostAddProductRequest, res: Response) => {
@@ -49,7 +37,5 @@ export default {
     getAddProductPage,
     getEditProductPage,
     getProductPage,
-    getDashboardPage,
-    redirectToDashboard,
     postAddProduct
 }

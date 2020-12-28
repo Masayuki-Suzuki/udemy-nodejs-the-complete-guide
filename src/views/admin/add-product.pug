@@ -11,6 +11,7 @@ block content
                 .shadow.overflow-hidden.max-w-3xl.mx-auto(class="sm:rounded-md")
                     .px-4.py-5.bg-white(class="sm:p-6")
                         .grid.grid-cols-6.gap-6
+
                             //- Product Title
                             .col-span-6
                                 label.block.text-sm.font-medium.text-gray-700(for="product-name")
@@ -22,6 +23,17 @@ block content
                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
                                 )
 
+                            //- Product Image URL (ToDo: Will be image uploader)
+                            .col-span-6
+                                label.block.text-sm.font-medium.text-gray-700(for="product-image")
+                                    | Product Image URL:
+                                input(
+                                    type="text"
+                                    name="image_url"
+                                    id="product-image"
+                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
+                                )
+
                             //- Product Description
                             .col-span-6
                                 label.block.text-sm.font-medium.text-gray-700(for="product-description")
@@ -30,10 +42,11 @@ block content
                                     name="description"
                                     id="product-description"
                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
+                                    rows=3
                                 )
 
                             //- Product Price
-                            .col-span-1
+                            .col-span-2
                                 label.block.text-sm.font-medium.text-gray-700(for="product-price")
                                     | Product Price:
                                 .flex
@@ -44,6 +57,8 @@ block content
                                         id="product-price"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
                                     )
+
+                        //- Submit Button
                         .grid.grid-cols-6.gap-6.mt-7
                             .col-span-2
                                 button.bg-indigo-600.text-white.font-bold.text-center.w-full.py-2.rounded(type="submit")

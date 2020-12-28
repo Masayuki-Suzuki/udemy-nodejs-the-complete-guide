@@ -1,5 +1,6 @@
 import express from 'express'
 import ProductsController from '../controller/products'
+import AdminController from '../controller/admin'
 
 const router = express.Router()
 
@@ -9,9 +10,9 @@ router.get('/edit-product', ProductsController.getEditProductPage)
 
 router.get('/products', ProductsController.getProductPage)
 
-router.get('/dashboard', ProductsController.getDashboardPage)
+router.get('/dashboard', AdminController.getDashboardPage)
 
-router.get('/', ProductsController.redirectToDashboard)
+router.get('/', AdminController.redirectToDashboard)
 
 router.post('/product', ProductsController.postAddProduct)
 
