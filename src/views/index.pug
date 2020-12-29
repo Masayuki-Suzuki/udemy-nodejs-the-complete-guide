@@ -8,9 +8,7 @@ block content
             each product in products
                 .shadow.max-w-xs.p-8.bg-white.rounded.m-2
                     .product-image
-                        img.m-auto.w-full(
-                            src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mbp16touch-space-select-201911?wid=904&hei=840&fmt=jpeg&qlt=80&op_usm=0.5,0.5&.v=1572825197207"
-                        )
+                        img.m-auto.w-full(src=product.image_url)
 
                     h4.text-gray-700.text-center.text-xl.pt-4.font-semibold= product.title
                     p.text-red-800.text-center.font-semibold= product.price

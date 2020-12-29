@@ -12,5 +12,12 @@
         "description": "This is the most powerful MacoBook",
         "image_url": "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mbp16touch-space-select-201911?wid=904&hei=840&fmt=jpeg&qlt=80&op_usm=0.5,0.5&.v=1572825197207",
         "price": "$6,000.00"
+    },
+    {
+        "title": "Maco Mini",
+        "image_url": "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mac-mini-hero-202011?wid=904&hei=840&fmt=jpeg&qlt=80&op_usm=0.5,0.5&.v=1603403462000",
+        "description": "Small and powerful desktop computer.",
+        "price": "$1,600.00",
+        "uuid": "8e5216f0-0552-49f0-b984-cda712808499"
     }
 ]

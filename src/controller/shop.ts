@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import product from '../models/product'
+import Product from '../models/product'
 
 export const getCartPage = (req: Request, res: Response) => {
     res.render('shop/cart', {
@@ -22,12 +22,13 @@ export const getOrdersPage = (req: Request, res: Response) => {
     })
 }
 
-export const getProductDtailPage = (req: Request, res: Response) => {
-    const { productId } = req.params
-    console.log(productId)
+export const getProductDetailPage = (req: Request, res: Response) => {
+    console.log(Product.getProduct(req.params.productId))
+    const product = Product.getProduct(req.params.productId)
     res.render('shop/product-detail', {
         title: 'Product Detail | Shops!',
-        path: 'shop-product-detail'
+        path: 'shop-product-detail',
+        product
     })
 }
 
@@ -35,6 +36,6 @@ export const getIndexPage = (req: Request, res: Response) => {
     res.render('index', {
         title: 'Shops!',
         path: 'shop-index',
-        products: product.getProducts()
+        products: Product.getProducts()
     })
 }

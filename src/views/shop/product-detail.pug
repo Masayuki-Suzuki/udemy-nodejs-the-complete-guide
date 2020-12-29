@@ -1,4 +1,16 @@
 extends ../partials/layout
 
 block content
-    h1 this page will be product detail page.
+    .container.m-auto.max-w-7xl.px-8
+        .grid.grid-cols-6.gap-6
+            .col-span-4
+                img(src=product.image_url)
+
+            .col-span-3
+                h2.py-8.text-gray-600.text-3xl.font-bold= product.title
+                p.text-gray-600.text-center.font-semibold= product.price
+                p.text-gray-700.leading-tight.mt-4= product.description
+
+                .add-cart.text-center.w-full.mt-6.flex.items-center.justify-center
+                    button.bg-green-600.text-white.font-bold.uppercase.px-5.py-3.tracking-wide.rounded add cart
+

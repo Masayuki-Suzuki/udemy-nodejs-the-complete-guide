@@ -16,6 +16,10 @@ export class Product {
     private filePath = path.join(rootPath, 'data', 'products.json')
     private products: ProductType[] = []
 
+    getProduct(id: string): ProductType {
+        return this.products.filter(product => product.uuid === id)[0]
+    }
+
     getProducts(): ProductType[] {
         fs.readFile(
             this.filePath,
