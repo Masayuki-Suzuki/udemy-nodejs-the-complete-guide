@@ -10,6 +10,7 @@ export type ProductType = {
     description: string
     image_url: string
     price: number | string
+    price_fine: string
 }
 
 export class Product {
@@ -17,6 +18,10 @@ export class Product {
     private products: ProductType[] = []
 
     getProduct(id: string): ProductType {
+        if (!this.products.length) {
+            this.getProducts()
+        }
+
         return this.products.filter(product => product.uuid === id)[0]
     }
 
@@ -47,7 +52,7 @@ export class Product {
 
                 // eslint-disable-next-line
                 product.uuid = uuidV4() as string
-                product.price = currencyFormatter(
+                product.price_fine = currencyFormatter(
                     parseInt(product.price as string, 10)
                 )
 

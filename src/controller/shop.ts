@@ -1,5 +1,14 @@
 import { Request, Response } from 'express'
+import Cart from '../models/cart'
 import Product from '../models/product'
+
+export type PostItemToCart = Request<
+    unknown,
+    unknown,
+    {
+        productId: string
+    }
+>
 
 export const getCartPage = (req: Request, res: Response) => {
     res.render('shop/cart', {
@@ -23,12 +32,10 @@ export const getOrdersPage = (req: Request, res: Response) => {
 }
 
 export const getProductDetailPage = (req: Request, res: Response) => {
-    console.log(Product.getProduct(req.params.productId))
-    const product = Product.getProduct(req.params.productId)
     res.render('shop/product-detail', {
         title: 'Product Detail | Shops!',
         path: 'shop-product-detail',
-        product
+        product: Product.getProduct(req.params.productId)
     })
 }
 
@@ -38,4 +45,12 @@ export const getIndexPage = (req: Request, res: Response) => {
         path: 'shop-index',
         products: Product.getProducts()
     })
+}
+
+export const addItemToCart = (req: PostItemToCart, res: Response) => {
+    const productId = req.body.productId
+    const product = Product.getProduct(productId)
+    Cart.addProduct(product)
+
+    res.redirect('/cart')
 }
