@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.get('/add-product', ProductsController.getAddProductPage)
 
-router.get('/edit-product', ProductsController.getEditProductPage)
+router.get('/edit-product/:productId', ProductsController.getEditProductPage)
 
 router.get('/products', ProductsController.getProductPage)
 
@@ -14,6 +14,6 @@ router.get('/dashboard', AdminController.getDashboardPage)
 
 router.get('/', AdminController.redirectToDashboard)
 
-router.post('/product', ProductsController.postAddProduct)
+router.post('/add-product', ProductsController.postAddProduct)
 
 export default router

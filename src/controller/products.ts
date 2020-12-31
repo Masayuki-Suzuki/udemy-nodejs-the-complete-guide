@@ -4,7 +4,7 @@ import product, { ProductType } from '../models/product'
 type PostAddProductRequest = Request<unknown, unknown, ProductType>
 
 export const getAddProductPage = (req: Request, res: Response): void => {
-    res.render('./admin/add-product', {
+    res.render('./admin/edit-product', {
         title: 'Add Product',
         path: 'add-product',
         pageTitle: 'Add Product'
@@ -12,10 +12,19 @@ export const getAddProductPage = (req: Request, res: Response): void => {
 }
 
 export const getEditProductPage = (req: Request, res: Response): void => {
+    const edit = req.query.edit === 'true'
+    const productData = product.getProduct(req.params.productId)
+
+    if (!edit || !productData) {
+        res.redirect('/admin/products')
+    }
+
     res.render('./admin/edit-product', {
         title: 'Edit Product',
         path: 'edit-product',
-        pageTitle: 'Edit Product'
+        pageTitle: 'Edit Product',
+        product: productData,
+        editMode: edit
     })
 }
 
