@@ -9,7 +9,7 @@ export type ProductType = {
     title: string
     description: string
     image_url: string
-    price: number | string
+    price: number
     price_fine: string
 }
 
@@ -17,55 +17,72 @@ export class Product {
     private filePath = path.join(rootPath, 'data', 'products.json')
     private products: ProductType[] = []
 
-    getProduct(id: string): ProductType {
+    constructor() {
+        // eslint-disable-next-line
+        const _ = this.getProducts()
+    }
+
+    async getProduct(id: string): Promise<ProductType> {
         if (!this.products.length) {
-            this.getProducts()
+            await this.getProducts()
         }
 
         return this.products.filter(product => product.uuid === id)[0]
     }
 
-    getProducts(): ProductType[] {
-        fs.readFile(
-            this.filePath,
-            { encoding: 'utf-8' },
-            (err, fileContent) => {
-                if (err) {
-                    this.products = []
-                } else {
-                    this.products = JSON.parse(fileContent) as ProductType[]
-                }
-            }
-        )
+    async getProducts(): Promise<ProductType[]> {
+        const fileContent = await fs.promises
+            .readFile(this.filePath, 'utf-8')
+            .catch(err => console.error(err))
+
+        if (fileContent) {
+            this.products = JSON.parse(fileContent) as ProductType[]
+        }
 
         return this.products
     }
 
-    addProduct(product: ProductType) {
-        fs.readFile(
-            this.filePath,
-            { encoding: 'utf-8' },
-            (err, fileContent) => {
-                if (!err) {
-                    this.products = JSON.parse(fileContent) as ProductType[]
+    saveProduct(product: ProductType): void {
+        const existingProductIndex = this.products.findIndex(prod => {
+            return prod.uuid === product.uuid
+        })
+
+        // When "product" has already existed.
+        if (existingProductIndex >= 0) {
+            const updatedProducts = [...this.products]
+            product.price_fine = currencyFormatter(product.price)
+            updatedProducts[existingProductIndex] = product
+            fs.writeFile(
+                this.filePath,
+                JSON.stringify(updatedProducts),
+                err => {
+                    console.error(err)
                 }
-
-                // eslint-disable-next-line
-                product.uuid = uuidV4() as string
-                product.price_fine = currencyFormatter(
-                    parseInt(product.price as string, 10)
-                )
-
-                this.products.push(product)
-                fs.writeFile(
-                    this.filePath,
-                    JSON.stringify(this.products),
-                    err => {
-                        console.error(err)
+            )
+        } else {
+            fs.readFile(
+                this.filePath,
+                { encoding: 'utf-8' },
+                (err, fileContent) => {
+                    if (!err) {
+                        this.products = JSON.parse(fileContent) as ProductType[]
                     }
-                )
-            }
-        )
+
+                    // eslint-disable-next-line
+                    product.uuid = uuidV4() as string
+                    product.price_fine = currencyFormatter(product.price)
+
+                    this.products.push(product)
+                    fs.writeFile(
+                        this.filePath,
+                        JSON.stringify(this.products),
+                        err => {
+                            console.error(err)
+                        }
+                    )
+                }
+            )
+        }
     }
 }
 

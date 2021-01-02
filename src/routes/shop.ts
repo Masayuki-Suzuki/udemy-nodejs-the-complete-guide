@@ -14,6 +14,7 @@ router.get('/cart', getCartPage)
 router.get('/cart/checkout', getCheckoutPage)
 router.get('/', getIndexPage)
 
+// eslint-disable-next-line
 router.post('/cart', addItemToCart)
 
 export default router

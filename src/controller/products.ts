@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import product, { ProductType } from '../models/product'
 
-type PostAddProductRequest = Request<unknown, unknown, ProductType>
+type PostProductRequest = Request<unknown, unknown, ProductType>
 
 export const getAddProductPage = (req: Request, res: Response): void => {
     res.render('./admin/edit-product', {
@@ -11,9 +11,12 @@ export const getAddProductPage = (req: Request, res: Response): void => {
     })
 }
 
-export const getEditProductPage = (req: Request, res: Response): void => {
+export const getEditProductPage = async (
+    req: Request,
+    res: Response
+): Promise<void> => {
     const edit = req.query.edit === 'true'
-    const productData = product.getProduct(req.params.productId)
+    const productData = await product.getProduct(req.params.productId)
 
     if (!edit || !productData) {
         res.redirect('/admin/products')
@@ -28,17 +31,31 @@ export const getEditProductPage = (req: Request, res: Response): void => {
     })
 }
 
-export const getProductPage = (req: Request, res: Response): void => {
+export const getProductPage = async (
+    req: Request,
+    res: Response
+): Promise<void> => {
     res.render('./admin/products', {
         title: 'Product List',
         path: 'products',
         pageTitle: 'Products',
-        products: product.getProducts()
+        products: await product.getProducts()
     })
 }
 
-export const postAddProduct = (req: PostAddProductRequest, res: Response) => {
-    product.addProduct(req.body)
+export const postAddProduct = (
+    req: PostProductRequest,
+    res: Response
+): void => {
+    product.saveProduct(req.body)
+    res.redirect('/admin/products')
+}
+
+export const postEditProduct = (
+    req: PostProductRequest,
+    res: Response
+): void => {
+    product.saveProduct(req.body)
     res.redirect('/admin/products')
 }
 
@@ -46,5 +63,6 @@ export default {
     getAddProductPage,
     getEditProductPage,
     getProductPage,
-    postAddProduct
+    postAddProduct,
+    postEditProduct
 }

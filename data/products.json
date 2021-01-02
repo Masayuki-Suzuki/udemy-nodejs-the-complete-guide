@@ -1,10 +1,10 @@
 [
     {
-        "uuid": "466b8976-73dc-4456-9138-4401a9a60ac6",
         "title": "MacoBook Pro 14\"",
-        "description": "This is a super-powerful laptop for all creators, developers, and so on.",
         "image_url": "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mbp16touch-space-select-201911?wid=904&hei=840&fmt=jpeg&qlt=80&op_usm=0.5,0.5&.v=1572825197207",
-        "price": 4000,
+        "description": "This is a super-powerful laptop for all creators, developers, and so on.",
+        "price": "4000",
+        "uuid": "466b8976-73dc-4456-9138-4401a9a60ac6",
         "price_fine": "$4,000.00"
     },
     {

@@ -10,28 +10,28 @@ export type PostItemToCart = Request<
     }
 >
 
-export const getCartPage = (req: Request, res: Response) => {
+export const getCartPage = (req: Request, res: Response): void => {
     res.render('shop/cart', {
         title: 'Your Shopping Cart | Shops!',
         path: 'shop-cart'
     })
 }
 
-export const getCheckoutPage = (req: Request, res: Response) => {
+export const getCheckoutPage = (req: Request, res: Response): void => {
     res.render('shop/checkout', {
         title: 'Check Out | Shops!',
         path: 'shop-checkout'
     })
 }
 
-export const getOrdersPage = (req: Request, res: Response) => {
+export const getOrdersPage = (req: Request, res: Response): void => {
     res.render('shop/orders', {
         title: 'Your Orders | Shops!',
         path: 'shop-orders'
     })
 }
 
-export const getProductDetailPage = (req: Request, res: Response) => {
+export const getProductDetailPage = (req: Request, res: Response): void => {
     res.render('shop/product-detail', {
         title: 'Product Detail | Shops!',
         path: 'shop-product-detail',
@@ -39,7 +39,7 @@ export const getProductDetailPage = (req: Request, res: Response) => {
     })
 }
 
-export const getIndexPage = (req: Request, res: Response) => {
+export const getIndexPage = (req: Request, res: Response): void => {
     res.render('index', {
         title: 'Shops!',
         path: 'shop-index',
@@ -47,9 +47,12 @@ export const getIndexPage = (req: Request, res: Response) => {
     })
 }
 
-export const addItemToCart = (req: PostItemToCart, res: Response) => {
+export const addItemToCart = async (
+    req: PostItemToCart,
+    res: Response
+): Promise<void> => {
     const productId = req.body.productId
-    const product = Product.getProduct(productId)
+    const product = await Product.getProduct(productId)
     Cart.addProduct(product)
 
     res.redirect('/cart')
