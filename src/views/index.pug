@@ -4,9 +4,9 @@ block content
     .container.m-auto.max-w-7xl.px-8
         h2.py-8.text-gray-600.text-3xl.font-bold Our Product
 
-        .flex
+        .grid.grid-cols-6.gap-1
             each product in products
-                .shadow.max-w-xs.p-8.bg-white.rounded.m-2
+                .col-span-2.shadow.p-8.bg-white.rounded.m-2
                     .product-image
                         img.m-auto.w-full(src=product.image_url)
 

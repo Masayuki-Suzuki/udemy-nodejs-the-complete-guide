@@ -52,4 +52,12 @@ export default class Cart {
             })
         })
     }
+
+    static async deleteProduct(uuid: string): Promise<void> {
+        const fileContent = await fs.promises
+            .readFile(filePath, 'utf-8')
+            .catch(err => console.error(err))
+
+        console.info(fileContent, uuid)
+    }
 }

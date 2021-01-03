@@ -29,10 +29,13 @@ block content
                         td.text-center.p-3= product.description
                         td.text-center.p-3= product.price_fine
                         td.text-center.p-3
-                            a.bg-blue-800.text-white.font-bold.tracking-wide.px-6.py-3.mr-2.rounded(
-                                href=`/admin/edit-product/${product.uuid}?edit=true`
-                            )
-                                | Edit
-                            button.bg-red-600.text-white.font-bold.tracking-wide.px-4.py-3.rounded
-                                | Delete
+                            .flex.items-center.h-full
+                                a.bg-blue-800.text-white.font-bold.tracking-wide.px-6.py-3.mr-2.rounded(
+                                    href=`/admin/edit-product/${product.uuid}?edit=true`
+                                )
+                                    | Edit
+                                form.m-0(action="/admin/delete-product/" method="post")
+                                    input.hiden(type="hidden" value=product.uuid name="uuid")
+                                    button.bg-red-600.text-white.font-bold.tracking-wide.px-4.py-3.rounded(type="submit")
+                                        | Delete
 

@@ -11,13 +11,12 @@ router.get('/edit-product/:productId', ProductsController.getEditProductPage)
 
 // eslint-disable-next-line
 router.get('/products', ProductsController.getProductPage)
-
 router.get('/dashboard', AdminController.getDashboardPage)
-
 router.get('/', AdminController.redirectToDashboard)
-
 router.post('/add-product', ProductsController.postAddProduct)
-
 router.post('/edit-product', ProductsController.postEditProduct)
+
+// eslint-disable-next-line
+router.post('/delete-product', ProductsController.postDeleteProduct)
 
 export default router

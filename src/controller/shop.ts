@@ -39,11 +39,14 @@ export const getProductDetailPage = (req: Request, res: Response): void => {
     })
 }
 
-export const getIndexPage = (req: Request, res: Response): void => {
+export const getIndexPage = async (
+    req: Request,
+    res: Response
+): Promise<void> => {
     res.render('index', {
         title: 'Shops!',
         path: 'shop-index',
-        products: Product.getProducts()
+        products: await Product.getProducts()
     })
 }
 

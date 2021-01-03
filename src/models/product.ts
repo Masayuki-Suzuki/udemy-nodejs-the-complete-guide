@@ -56,7 +56,9 @@ export class Product {
                 this.filePath,
                 JSON.stringify(updatedProducts),
                 err => {
-                    console.error(err)
+                    if (err) {
+                        console.error(err)
+                    }
                 }
             )
         } else {
@@ -77,11 +79,36 @@ export class Product {
                         this.filePath,
                         JSON.stringify(this.products),
                         err => {
-                            console.error(err)
+                            if (err) {
+                                console.error(err)
+                            }
                         }
                     )
                 }
             )
+        }
+    }
+
+    async deleteProduct(uuid: string): Promise<string | null> {
+        const existedProduct = this.products.find(prod => prod.uuid === uuid)
+
+        if (existedProduct) {
+            const updatedProducts = this.products.filter(
+                prod => prod.uuid !== uuid
+            )
+
+            this.products = updatedProducts
+
+            await fs.promises
+                .writeFile(this.filePath, JSON.stringify(this.products))
+                .catch(err => {
+                    console.error(err)
+                    return 'Save data failed.'
+                })
+
+            return null
+        } else {
+            return 'product Id does not exist.'
         }
     }
 }
