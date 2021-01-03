@@ -19,6 +19,6 @@ block content
                         ) details
 
                         form.m-0(action="/cart" method="post")
-                            input.hidden(type="hidden" name="productId" value=product.uuid)
+                            input.hidden(type="hidden" name="uuid" value=product.uuid)
                             button.bg-green-600.text-white.font-bold.uppercase.px-5.py-3.tracking-wide.rounded(type="submit")
                                 | add cart

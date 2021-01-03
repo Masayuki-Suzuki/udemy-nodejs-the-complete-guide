@@ -1,18 +1,23 @@
 import fs from 'fs'
 import path from 'path'
 import { rootPath } from '../utils/rootPath'
-import { ProductType } from './product'
-
-export type CartData = {
-    products: ProductType[]
-    totalPrice: number
-}
+import { CartData, ProductType } from '../types/models'
 
 const filePath = path.join(rootPath, 'data', 'cart.json')
 
 export default class Cart {
+    static async getCartData(): Promise<CartData | string> {
+        const fileContent = await fs.promises
+            .readFile(filePath, 'utf-8')
+            .catch(err => {
+                console.error(err)
+                return 'Database accessing failed'
+            })
+        return JSON.parse(fileContent) as CartData
+    }
+
     static addProduct(product: ProductType): void {
-        fs.readFile(filePath, { encoding: 'utf-8' }, (err, fileContent) => {
+        fs.readFile(filePath, 'utf-8', (err, fileContent) => {
             let cart: CartData = { products: [], totalPrice: 0 }
 
             if (!err) {
@@ -48,16 +53,40 @@ export default class Cart {
             cart.totalPrice = cart.totalPrice + product.price
 
             fs.writeFile(filePath, JSON.stringify(cart), err => {
-                console.error(err)
+                if (err) {
+                    console.error(err)
+                }
             })
         })
     }
 
-    static async deleteProduct(uuid: string): Promise<void> {
-        const fileContent = await fs.promises
+    static async deleteProduct(uuid: string): Promise<string | null> {
+        const fileContentJson = await fs.promises
             .readFile(filePath, 'utf-8')
-            .catch(err => console.error(err))
+            .catch(err => {
+                console.error(err)
+                return 'Database Not Found...'
+            })
 
-        console.info(fileContent, uuid)
+        const fileContent = JSON.parse(fileContentJson) as CartData
+
+        const updatedProducts = fileContent.products.filter(prod => {
+            if (prod.uuid === uuid) {
+                fileContent.totalPrice -= prod.price * (prod.qty ? prod.qty : 1)
+                return false
+            }
+            return true
+        })
+
+        fileContent.products = updatedProducts
+
+        const result = await fs.promises
+            .writeFile(filePath, JSON.stringify(fileContent))
+            .catch(err => {
+                console.error(err)
+                return 'Save file failed...'
+            })
+
+        return result ? result : null
     }
 }

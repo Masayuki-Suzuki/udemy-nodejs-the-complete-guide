@@ -1,8 +1,6 @@
 import { Request, Response } from 'express'
-import product, { ProductType } from '../models/product'
-
-type PostProductRequest = Request<unknown, unknown, ProductType>
-type PostDeleteProductReq = Request<unknown, unknown, { uuid: string }>
+import product from '../models/product'
+import { PostDeleteProductReq, PostProductRequest } from '../types/controllers'
 
 export const getAddProductPage = (req: Request, res: Response): void => {
     res.render('./admin/edit-product', {

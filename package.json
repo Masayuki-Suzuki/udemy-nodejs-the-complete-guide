@@ -59,7 +59,6 @@
     },
     "lint-staged": {
         "*.{js,ts}": "eslint --cache",
-        "*.ts": "tsc --noEmit --esModuleInterop",
         "*.{js,ts,json}": "prettier --write"
     }
 }

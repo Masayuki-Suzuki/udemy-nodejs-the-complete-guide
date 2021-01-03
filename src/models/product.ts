@@ -3,15 +3,7 @@ import fs from 'fs'
 import { v4 as uuidV4 } from 'uuid'
 import { rootPath } from '../utils/rootPath'
 import currencyFormatter from '../utils/currencyFormatter'
-
-export type ProductType = {
-    uuid: string
-    title: string
-    description: string
-    image_url: string
-    price: number
-    price_fine: string
-}
+import { ProductType } from '../types/models'
 
 export class Product {
     private filePath = path.join(rootPath, 'data', 'products.json')
