@@ -1,9 +1,9 @@
 import express from 'express'
+import { getCartPage, getIndexPage } from '../controller/shop'
 
 const router = express.Router()
 
-router.get('/', (req, res) => {
-    res.render('index', { title: 'Welcome!' })
-})
+router.get('/', getIndexPage)
+router.get('/cart', getCartPage)
 
 export default router

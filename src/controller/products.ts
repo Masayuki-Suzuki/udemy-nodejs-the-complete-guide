@@ -1,15 +1,21 @@
 import { Request, Response } from 'express'
-import { Product, ProductType } from '../models/product'
+import product, { ProductType } from '../models/product'
 
 type PostAddProductRequest = Request<unknown, unknown, ProductType>
-
-const product = new Product()
 
 export const getAddProductPage = (req: Request, res: Response): void => {
     res.render('./admin/add-product', {
         title: 'Add Product',
         path: 'add-product',
         pageTitle: 'Add Product'
+    })
+}
+
+export const getEditProductPage = (req: Request, res: Response): void => {
+    res.render('./admin/edit-product', {
+        title: 'Edit Product',
+        path: 'edit-product',
+        pageTitle: 'Edit Product'
     })
 }
 
@@ -41,6 +47,7 @@ export const postAddProduct = (req: PostAddProductRequest, res: Response) => {
 
 export default {
     getAddProductPage,
+    getEditProductPage,
     getProductPage,
     getDashboardPage,
     redirectToDashboard,

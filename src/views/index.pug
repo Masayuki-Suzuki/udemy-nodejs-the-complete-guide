@@ -1,7 +1,19 @@
 extends ./partials/layout
 
 block content
-    .container.m-0
-        .h-screen.flex.items-center.justify-center
-            h1.text-4xl.text-gray-600.font-medium.tracking-wide
-                | Welcome to Shops!
+    .container.m-auto.max-w-7xl.px-8
+        h2.py-8.text-gray-600.text-3xl.font-bold Our Product
+
+        .flex
+            each product in products
+                .shadow.max-w-xs.p-8.bg-white.rounded.m-2
+                    .product-image
+                        img.m-auto.w-full(
+                            src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mbp16touch-space-select-201911?wid=904&hei=840&fmt=jpeg&qlt=80&op_usm=0.5,0.5&.v=1572825197207"
+                        )
+
+                    h4.text-gray-700.text-center.text-xl.pt-4.font-semibold= product.title
+                    p.text-red-800.text-center.font-semibold= product.price
+                    p.text-gray-700.leading-tight.mt-4= product.description
+                    .add-cart.text-center.w-full.mt-6
+                        button.bg-green-600.text-white.font-bold.uppercase.px-8.py-3.tracking-wide.rounded add cart
