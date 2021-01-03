@@ -2,6 +2,29 @@ extends ../partials/layout-admin
 
 block content
     .container.mx-auto
-        .flex.justify-end.mt-4
+        .flex.justify-end.mt-10
             a.px-4.py-3.bg-indigo-600.text-white.font-bold.rounded(href="/admin/add-product")
                 | Add Product
+
+    .container.mx-auto.shadow.overflow-hidden.bg-white.rounded.mt-10.p-8
+        table.w-full
+            thead
+                tr.border-b
+                    td.text-center.py-4 Image
+                    td.text-center.py-4 Product Name
+                    td.text-center.py-4 Description
+                    td.text-center.py-4 Price
+
+            tbody
+                each product in products
+                    tr
+                        td.text-center.p-5
+                            img.m-auto(
+                                src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mbp16touch-space-select-201911?wid=904&hei=840&fmt=jpeg&qlt=80&op_usm=0.5,0.5&.v=1572825197207"
+                                width="64"
+                            )
+
+                        td.text-center.p-3= product.title
+                        td.text-center.p-3= product.description
+                        td.text-center.p-3 $#{product.price}
+

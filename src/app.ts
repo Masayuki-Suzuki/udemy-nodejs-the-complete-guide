@@ -3,6 +3,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import adminRoutes from './routes/admin'
 import shopRoutes from './routes/shop'
+import errorController from './controller/error'
 
 const app = express()
 
@@ -15,8 +16,6 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use('/admin', adminRoutes)
 app.use(shopRoutes)
 
-app.use((req, res) => {
-    res.status(404).render('404', { title: 'Page Not Found' })
-})
+app.use(errorController.getPageNotFound)
 
 app.listen(4000)
