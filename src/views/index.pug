@@ -4,16 +4,21 @@ block content
     .container.m-auto.max-w-7xl.px-8
         h2.py-8.text-gray-600.text-3xl.font-bold Our Product
 
-        .flex
+        .grid.grid-cols-6.gap-1
             each product in products
-                .shadow.max-w-xs.p-8.bg-white.rounded.m-2
+                .col-span-2.shadow.p-8.bg-white.rounded.m-2
                     .product-image
-                        img.m-auto.w-full(
-                            src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mbp16touch-space-select-201911?wid=904&hei=840&fmt=jpeg&qlt=80&op_usm=0.5,0.5&.v=1572825197207"
-                        )
+                        img.m-auto.w-full(src=product.image_url)
 
                     h4.text-gray-700.text-center.text-xl.pt-4.font-semibold= product.title
-                    p.text-red-800.text-center.font-semibold= product.price
+                    p.text-red-800.text-center.font-semibold= product.price_fine
                     p.text-gray-700.leading-tight.mt-4= product.description
-                    .add-cart.text-center.w-full.mt-6
-                        button.bg-green-600.text-white.font-bold.uppercase.px-8.py-3.tracking-wide.rounded add cart
+                    .add-cart.text-center.w-full.mt-6.flex.items-center.justify-center
+                        a.bg-green-600.text-white.font-bold.uppercase.px-5.py-3.mr-2.tracking-wide.rounded(
+                            href=`/shop/product/${product.uuid}`
+                        ) details
+
+                        form.m-0(action="/cart" method="post")
+                            input.hidden(type="hidden" name="uuid" value=product.uuid)
+                            button.bg-green-600.text-white.font-bold.uppercase.px-5.py-3.tracking-wide.rounded(type="submit")
+                                | add cart

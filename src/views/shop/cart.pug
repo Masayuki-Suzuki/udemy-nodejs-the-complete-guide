@@ -1,4 +1,48 @@
 extends ../partials/layout
 
 block content
-    h1 this page will be shopping cart.
+    if !products.length
+        .container.mx-auto.pt-10
+        p.text-gray-700.text-2xl.text-center Your cart is empty.
+        .text-center.p-4
+            a.text-blue-500.underline(href="/") Back To Products List
+    else
+        .container.mx-auto.pt-10
+
+
+            h2.text-gray-700.text-4xl.font-bold.mb-4 Your Cart
+            table.w-full.shadow.overflow-hidden.bg-white.rounded.p-8
+                thead
+                    tr.border-b-2
+                        td.text-center.py-4 Image
+                        td.text-center.py-4 Product Name
+                        td.text-center.py-4 Description
+                        td.text-center.py-4 Price
+                        td.text-center.py-4 Quantity
+                        td.text-center.py-4
+
+                tbody
+                    each product in products
+                        tr.border-b
+                            td.text-center.p-5
+                                img.m-auto(
+                                    src=product.image_url
+                                    width="64"
+                                )
+
+                            td.text-center.p-3= product.title
+                            td.text-center.p-3= product.description
+                            td.text-center.p-3= product.price_fine
+                            td.text-center.p-3= product.qty
+                            td.text-center.p-3
+                                .flex.items-center.h-full
+                                    form.m-0(action="/cart/delete-product/" method="post")
+                                        input.hiden(type="hidden" value=product.uuid name="uuid")
+                                        button.bg-red-600.text-white.font-bold.tracking-wide.px-4.py-3.rounded(type="submit")
+                                            | Delete
+
+        .container.mx-auto.shadow.overflow-hidden.bg-white.rounded.mt-10.p-8
+            p.text-gray-600.text-xl.w-full.text-right
+                span.font-bold.mr-3 Total Price:
+                span= totalPrice
+

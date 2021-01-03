@@ -1,12 +1,26 @@
 [
     {
         "title": "MacoBook Pro 14\"",
+        "image_url": "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mbp16touch-space-select-201911?wid=904&hei=840&fmt=jpeg&qlt=80&op_usm=0.5,0.5&.v=1572825197207",
         "description": "This is a super-powerful laptop for all creators, developers, and so on.",
-        "price": "$4,000.00"
+        "price": "4000",
+        "uuid": "466b8976-73dc-4456-9138-4401a9a60ac6",
+        "price_fine": "$4,000.00"
     },
     {
+        "uuid": "fe172f39-1aba-4cb0-b11e-e7db1b8ea3c6",
         "title": "MacoBook Pro 17\"",
         "description": "This is the most powerful MacoBook",
-        "price": "$6,000.00"
+        "image_url": "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mbp16touch-space-select-201911?wid=904&hei=840&fmt=jpeg&qlt=80&op_usm=0.5,0.5&.v=1572825197207",
+        "price": 6000,
+        "price_fine": "$6,000.00"
+    },
+    {
+        "title": "Maco Mini",
+        "image_url": "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mac-mini-hero-202011?wid=904&hei=840&fmt=jpeg&qlt=80&op_usm=0.5,0.5&.v=1603403462000",
+        "description": "Small and powerful desktop computer.",
+        "price": 1600,
+        "price_fine": "$1,600.00",
+        "uuid": "8e5216f0-0552-49f0-b984-cda712808499"
     }
 ]

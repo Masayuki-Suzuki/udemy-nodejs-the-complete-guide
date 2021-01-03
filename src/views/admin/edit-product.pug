@@ -1,12 +1,74 @@
 extends ../partials/layout-admin
 
 block content
-
     .container.max-w-7xl.m-auto.px-8
 
         p.mb-5.py-4
             a.text-blue-600.capitalize(href="/admin/products") < products
 
         .fields
-            form(action="/admin/product" method="post")
+            form(action=`/admin/${editMode ? 'edit-product' : 'add-product'}` method="post")
                 .shadow.overflow-hidden.max-w-3xl.mx-auto(class="sm:rounded-md")
+                    .px-4.py-5.bg-white(class="sm:p-6")
+                        .grid.grid-cols-6.gap-6
+
+                            //- Product Title
+                            .col-span-6
+                                label.block.text-sm.font-medium.text-gray-700(for="product-name")
+                                    | Product Name:
+                                input(
+                                    type="text"
+                                    name="title"
+                                    id="product-name"
+                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
+                                    value=`${editMode ? product.title : ''}`
+                                )
+
+                            //- Product Image URL (ToDo: Will be image uploader)
+                            .col-span-6
+                                label.block.text-sm.font-medium.text-gray-700(for="product-image")
+                                    | Product Image URL:
+                                input(
+                                    type="text"
+                                    name="image_url"
+                                    id="product-image"
+                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
+                                    value=`${editMode ? product.image_url : ''}`
+                                )
+
+                            //- Product Description
+                            .col-span-6
+                                label.block.text-sm.font-medium.text-gray-700(for="product-description")
+                                    | Product Description:
+                                textarea(
+                                    name="description"
+                                    id="product-description"
+                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
+                                    rows=3
+                                )
+                                    | #{editMode ? product.description : ''}
+
+                            //- Product Price
+                            .col-span-2
+                                label.block.text-sm.font-medium.text-gray-700(for="product-price")
+                                    | Product Price:
+                                .flex
+                                    span.text-xl.text-bold.text-gray-500.flex.items-center.h-10.pt-2.pr-2 $
+                                    input(
+                                        type="number"
+                                        name="price"
+                                        id="product-price"
+                                        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
+                                        step="0.01"
+                                        value=`${editMode ? product.price : null}`
+                                    )
+
+                        //- Submit Button
+                        .grid.grid-cols-6.gap-6.mt-7
+                            .col-span-2
+                                input.hidden(type="hidden" value=`${editMode ? product.uuid : ''}` name="uuid")
+                                button.bg-indigo-600.text-white.font-bold.text-center.w-full.py-2.rounded(type="submit")
+                                    if editMode
+                                        | Update
+                                    else
+                                        | Submit

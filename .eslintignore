@@ -6,3 +6,4 @@ package.json
 .prettierrc
 .prettierignore
 .eslintrc.js
+dist

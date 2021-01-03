@@ -74,9 +74,7 @@ module.exports = {
                     multiline: true,
                     minProperties: 4,
                     consistent: true
-                },
-                ImportDeclaration: 'never',
-                ExportDeclaration: 'never'
+                }
             }
         ],
         'object-curly-spacing': [1, 'always'],

@@ -7,9 +7,13 @@ header
                         img.h-8.w-8(src="/images/logo.png" alt="Logo")
                         span.text-white.font-bold.text-lg.tracking-wide.pl-2 Shops!
 
-                    .hidden(class="md:block")
-                        .ml-10.flex.items-baseline.space-x-4.justyfi-end
-                            a(href="/cart")
-                                i.fas.fa-shopping-basket.text-2xl.text-white
+                    .flex.items-center
+                        a.font-bold.py-3.px-4.rounded(
+                            href="/shop/orders"
+                            class=(path === "shop-orders" ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white")
+                        )
+                            | Orders
+                        a.ml-4(href="/cart")
+                            i.fas.fa-shopping-basket.text-2xl.text-white
 
 
