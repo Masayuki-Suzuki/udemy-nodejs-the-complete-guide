@@ -1,0 +1,12 @@
+version: '3'
+services:
+    mariadb:
+        image: mariadb:10.5.8
+        container_name: mariadb_udemy_node
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_USER: masa
+            MYSQL_PASSWORD: admin
+        volumes:
+            - ./db-data:/var/lib/mysql
