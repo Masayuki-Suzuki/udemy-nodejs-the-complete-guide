@@ -6,7 +6,7 @@ import db from '../utils/database'
 export class Product {
     async getProduct(id: string): Promise<ProductType> {
         const [rows] = await db.execute(
-            `SELECT * FROM products WHERE uuid="${id}"`
+            `SELECT * FROM products WHERE uuid='${id}'`
         )
 
         return rows[0] as ProductType
