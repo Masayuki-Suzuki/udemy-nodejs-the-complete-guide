@@ -42,19 +42,19 @@ export const getProductPage = async (
     })
 }
 
-export const postAddProduct = (
+export const postAddProduct = async (
     req: PostProductRequest,
     res: Response
-): void => {
-    product.saveProduct(req.body)
+): Promise<void> => {
+    await product.saveProduct(req.body)
     res.redirect('/admin/products')
 }
 
-export const postEditProduct = (
+export const postEditProduct = async (
     req: PostProductRequest,
     res: Response
-): void => {
-    product.saveProduct(req.body)
+): Promise<void> => {
+    await product.saveProduct(req.body)
     res.redirect('/admin/products')
 }
 
@@ -62,12 +62,8 @@ export const postDeleteProduct = async (
     req: PostDeleteProductReq,
     res: Response
 ): Promise<void> => {
-    const result = await product.deleteProduct(req.body.uuid)
-    if (result) {
-        res.status(500).send(result)
-    } else {
-        res.redirect('/admin/products')
-    }
+    await product.deleteProduct(req.body.uuid)
+    res.redirect('/admin/products')
 }
 
 export default {

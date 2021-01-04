@@ -16,10 +16,14 @@ import {
 const router = express.Router()
 
 router.get('/shop/orders', getOrdersPage)
-router.get('/shop/product/:productId', getProductDetailPage)
+router.get(
+    '/shop/product/:productId',
+    getProductDetailPage as PromiseController
+)
 router.get('/cart', getCartPage as PromiseController)
 router.get('/cart/checkout', getCheckoutPage)
 router.get('/', getIndexPage as PromiseController)
+
 router.post('/cart', addItemToCart as PromiseController<PostItemToCart>)
 router.post(
     '/cart/delete-product',
