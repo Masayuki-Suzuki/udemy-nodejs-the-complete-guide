@@ -22,5 +22,13 @@
         "price": 1600,
         "price_fine": "$1,600.00",
         "uuid": "8e5216f0-0552-49f0-b984-cda712808499"
+    },
+    {
+        "title": "MacoBook Pro 14\"",
+        "image_url": "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mbp16touch-space-select-201911?wid=904&hei=840&fmt=jpeg&qlt=80&op_usm=0.5,0.5&.v=1572825197207",
+        "description": "This is a super-powerful laptop for all creators, developers, and so on.",
+        "price": "4000.02",
+        "uuid": "412d6c2c-d908-41c5-a810-3b73df6d7090",
+        "price_fine": "$4,000.02"
     }
 ]

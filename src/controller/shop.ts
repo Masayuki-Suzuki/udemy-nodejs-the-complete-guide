@@ -15,11 +15,14 @@ export const getOrdersPage = (req: Request, res: Response): void => {
     })
 }
 
-export const getProductDetailPage = (req: Request, res: Response): void => {
+export const getProductDetailPage = async (
+    req: Request,
+    res: Response
+): Promise<void> => {
     res.render('shop/product-detail', {
         title: 'Product Detail | Shops!',
         path: 'shop-product-detail',
-        product: Product.getProduct(req.params.productId)
+        product: await Product.getProduct(req.params.productId)
     })
 }
 

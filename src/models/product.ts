@@ -1,107 +1,56 @@
-import path from 'path'
-import fs from 'fs'
 import { v4 as uuidV4 } from 'uuid'
-import { rootPath } from '../utils/rootPath'
 import currencyFormatter from '../utils/currencyFormatter'
 import { ProductType } from '../types/models'
+import db from '../utils/database'
 
 export class Product {
-    private filePath = path.join(rootPath, 'data', 'products.json')
-    private products: ProductType[] = []
-
-    constructor() {
-        // eslint-disable-next-line
-        const _ = this.getProducts()
-    }
-
     async getProduct(id: string): Promise<ProductType> {
-        if (!this.products.length) {
-            await this.getProducts()
-        }
+        const [rows] = await db.execute(
+            `SELECT * FROM products WHERE uuid='${id}'`
+        )
 
-        return this.products.filter(product => product.uuid === id)[0]
+        return rows[0] as ProductType
     }
 
-    async getProducts(): Promise<ProductType[]> {
-        const fileContent = await fs.promises
-            .readFile(this.filePath, 'utf-8')
-            .catch(err => console.error(err))
-
-        if (fileContent) {
-            this.products = JSON.parse(fileContent) as ProductType[]
-        }
-
-        return this.products
-    }
-
-    saveProduct(product: ProductType): void {
-        const existingProductIndex = this.products.findIndex(prod => {
-            return prod.uuid === product.uuid
+    // Get All Products
+    async getProducts(): Promise<ProductType[] | string> {
+        const [rows] = await db.execute('SELECT * FROM products').catch(err => {
+            console.error(err)
+            return [err as unknown, null]
         })
 
-        // When "product" has already existed.
-        if (existingProductIndex >= 0) {
-            const updatedProducts = [...this.products]
-            product.price_fine = currencyFormatter(product.price)
-            updatedProducts[existingProductIndex] = product
-            fs.writeFile(
-                this.filePath,
-                JSON.stringify(updatedProducts),
-                err => {
-                    if (err) {
-                        console.error(err)
-                    }
-                }
+        return rows as ProductType[]
+    }
+
+    async saveProduct(product: ProductType): Promise<void> {
+        const [rows] = (await db.execute(
+            `SELECT uuid FROM products WHERE uuid="${product.uuid}"`
+        )) as [ProductType[], unknown]
+        const existingProductId = rows[0]
+
+        if (existingProductId) {
+            await db.execute(
+                'UPDATE products SET ' +
+                    `title='${product.title}', ` +
+                    `description='${product.description}', ` +
+                    `image_url='${product.image_url}', ` +
+                    `price='${product.price}', ` +
+                    `price_fine='${currencyFormatter(product.price)}' ` +
+                    `WHERE uuid="${product.uuid}"`
             )
         } else {
-            fs.readFile(
-                this.filePath,
-                { encoding: 'utf-8' },
-                (err, fileContent) => {
-                    if (!err) {
-                        this.products = JSON.parse(fileContent) as ProductType[]
-                    }
-
-                    // eslint-disable-next-line
-                    product.uuid = uuidV4() as string
-                    product.price_fine = currencyFormatter(product.price)
-
-                    this.products.push(product)
-                    fs.writeFile(
-                        this.filePath,
-                        JSON.stringify(this.products),
-                        err => {
-                            if (err) {
-                                console.error(err)
-                            }
-                        }
-                    )
-                }
+            await db.execute(
+                'INSERT INTO products ' +
+                    '(uuid, title, description, image_url, price, price_fine) ' +
+                    `values ('${uuidV4()}', '${product.title}', ` +
+                    `'${product.description}', '${product.image_url}', ` +
+                    `'${product.price}', '${currencyFormatter(product.price)}')`
             )
         }
     }
 
-    async deleteProduct(uuid: string): Promise<string | null> {
-        const existedProduct = this.products.find(prod => prod.uuid === uuid)
-
-        if (existedProduct) {
-            const updatedProducts = this.products.filter(
-                prod => prod.uuid !== uuid
-            )
-
-            this.products = updatedProducts
-
-            await fs.promises
-                .writeFile(this.filePath, JSON.stringify(this.products))
-                .catch(err => {
-                    console.error(err)
-                    return 'Save data failed.'
-                })
-
-            return null
-        } else {
-            return 'product Id does not exist.'
-        }
+    async deleteProduct(uuid: string): Promise<void> {
+        await db.execute(`DELETE FROM products WHERE uuid='${uuid}'`)
     }
 }
 
