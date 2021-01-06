@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import Product from '../models/product'
+import products from '../models/product'
 
 export const getCheckoutPage = (req: Request, res: Response): void => {
     res.render('shop/checkout', {
@@ -22,7 +22,7 @@ export const getProductDetailPage = async (
     res.render('shop/product-detail', {
         title: 'Product Detail | Shops!',
         path: 'shop-product-detail',
-        product: await Product.getProduct(req.params.productId)
+        product: await products.findByPk(req.params.productId)
     })
 }
 
@@ -33,6 +33,6 @@ export const getIndexPage = async (
     res.render('index', {
         title: 'Shops!',
         path: 'shop-index',
-        products: await Product.getProducts()
+        products: await products.findAll()
     })
 }

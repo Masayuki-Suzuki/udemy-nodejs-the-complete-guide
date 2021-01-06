@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
-import product from '../models/product'
+import products from '../models/product'
 import { PostDeleteProductReq, PostProductRequest } from '../types/controllers'
+import currencyFormatter from '../utils/currencyFormatter'
 
 export const getAddProductPage = (req: Request, res: Response): void => {
     res.render('./admin/edit-product', {
@@ -15,7 +16,9 @@ export const getEditProductPage = async (
     res: Response
 ): Promise<void> => {
     const edit = req.query.edit === 'true'
-    const productData = await product.getProduct(req.params.productId)
+    const productData = await products.findOne({
+        where: { uuid: req.params.productId }
+    })
 
     if (!edit || !productData) {
         res.redirect('/admin/products')
@@ -38,7 +41,7 @@ export const getProductPage = async (
         title: 'Product List',
         path: 'products',
         pageTitle: 'Products',
-        products: await product.getProducts()
+        products: await products.findAll()
     })
 }
 
@@ -46,7 +49,11 @@ export const postAddProduct = async (
     req: PostProductRequest,
     res: Response
 ): Promise<void> => {
-    await product.saveProduct(req.body)
+    const result = await products.create(req.body).catch(err => {
+        console.error(err)
+        res.status(500)
+    })
+    console.info(result)
     res.redirect('/admin/products')
 }
 
@@ -54,7 +61,21 @@ export const postEditProduct = async (
     req: PostProductRequest,
     res: Response
 ): Promise<void> => {
-    await product.saveProduct(req.body)
+    const target = await products.findOne({ where: { uuid: req.body.uuid } })
+    if (target) {
+        target.title = req.body.title
+        target.description = req.body.description
+        target.image_url = req.body.image_url
+        target.price = req.body.price
+        target.price_fine = currencyFormatter(req.body.price)
+        const result = await target.save().catch(err => {
+            console.error(err)
+            res.status(500).send(
+                `Internal Server Error: DB couldn't save the data.`
+            )
+        })
+        console.info(result)
+    }
     res.redirect('/admin/products')
 }
 
@@ -62,7 +83,9 @@ export const postDeleteProduct = async (
     req: PostDeleteProductReq,
     res: Response
 ): Promise<void> => {
-    await product.deleteProduct(req.body.uuid)
+    const target = await products.findOne({ where: { uuid: req.body.uuid } })
+    const result = target && (await target.destroy())
+    console.info(result)
     res.redirect('/admin/products')
 }
 

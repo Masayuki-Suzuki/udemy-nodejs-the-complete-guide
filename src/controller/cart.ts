@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import Cart from '../models/cart'
-import Product from '../models/product'
+import products from '../models/product'
 import currencyFormatter from '../utils/currencyFormatter'
 
 export type PostItemToCart = Request<unknown, unknown, { uuid: string }>
@@ -26,8 +26,9 @@ export const addItemToCart = async (
     req: PostItemToCart,
     res: Response
 ): Promise<void> => {
-    const product = await Product.getProduct(req.body.uuid)
-    Cart.addProduct(product)
+    const product = await products.findOne({ where: { uuid: req.body.uuid } })
+    console.info(product)
+    // Cart.addProduct(product)
     res.redirect('/cart')
 }
 

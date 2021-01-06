@@ -82,7 +82,7 @@ module.exports = {
         'padded-blocks': 0,
         'prefer-arrow-callback': 2,
         'prefer-const': 2,
-        quotes: [2, 'single'],
+        quotes: [2, 'single', { allowTemplateLiterals: true }],
         'require-await': 1,
         semi: [2, 'never'],
         'space-before-function-paren': [0, 'never']
