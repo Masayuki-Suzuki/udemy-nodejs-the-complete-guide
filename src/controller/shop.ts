@@ -22,7 +22,9 @@ export const getProductDetailPage = async (
     res.render('shop/product-detail', {
         title: 'Product Detail | Shops!',
         path: 'shop-product-detail',
-        product: await products.findByPk(req.params.productId)
+        product: await products.findOne({
+            where: { uuid: req.params.productId }
+        })
     })
 }
 

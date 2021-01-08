@@ -1,18 +1,36 @@
 import { BuildOptions, Model } from 'sequelize'
 
 export type ProductType = {
+    id?: number
     uuid: string
     title: string
     description: string
     image_url: string
     price: number
     price_fine: string
+    userId: number
+    createdAt?: Date
+    updatedAt?: Date
+    user?: UserModel
     qty?: number
 }
 
 export type ProductModel = ProductType & Model
 export type ProductModelStrict = typeof Model & {
     new (value?: unknown, options?: BuildOptions): ProductModel
+}
+
+export type User = {
+    id?: number
+    uuid: string
+    first_name: string
+    last_name: string
+    email: string
+}
+
+export type UserModel = User & Model
+export type UserModelStrict = typeof Model & {
+    new (value?: unknown, options?: BuildOptions): UserModel
 }
 
 export type CartData = {

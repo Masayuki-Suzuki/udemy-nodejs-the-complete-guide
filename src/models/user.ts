@@ -1,8 +1,8 @@
 import { DataTypes } from 'sequelize'
-import { ProductModelStrict } from '../types/models'
+import { UserModelStrict } from '../types/models'
 import sequelize from '../utils/database'
 
-const Products = sequelize.define('products', {
+const User = sequelize.define('user', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -13,26 +13,18 @@ const Products = sequelize.define('products', {
         unique: true,
         allowNull: false
     },
-    title: {
+    first_name: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    description: {
-        type: DataTypes.TEXT,
+    last_name: {
+        type: DataTypes.STRING,
         allowNull: false
     },
-    image_url: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    },
-    price: {
-        type: DataTypes.DOUBLE,
-        allowNull: false
-    },
-    price_fine: {
+    email: {
         type: DataTypes.STRING,
         allowNull: false
     }
-}) as ProductModelStrict
+}) as UserModelStrict
 
-export default Products
+export default User

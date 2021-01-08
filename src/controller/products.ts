@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { v4 as uuidV4 } from 'uuid'
 import products from '../models/product'
 import { PostDeleteProductReq, PostProductRequest } from '../types/controllers'
 import currencyFormatter from '../utils/currencyFormatter'
@@ -49,11 +50,23 @@ export const postAddProduct = async (
     req: PostProductRequest,
     res: Response
 ): Promise<void> => {
-    const result = await products.create(req.body).catch(err => {
+    const product = req.body
+    product.price_fine = currencyFormatter(product.price)
+    product.uuid = uuidV4()
+
+    if (req.body.user && req.body.user.id) {
+        product.userId = req.body.user.id
+    }
+
+    delete product.user
+
+    const result = await products.create(product).catch(err => {
         console.error(err)
         res.status(500)
     })
+
     console.info(result)
+
     res.redirect('/admin/products')
 }
 
@@ -61,20 +74,23 @@ export const postEditProduct = async (
     req: PostProductRequest,
     res: Response
 ): Promise<void> => {
-    const target = await products.findOne({ where: { uuid: req.body.uuid } })
+    const target = await products.findOne({
+        where: { uuid: req.body.uuid }
+    })
+
     if (target) {
         target.title = req.body.title
         target.description = req.body.description
         target.image_url = req.body.image_url
         target.price = req.body.price
         target.price_fine = currencyFormatter(req.body.price)
-        const result = await target.save().catch(err => {
+
+        await target.save().catch(err => {
             console.error(err)
             res.status(500).send(
                 `Internal Server Error: DB couldn't save the data.`
             )
         })
-        console.info(result)
     }
     res.redirect('/admin/products')
 }
@@ -83,9 +99,13 @@ export const postDeleteProduct = async (
     req: PostDeleteProductReq,
     res: Response
 ): Promise<void> => {
-    const target = await products.findOne({ where: { uuid: req.body.uuid } })
-    const result = target && (await target.destroy())
-    console.info(result)
+    const target = await products.findOne({
+        where: { uuid: req.body.uuid }
+    })
+
+    if (target) {
+        await target.destroy()
+    }
     res.redirect('/admin/products')
 }
 
