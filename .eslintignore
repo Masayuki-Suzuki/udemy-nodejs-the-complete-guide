@@ -1,3 +1,8 @@
+# Directories
+dist
+src/types
+
+# Files
 tailwind.config.js
 postcss.config.js
 tsconfig.json
@@ -6,4 +11,3 @@ package.json
 .prettierrc
 .prettierignore
 .eslintrc.js
-dist

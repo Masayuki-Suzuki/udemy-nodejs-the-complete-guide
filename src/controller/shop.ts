@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import prisma from '../prisma'
 import products from '../models/product'
 
 export const getCheckoutPage = (req: Request, res: Response): void => {
@@ -35,6 +36,6 @@ export const getIndexPage = async (
     res.render('index', {
         title: 'Shops!',
         path: 'shop-index',
-        products: await products.findAll()
+        products: await prisma.products.findMany()
     })
 }

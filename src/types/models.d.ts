@@ -6,11 +6,11 @@ export type ProductType = {
     title: string
     description: string
     image_url: string
-    price: number
+    price: string
     price_fine: string
     userId: number
-    createdAt?: Date
-    updatedAt?: Date
+    createdAt: Date | string
+    updatedAt: Date | string
     user?: UserModel
     qty?: number
 }

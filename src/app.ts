@@ -5,7 +5,8 @@ import bodyParser from 'body-parser'
 import adminRoutes from './routes/admin'
 import shopRoutes from './routes/shop'
 import errorController from './controller/error'
-import { db_connect } from './controller/database'
+// import { db_connect } from './controller/database'
+import extendRequestWithUserModel from './middleware/extendRequestWithUserModel'
 
 dotenv.config()
 const app = express()
@@ -16,12 +17,14 @@ app.set('views', 'src/views')
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, 'public')))
 
+extendRequestWithUserModel(app)
+
 app.use('/admin', adminRoutes)
 app.use(shopRoutes)
 
 app.use(errorController.getPageNotFound)
 
 //eslint-disable-next-line
-db_connect()
+// db_connect()
 
 app.listen(4000)

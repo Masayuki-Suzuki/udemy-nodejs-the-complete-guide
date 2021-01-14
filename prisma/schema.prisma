@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model cartItems {
+  id        Int       @id @default(autoincrement())
+  quantity  Int?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime
+  cartId    Int?
+  productId Int?
+  carts     carts?    @relation(fields: [cartId], references: [id])
+  products  products? @relation(fields: [productId], references: [id])
+
+  @@unique([cartId, productId], name: "cartItems_productId_cartId_unique")
+  @@index([productId], name: "productId")
+}
+
+model carts {
+  id        Int             @id @default(autoincrement())
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  userId    Int?
+  users     users?          @relation(fields: [userId], references: [id])
+  cartItems cartItems[]
+
+  @@index([userId], name: "userId")
+}
+
+model products {
+  id          Int         @id @default(autoincrement())
+  uuid        String      @unique
+  title       String
+  description String
+  image_url   String
+  price       Float
+  price_fine  String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  userId      Int?
+  users       users?      @relation(fields: [userId], references: [id])
+  cartItems   cartItems[]
+
+  @@index([userId], name: "userId")
+}
+
+model users {
+  id         Int        @id @default(autoincrement())
+  uuid       String     @unique
+  first_name String
+  last_name  String
+  email      String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  carts      carts[]
+  products   products[]
+}
