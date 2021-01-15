@@ -1,23 +1,19 @@
-import { Sequelize } from 'sequelize'
-import dotenv from 'dotenv'
+import mongodb from 'mongodb'
 
-dotenv.config()
+const MongoClient = mongodb.MongoClient
 
-const sequelize = new Sequelize(
-    process.env.db_database as string,
-    process.env.db_user as string,
-    process.env.db_password,
-    {
-        dialect: 'mysql',
-        host: process.env.db_host
-    }
-)
+const option = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}
 
-// const pool = mysql.createPool({
-//     host: process.env.db_host,
-//     user: process.env.db_user,
-//     database: process.env.db_database,
-//     password: process.env.db_password
-// })
+export const mongoConnection = async (): Promise<void> => {
+    const result = await MongoClient.connect(
+        process.env.MONGO_URL as string,
+        option
+    ).catch(err => {
+        console.error(err)
+    })
 
-export default sequelize
+    console.info(result)
+}
