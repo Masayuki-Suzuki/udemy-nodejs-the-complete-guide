@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import prisma from '../prisma'
-import products from '../models/product'
+import { Product } from '../models/product'
+import { PostProductRequest } from '../types/controllers'
 
 export const getCheckoutPage = (req: Request, res: Response): void => {
     res.render('shop/checkout', {
@@ -20,12 +20,11 @@ export const getProductDetailPage = async (
     req: Request,
     res: Response
 ): Promise<void> => {
+    console.log(req.params.productId)
     res.render('shop/product-detail', {
         title: 'Product Detail | Shops!',
         path: 'shop-product-detail',
-        product: await products.findOne({
-            where: { uuid: req.params.productId }
-        })
+        product: await Product.fetchProduct(req.params.productId)
     })
 }
 
@@ -36,6 +35,6 @@ export const getIndexPage = async (
     res.render('index', {
         title: 'Shops!',
         path: 'shop-index',
-        products: await prisma.products.findMany()
+        products: await Product.fetchAll()
     })
 }

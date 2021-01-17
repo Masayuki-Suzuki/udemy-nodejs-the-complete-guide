@@ -66,7 +66,7 @@ block content
                         //- Submit Button
                         .grid.grid-cols-6.gap-6.mt-7
                             .col-span-2
-                                input.hidden(type="hidden" value=`${editMode ? product.uuid : ''}` name="uuid")
+                                input.hidden(type="hidden" value=`${editMode ? product._id : null}` name="_id")
                                 button.bg-indigo-600.text-white.font-bold.text-center.w-full.py-2.rounded(type="submit")
                                     if editMode
                                         | Update

@@ -5,8 +5,6 @@ import bodyParser from 'body-parser'
 import adminRoutes from './routes/admin'
 import shopRoutes from './routes/shop'
 import errorController from './controller/error'
-// import { db_connect } from './controller/database'
-import extendRequestWithUserModel from './middleware/extendRequestWithUserModel'
 import { mongoConnection } from './utils/database'
 
 dotenv.config()
@@ -20,8 +18,8 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 // extendRequestWithUserModel(app)
 
-// app.use('/admin', adminRoutes)
-// app.use(shopRoutes)
+app.use('/admin', adminRoutes)
+app.use(shopRoutes)
 
 app.use(errorController.getPageNotFound)
 

@@ -12,7 +12,7 @@ const router = express.Router()
 router.get('/add-product', ProductsController.getAddProductPage)
 router.get(
     '/edit-product/:productId',
-    ProductsController.getEditProductPage as PromiseController
+    ProductsController.getEditProductPage as PromiseController<PostProductRequest>
 )
 router.get('/products', ProductsController.getProductPage as PromiseController)
 router.get('/dashboard', AdminController.getDashboardPage)

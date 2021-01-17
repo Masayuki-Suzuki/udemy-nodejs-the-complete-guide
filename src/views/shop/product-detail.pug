@@ -8,8 +8,8 @@ block content
 
             .col-span-4
                 h2.py-8.text-gray-600.text-3xl.font-bold= product.title
-                p.text-gray-600.text-xl.font-semibold= product.price_fine
-                p.text-gray-600.leading-tight.mt-4= product.description
+                p.text-gray-600.text-2xl.font-semibold= product.price_fine
+                pre.text-gray-600.leading-tight.mt-4.whitespace-pre-wrap= product.description
 
                 form.w-full.mt-6(action="/cart" method="post")
                     input(type="hidden" name="product" value=product)

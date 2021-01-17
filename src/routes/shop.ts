@@ -1,11 +1,12 @@
 import express from 'express'
-import { PromiseController } from 'src/types/controllers'
+import { PostProductRequest, PromiseController } from 'src/types/controllers'
 import { addItemToCart, getCartPage, PostItemToCart } from '../controller/cart'
 import {
     getCheckoutPage,
     getIndexPage,
     getOrdersPage,
     getProductDetailPage
+    // getProductDetailPage
 } from '../controller/shop'
 
 const router = express.Router()
@@ -13,7 +14,7 @@ const router = express.Router()
 router.get('/shop/orders', getOrdersPage)
 router.get(
     '/shop/product/:productId',
-    getProductDetailPage as PromiseController
+    getProductDetailPage as PromiseController<PostProductRequest>
 )
 
 router.get('/cart', getCartPage as PromiseController)

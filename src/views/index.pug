@@ -12,15 +12,15 @@ block content
 
                     h4.text-gray-700.text-center.text-xl.pt-4.font-semibold= product.title
                     p.text-red-800.text-center.font-semibold= product.price_fine
-                    div.text-gray-700.leading-tight.mt-4
+                    // div.text-gray-700.leading-tight.mt-4
                         pre.whitespace-pre-line= product.description
 
                     .add-cart.text-center.w-full.mt-6.flex.items-center.justify-center
                         a.bg-green-600.text-white.font-bold.uppercase.px-5.py-3.mr-2.tracking-wide.rounded(
-                            href=`/shop/product/${product.uuid}`
+                            href=`/shop/product/${product._id}`
                         ) details
 
                         form.m-0(action="/cart" method="post")
-                            input.hidden(type="hidden" name="uuid" value=product.uuid)
+                            input.hidden(type="hidden" name="id" value=product._id)
                             button.bg-green-600.text-white.font-bold.uppercase.px-5.py-3.tracking-wide.rounded(type="submit")
                                 | add cart
