@@ -19,7 +19,8 @@ export const getCartPage = async (
             .collection('users')
             .findOne<UserWithCart | null>({ _id: new ObjectId(req.user._id) })
         if (user) {
-            products = user.cart.items
+            // products = user.cart.items
+            products = []
         }
     }
 

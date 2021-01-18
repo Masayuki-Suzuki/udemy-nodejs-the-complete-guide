@@ -68,10 +68,24 @@ export class User {
     }
 
     async addToCart(product: ProductModel): Promise<void> {
-        // const cartProduct = this.cart.items.findIndex(
-        //     cp => cp._id === product._id
-        // )
-        const updatedCart: Cart = { items: [{ ...product, quantity: 1 }] }
+        const cartProductIndex = this.cart.items.findIndex(
+            cp => cp.productId === product._id.toString()
+        )
+
+        let newQuantity = 1
+        const updatedCarItems = [...this.cart.items]
+
+        if (cartProductIndex >= 0) {
+            newQuantity = this.cart.items[cartProductIndex].quantity + 1
+            updatedCarItems[cartProductIndex].quantity = newQuantity
+        } else {
+            updatedCarItems.push({
+                productId: new ObjectId(product._id),
+                quantity: newQuantity
+            })
+        }
+
+        const updatedCart: Cart = { items: updatedCarItems }
         const db = database.getDB()
 
         if (db) {

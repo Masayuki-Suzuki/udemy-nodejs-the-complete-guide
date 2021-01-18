@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongodb'
+
 export type ProductType = {
     title: string
     description: string
@@ -31,5 +33,10 @@ export type UserWithCart = {
 } & UserModel
 
 export type Cart = {
-    items: CartItem[]
+    items: CartItemModel[]
+}
+
+export type CartItemModel = {
+    productId: string | number | ObjectId
+    quantity: number
 }
