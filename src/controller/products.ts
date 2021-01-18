@@ -1,9 +1,6 @@
 import { Request, Response } from 'express'
-import { v4 as uuidV4 } from 'uuid'
 import { PostDeleteProductReq, PostProductRequest } from '../types/controllers'
 import { Product } from '../models/product'
-import currencyFormatter from '../utils/currencyFormatter'
-import { getDB } from '../utils/database'
 
 export const getAddProductPage = (req: Request, res: Response): void => {
     res.render('./admin/edit-product', {
@@ -52,7 +49,7 @@ export const postAddProduct = async (
     res: Response
 ): Promise<void> => {
     const product = new Product(req.body)
-    await product.save()
+    await product.create()
 
     res.redirect('/admin/products')
 }

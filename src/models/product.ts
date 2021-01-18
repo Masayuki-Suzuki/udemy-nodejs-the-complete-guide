@@ -1,11 +1,8 @@
-import mongodb from 'mongodb'
-import { ProductModel, ProductType } from '../types/models'
-import { getDB } from '../utils/database'
+import { ObjectId, Db } from 'mongodb'
 import currencyFormatter from '../utils/currencyFormatter'
+import { database } from '../utils/database'
+import { ProductModel, ProductType } from '../types/models'
 import { Nullable } from '../types/utilities'
-import error from '../controller/error'
-
-// let collection = getDB().collection('products')
 
 export class Product {
     private title: string
@@ -22,86 +19,110 @@ export class Product {
         this.price_fine = currencyFormatter(params.price)
     }
 
-    public async save(): Promise<string> {
-        const collection = getDB().collection('products')
-        const { title, description, image_url, price, price_fine } = this
-
+    public async create(): Promise<string> {
+        const db = database.getDB()
         let errorMessage = ''
 
-        await collection
-            .insertOne({
-                title,
-                description,
-                image_url,
-                price,
-                price_fine
-            })
-            .catch(err => {
-                errorMessage = 'insert data error'
-                console.error(errorMessage)
-                console.error(err)
-            })
+        if (db) {
+            const collection = db.collection('products')
+            const { title, description, image_url, price, price_fine } = this
+
+            await collection
+                .insertOne({
+                    title,
+                    description,
+                    image_url,
+                    price,
+                    price_fine
+                })
+                .catch(err => {
+                    errorMessage = 'insert data error'
+                    console.error(errorMessage)
+                    console.error(err)
+                })
+        } else {
+            errorMessage = 'Data source not found.'
+        }
 
         return errorMessage || 'Success'
     }
 
     public async update(id: string): Promise<string> {
-        console.log(id)
-        const { title, description, image_url, price, price_fine } = this
-        const collection = getDB().collection('products')
-
+        const db = database.getDB()
         let errorMessage = ''
 
-        await collection
-            .updateOne(
-                { _id: new mongodb.ObjectId(id) },
-                {
-                    $set: {
-                        title,
-                        description,
-                        image_url,
-                        price,
-                        price_fine
+        if (db) {
+            const collection = db.collection('products')
+            const { title, description, image_url, price, price_fine } = this
+
+            await collection
+                .updateOne(
+                    { _id: new ObjectId(id) },
+                    {
+                        $set: {
+                            title,
+                            description,
+                            image_url,
+                            price,
+                            price_fine
+                        }
                     }
-                }
-            )
-            .catch(err => {
-                errorMessage = 'ERROR: update database error.'
-                console.error(errorMessage)
-                console.error(err)
-            })
+                )
+                .catch(err => {
+                    errorMessage = 'ERROR: update database error.'
+                    console.error(errorMessage)
+                    console.error(err)
+                })
+        } else {
+            errorMessage = 'Data source not found.'
+        }
 
         return errorMessage || 'Success'
     }
 
     static async fetchProduct(id: string): Promise<Nullable<ProductModel>> {
-        const collection = getDB().collection('products')
-        const product = await collection.findOne<ProductModel>({
-            _id: new mongodb.ObjectId(id)
-        })
+        const db = database.getDB()
+        if (db) {
+            const collection = db.collection('products')
+            const product = await collection.findOne<ProductModel>({
+                _id: new ObjectId(id)
+            })
 
-        return product
+            return product
+        }
+
+        return null
     }
 
     static async fetchAll(): Promise<ProductModel[]> {
-        const collection = getDB().collection('products')
-        return (await collection.find().toArray()) as ProductModel[]
+        const db = database.getDB()
+        if (db) {
+            const collection = db.collection('products')
+            return (await collection.find().toArray()) as ProductModel[]
+        }
+
+        return []
     }
 
     static async delete(id: string): Promise<string> {
-        const collection = getDB().collection('products')
-
+        const db = database.getDB()
         let errorMessage = ''
 
-        await collection
-            .deleteOne({
-                _id: new mongodb.ObjectId(id)
-            })
-            .catch(err => {
-                errorMessage = 'ERROR: Failed to delete data'
-                console.error(errorMessage)
-                console.error(err)
-            })
+        if (db) {
+            const collection = db.collection('products')
+
+            await collection
+                .deleteOne({
+                    _id: new ObjectId(id)
+                })
+                .catch(err => {
+                    errorMessage = 'ERROR: Failed to delete data'
+                    console.error(errorMessage)
+                    console.error(err)
+                })
+        } else {
+            errorMessage = 'Data source not found.'
+        }
 
         return errorMessage || 'Success'
     }

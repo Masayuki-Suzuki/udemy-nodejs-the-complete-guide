@@ -1,6 +1,8 @@
 import { Request, Response } from 'express'
 import { Product } from '../models/product'
 import { PostProductRequest } from '../types/controllers'
+import { UserType } from '../types/models'
+import { User } from '../models/user'
 
 export const getCheckoutPage = (req: Request, res: Response): void => {
     res.render('shop/checkout', {
@@ -32,6 +34,16 @@ export const getIndexPage = async (
     req: Request,
     res: Response
 ): Promise<void> => {
+    const userData: UserType = {
+        first_name: 'Masayuki',
+        last_name: 'Suzuki',
+        email: 'm.suzuki.fp@gmail.com',
+        role: 'admin'
+    }
+
+    const user = new User(userData)
+    await user.create()
+
     res.render('index', {
         title: 'Shops!',
         path: 'shop-index',

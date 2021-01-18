@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
-import { ProductType } from './models'
+import { ProductModel } from './models'
 
 export type PromiseController<T = Request> = (req: T, res: Response) => void
-export type PostProductRequest = Request<unknown, unknown, ProductType>
+export type PostProductRequest = Request<unknown, unknown, ProductModel>
 export type PostDeleteProductReq = Request<unknown, unknown, { id: string }>
 export type CartPageRequest = Request<unknown, unknown, { uuid: string }>

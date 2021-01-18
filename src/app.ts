@@ -5,7 +5,9 @@ import bodyParser from 'body-parser'
 import adminRoutes from './routes/admin'
 import shopRoutes from './routes/shop'
 import errorController from './controller/error'
-import { mongoConnection } from './utils/database'
+import { User } from './models/user'
+import { UserType } from './types/models'
+import { database } from './utils/database'
 
 dotenv.config()
 const app = express()
@@ -16,17 +18,13 @@ app.set('views', 'src/views')
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, 'public')))
 
-// extendRequestWithUserModel(app)
-
 app.use('/admin', adminRoutes)
 app.use(shopRoutes)
 
 app.use(errorController.getPageNotFound)
 
-//eslint-disable-next-line
-// db_connect()
-
+// Create root user
 // eslint-disable-next-line
-mongoConnection()
+// export const createRootUser = async (): Promise<void> => {
 
 app.listen(4000)

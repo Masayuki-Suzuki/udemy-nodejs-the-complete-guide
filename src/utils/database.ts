@@ -1,33 +1,36 @@
-import mongodb, { MongoClient as MongoClientType } from 'mongodb'
+import dotenv from 'dotenv'
+import { Db, MongoClient } from 'mongodb'
 import { Nullable } from '../types/utilities'
 
-const MongoClient = mongodb.MongoClient
+dotenv.config()
 
-const option = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}
+export class Database {
+    _db: Nullable<Db>
 
-let _db: mongodb.Db
+    constructor() {
+        this._db = null
+        this.mongoConnection()
+    }
 
-export const mongoConnection = async (): Promise<void> => {
-    const client = await MongoClient.connect(
-        process.env.MONGO_URL as string,
-        option
-    ).catch(err => {
-        console.error(err)
-        throw 'Database connection error!!'
-    })
+    mongoConnection(): void {
+        const option = {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        }
 
-    if (client) {
-        _db = client.db('shops')
+        MongoClient.connect(process.env.MONGO_URL as string, option)
+            .then(data => {
+                this._db = data.db('shops')
+            })
+            .catch(err => {
+                console.error(err)
+                throw 'Database connection error!!'
+            })
+    }
+
+    getDB() {
+        return this._db
     }
 }
 
-export const getDB = (): mongodb.Db => {
-    if (_db) {
-        return _db
-    }
-
-    throw 'No database found!'
-}
+export const database = new Database()
