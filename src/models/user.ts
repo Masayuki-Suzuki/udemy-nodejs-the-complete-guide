@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb'
 import { UserModel, UserType } from '../types/models'
 import { database } from '../utils/database'
 
@@ -47,5 +48,14 @@ export class User {
         }
 
         return errorMessage || 'Success'
+    }
+
+    static async findById(id: string) {
+        const db = database.getDB()
+        if (db) {
+            return await db
+                .collection('users')
+                .findOne<UserModel>({ _id: new ObjectId(id) })
+        }
     }
 }
