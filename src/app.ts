@@ -6,8 +6,6 @@ import adminRoutes from './routes/admin'
 import shopRoutes from './routes/shop'
 import errorController from './controller/error'
 import { User } from './models/user'
-import { UserType } from './types/models'
-import { database } from './utils/database'
 
 dotenv.config()
 const app = express()
@@ -17,6 +15,16 @@ app.set('views', 'src/views')
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, 'public')))
+
+app.use(async (req, res, next) => {
+    const user = await User.findById('600528241f408ff2d4837824')
+    if (user) {
+        req.user = new User(user)
+    } else {
+        req.user = null
+    }
+    next()
+})
 
 app.use('/admin', adminRoutes)
 app.use(shopRoutes)

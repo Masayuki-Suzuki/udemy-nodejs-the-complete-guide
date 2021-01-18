@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { PostDeleteProductReq, PostProductRequest } from '../types/controllers'
 import { Product } from '../models/product'
+import { ProductModel } from '../types/models'
 
 export const getAddProductPage = (req: Request, res: Response): void => {
     res.render('./admin/edit-product', {
@@ -45,25 +46,32 @@ export const getProductPage = async (
 }
 
 export const postAddProduct = async (
-    req: PostProductRequest,
+    req: Request,
     res: Response
 ): Promise<void> => {
-    const product = new Product(req.body)
-    await product.create()
-
-    res.redirect('/admin/products')
+    if (req.user) {
+        const params = { ...req.body, userId: req.user._id } as ProductModel
+        const product = new Product(params)
+        await product.create()
+        res.redirect('/admin/products')
+    } else {
+        res.redirect('/')
+    }
 }
 
 export const postEditProduct = async (
     req: PostProductRequest,
     res: Response
 ): Promise<void> => {
-    const product = new Product(req.body)
-    const result = await product.update(req.body._id)
+    if (req.user) {
+        const params = { ...req.body, userId: req.user._id } as ProductModel
+        const product = new Product(params)
+        await product.update(req.body._id)
 
-    console.info(result)
-
-    res.redirect('/admin/products')
+        res.redirect('/admin/products')
+    } else {
+        res.redirect('/')
+    }
 }
 
 export const postDeleteProduct = async (

@@ -4,11 +4,16 @@ export type ProductType = {
     image_url: string
     price: number
     price_fine: string
+    userId: string
 }
 
 export type ProductModel = {
     _id: string
 } & ProductType
+
+export type CartItem = {
+    quantity: number
+} & ProductModel
 
 export type UserType = {
     first_name: string
@@ -20,3 +25,11 @@ export type UserType = {
 export type UserModel = {
     _id: string
 } & UserType
+
+export type UserWithCart = {
+    cart: Cart
+} & UserModel
+
+export type Cart = {
+    items: CartItem[]
+}

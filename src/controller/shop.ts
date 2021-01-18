@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import { Product } from '../models/product'
-import { PostProductRequest } from '../types/controllers'
 import { UserType } from '../types/models'
 import { User } from '../models/user'
 
@@ -22,7 +21,6 @@ export const getProductDetailPage = async (
     req: Request,
     res: Response
 ): Promise<void> => {
-    console.log(req.params.productId)
     res.render('shop/product-detail', {
         title: 'Product Detail | Shops!',
         path: 'shop-product-detail',

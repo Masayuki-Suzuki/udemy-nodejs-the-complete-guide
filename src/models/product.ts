@@ -1,4 +1,4 @@
-import { ObjectId, Db } from 'mongodb'
+import { ObjectId } from 'mongodb'
 import currencyFormatter from '../utils/currencyFormatter'
 import { database } from '../utils/database'
 import { ProductModel, ProductType } from '../types/models'
@@ -10,6 +10,7 @@ export class Product {
     private image_url: string
     private price: number
     private price_fine: string
+    private userId: string
 
     constructor(params: ProductType) {
         this.title = params.title
@@ -17,6 +18,7 @@ export class Product {
         this.image_url = params.image_url
         this.price = params.price
         this.price_fine = currencyFormatter(params.price)
+        this.userId = params.userId
     }
 
     public async create(): Promise<string> {
@@ -25,7 +27,14 @@ export class Product {
 
         if (db) {
             const collection = db.collection('products')
-            const { title, description, image_url, price, price_fine } = this
+            const {
+                title,
+                description,
+                image_url,
+                price,
+                price_fine,
+                userId
+            } = this
 
             await collection
                 .insertOne({
@@ -33,7 +42,8 @@ export class Product {
                     description,
                     image_url,
                     price,
-                    price_fine
+                    price_fine,
+                    userId
                 })
                 .catch(err => {
                     errorMessage = 'insert data error'
@@ -53,7 +63,14 @@ export class Product {
 
         if (db) {
             const collection = db.collection('products')
-            const { title, description, image_url, price, price_fine } = this
+            const {
+                title,
+                description,
+                image_url,
+                price,
+                price_fine,
+                userId
+            } = this
 
             await collection
                 .updateOne(
@@ -64,7 +81,8 @@ export class Product {
                             description,
                             image_url,
                             price,
-                            price_fine
+                            price_fine,
+                            userId
                         }
                     }
                 )

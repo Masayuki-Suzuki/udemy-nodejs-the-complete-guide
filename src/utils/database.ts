@@ -28,7 +28,7 @@ export class Database {
             })
     }
 
-    getDB() {
+    getDB(): Nullable<Db> {
         return this._db
     }
 }
