@@ -1,6 +1,11 @@
 import express from 'express'
 import { PostProductRequest, PromiseController } from 'src/types/controllers'
-import { addItemToCart, getCartPage, PostItemToCart } from '../controller/cart'
+import {
+    addItemToCart,
+    deleteItemFromCart,
+    getCartPage,
+    PostItemToCart
+} from '../controller/cart'
 import {
     getCheckoutPage,
     getIndexPage,
@@ -23,9 +28,9 @@ router.get('/', getIndexPage as PromiseController)
 
 router.post('/cart', addItemToCart as PromiseController<PostItemToCart>)
 
-// router.post(
-//     '/cart/delete-product',
-//     deleteItemFromCart as PromiseController<PostItemToCart>
-// )
+router.post(
+    '/cart/delete-product',
+    deleteItemFromCart as PromiseController<PostItemToCart>
+)
 
 export default router

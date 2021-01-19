@@ -37,7 +37,7 @@ block content
                             td.text-center.p-3
                                 .flex.items-center.h-full
                                     form.m-0(action="/cart/delete-product/" method="post")
-                                        input.hiden(type="hidden" value=product.uuid name="uuid")
+                                        input.hiden(type="hidden" value=product._id name="id")
                                         button.bg-red-600.text-white.font-bold.tracking-wide.px-4.py-3.rounded(type="submit")
                                             | Delete
 

@@ -1,14 +1,22 @@
 import { ObjectId } from 'mongodb'
 import { database } from '../utils/database'
-import { Cart, ProductModel, UserModel, UserType } from '../types/models'
+import {
+    Cart,
+    CartItem,
+    CartItemModel,
+    ProductModel,
+    UserModel,
+    UserType,
+    UserWithCart
+} from '../types/models'
+import { ID } from '../types/utilities'
 
 export class User {
-    readonly _id: string
-    readonly first_name: string
-    readonly last_name: string
-    readonly email: string
-    readonly role: 'admin' | 'customer'
-    private cart: Cart
+    _id: string
+    first_name: string
+    last_name: string
+    email: string
+    role: 'admin' | 'customer'
 
     constructor(params: UserType & { _id?: string }) {
         this.first_name = params.first_name
@@ -16,7 +24,15 @@ export class User {
         this.email = params.email
         this.role = params.role
         this._id = params._id || ''
-        this.cart = { items: [] }
+    }
+
+    static async findById(id: string): Promise<UserModel | null | undefined> {
+        const db = database.getDB()
+        if (db) {
+            return await db
+                .collection('users')
+                .findOne<UserModel>({ _id: new ObjectId(id) })
+        }
     }
 
     async create(): Promise<string> {
@@ -58,44 +74,117 @@ export class User {
         return errorMessage || 'Success'
     }
 
-    static async findById(id: string): Promise<UserModel | null | undefined> {
+    async deleteOne(id: string): Promise<void> {
+        console.log(id)
         const db = database.getDB()
+
         if (db) {
-            return await db
-                .collection('users')
-                .findOne<UserModel>({ _id: new ObjectId(id) })
+            const user = await db.collection('users').findOne<UserWithCart>({
+                _id: new ObjectId(this._id)
+            })
+
+            if (user) {
+                const updatedCartItems = user.cart.items.filter(item => {
+                    console.log(item.productId.toString(), id)
+                    return item.productId.toString() !== id
+                })
+
+                console.log(updatedCartItems)
+
+                const result = await db
+                    .collection('users')
+                    .updateOne(
+                        { _id: new ObjectId(this._id) },
+                        { $set: { cart: { items: updatedCartItems } } }
+                    )
+            }
         }
     }
 
     async addToCart(product: ProductModel): Promise<void> {
-        const cartProductIndex = this.cart.items.findIndex(
-            cp => cp.productId === product._id.toString()
-        )
-
-        let newQuantity = 1
-        const updatedCarItems = [...this.cart.items]
-
-        if (cartProductIndex >= 0) {
-            newQuantity = this.cart.items[cartProductIndex].quantity + 1
-            updatedCarItems[cartProductIndex].quantity = newQuantity
-        } else {
-            updatedCarItems.push({
-                productId: new ObjectId(product._id),
-                quantity: newQuantity
-            })
-        }
-
-        const updatedCart: Cart = { items: updatedCarItems }
         const db = database.getDB()
 
         if (db) {
-            const result = await db.collection('users').updateOne(
-                { _id: new ObjectId(this._id) },
-                // eslint-disable-next-line
-                { $set: { cart: updatedCart } }
-            )
+            const user = await db.collection('users').findOne<UserWithCart>({
+                _id: new ObjectId(this._id)
+            })
 
-            console.info(result)
+            if (user) {
+                let cartProductIndex = -1
+
+                let updatedCarItems: CartItemModel[] = []
+                let newQuantity = 1
+
+                if (user.cart && user.cart.items) {
+                    cartProductIndex = user.cart.items.findIndex(
+                        cp => cp.productId.toString() === product._id.toString()
+                    )
+
+                    updatedCarItems = [...user.cart.items]
+
+                    if (cartProductIndex >= 0) {
+                        newQuantity =
+                            user.cart.items[cartProductIndex].quantity + 1
+                        updatedCarItems[cartProductIndex].quantity = newQuantity
+                    } else {
+                        updatedCarItems.push({
+                            productId: new ObjectId(product._id),
+                            quantity: newQuantity
+                        })
+                    }
+                } else {
+                    updatedCarItems.push({
+                        productId: new ObjectId(product._id),
+                        quantity: 1
+                    })
+                }
+
+                const updatedCart: Cart = { items: updatedCarItems }
+
+                await db
+                    .collection('users')
+                    .updateOne(
+                        { _id: new ObjectId(this._id) },
+                        { $set: { cart: updatedCart } }
+                    )
+            }
         }
+    }
+
+    async getCart(): Promise<CartItem[]> {
+        const db = database.getDB()
+
+        if (db) {
+            let productIds: ID[] = []
+            const quantities: number[] = []
+
+            const user = await db.collection('users').findOne<UserWithCart>({
+                _id: new ObjectId(this._id)
+            })
+
+            if (user) {
+                productIds = user.cart.items.map(
+                    (item): ID => {
+                        quantities.push(item.quantity)
+                        return item.productId
+                    }
+                )
+            } else {
+                return []
+            }
+
+            const items = await db
+                .collection('products')
+                .find<ProductModel>({
+                    _id: { $in: productIds }
+                })
+                .toArray()
+
+            return items.map((item, index) => {
+                return { ...item, quantity: quantities[index] }
+            })
+        }
+
+        return []
     }
 }
