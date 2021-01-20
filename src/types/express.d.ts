@@ -10,8 +10,8 @@ declare global {
         }
     }
 }
-//
-// export interface RequestWithUserModel<body = any>
-//     extends Request<unknown, unknown, body, unknown> {
-//     user: UserModel
-// }
+
+export interface RequestWithUserModel<body = unknown>
+    extends Request<unknown, unknown, body, unknown> {
+    user: User | null
+}

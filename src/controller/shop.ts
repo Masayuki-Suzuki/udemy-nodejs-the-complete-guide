@@ -11,10 +11,31 @@ export const getCheckoutPage = (req: Request, res: Response): void => {
 }
 
 export const getOrdersPage = (req: Request, res: Response): void => {
-    res.render('shop/orders', {
-        title: 'Your Orders | Shops!',
-        path: 'shop-orders'
-    })
+    if (req.user) {
+        req.user
+            .getOrders()
+            .then(orders => {
+                res.render('shop/orders', {
+                    title: 'Your Orders | Shops!',
+                    path: 'shop-orders',
+                    orders
+                })
+            })
+            .catch(err => {
+                console.error(err)
+                res.render('shop/orders', {
+                    title: 'Your Orders | Shops!',
+                    path: 'shop-orders',
+                    orders: []
+                })
+            })
+    } else {
+        res.render('shop/orders', {
+            title: 'Your Orders | Shops!',
+            path: 'shop-orders',
+            orders: []
+        })
+    }
 }
 
 export const getProductDetailPage = async (
@@ -47,4 +68,14 @@ export const getIndexPage = async (
         path: 'shop-index',
         products: await Product.fetchAll()
     })
+}
+
+export const postOrder = async (req: Request, res: Response): Promise<void> => {
+    if (req.user) {
+        await req.user.addOrder().catch(err => {
+            console.error(err)
+            res.redirect('/cart')
+        })
+        res.redirect('/orders')
+    }
 }

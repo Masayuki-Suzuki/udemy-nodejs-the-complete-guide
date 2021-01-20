@@ -1,4 +1,11 @@
 extends ../partials/layout
 
 block content
-    h1 this page will be orders page.
+    if !orders.length
+        .container.mx-auto.pt-10
+        p.text-gray-700.text-2xl.text-center You haven’t ordered any products yet...🥺
+        .text-center.p-4
+            a.text-blue-500.underline(href="/") Back To Products List to order.
+    else
+        .container.mx-auto.pt-10
+            h2.text-gray-700.text-4xl.font-bold.mb-4 Your Orders

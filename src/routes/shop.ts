@@ -10,13 +10,13 @@ import {
     getCheckoutPage,
     getIndexPage,
     getOrdersPage,
-    getProductDetailPage
-    // getProductDetailPage
+    getProductDetailPage,
+    postOrder
 } from '../controller/shop'
 
 const router = express.Router()
 
-router.get('/shop/orders', getOrdersPage)
+router.get('/orders', getOrdersPage)
 router.get(
     '/shop/product/:productId',
     getProductDetailPage as PromiseController<PostProductRequest>
@@ -32,5 +32,7 @@ router.post(
     '/cart/delete-product',
     deleteItemFromCart as PromiseController<PostItemToCart>
 )
+
+router.post('/order-products', postOrder as PromiseController)
 
 export default router

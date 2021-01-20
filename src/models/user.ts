@@ -4,6 +4,7 @@ import {
     Cart,
     CartItem,
     CartItemModel,
+    OrdersModel,
     ProductModel,
     UserModel,
     UserType,
@@ -75,9 +76,7 @@ export class User {
     }
 
     async deleteOne(id: string): Promise<void> {
-        console.log(id)
         const db = database.getDB()
-
         if (db) {
             const user = await db.collection('users').findOne<UserWithCart>({
                 _id: new ObjectId(this._id)
@@ -85,13 +84,10 @@ export class User {
 
             if (user) {
                 const updatedCartItems = user.cart.items.filter(item => {
-                    console.log(item.productId.toString(), id)
-                    return item.productId.toString() !== id
+                    return item.productId.toString() !== id.toString()
                 })
 
-                console.log(updatedCartItems)
-
-                const result = await db
+                await db
                     .collection('users')
                     .updateOne(
                         { _id: new ObjectId(this._id) },
@@ -186,5 +182,55 @@ export class User {
         }
 
         return []
+    }
+
+    async addOrder(): Promise<void> {
+        const db = database.getDB()
+        if (db) {
+            const user = await db.collection('users').findOne<UserWithCart>({
+                _id: new ObjectId(this._id)
+            })
+
+            if (user) {
+                this.getCart()
+                    .then(async products => {
+                        const order = {
+                            items: products,
+                            user: {
+                                _id: new ObjectId(user._id),
+                                first_name: user.first_name,
+                                last_name: user.last_name
+                            }
+                        }
+
+                        await db.collection('orders').insertOne(order)
+                    })
+                    .catch(err => console.error(err))
+
+                await db
+                    .collection('users')
+                    .updateOne(
+                        { _id: new ObjectId(this._id) },
+                        { $set: { cart: { items: [] } } }
+                    )
+            }
+        }
+    }
+
+    async getOrders(): Promise<OrdersModel[]> {
+        const db = database.getDB()
+        if (db) {
+            const orders = await db
+                .collection('orders')
+                .find<OrdersModel>({
+                    'user._id': new ObjectId(this._id)
+                })
+                .toArray()
+
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+            return orders || []
+        } else {
+            return []
+        }
     }
 }

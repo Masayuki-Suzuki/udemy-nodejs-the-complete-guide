@@ -40,3 +40,8 @@ export type CartItemModel = {
     productId: string | number | ObjectId
     quantity: number
 }
+
+export type OrdersModel = {
+    items: CartItem[]
+    user: Pick<UserModel, '_id' | 'first_name' | 'last_name'>
+}
