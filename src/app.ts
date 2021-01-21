@@ -6,6 +6,7 @@ import adminRoutes from './routes/admin'
 import shopRoutes from './routes/shop'
 import errorController from './controller/error'
 import { User } from './models/user'
+import { RequestWithUserModel } from './types/express'
 
 dotenv.config()
 const app = express()
@@ -16,7 +17,7 @@ app.set('views', 'src/views')
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.use(async (req, res, next) => {
+app.use(async (req: RequestWithUserModel, res, next) => {
     const user = await User.findById('600528241f408ff2d4837824')
     if (user) {
         req.user = new User(user)

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { PostDeleteProductReq, PostProductRequest } from '../types/controllers'
-import { Product } from '../models/product'
-import { ProductModel } from '../types/models'
+import MgProduct, { Product } from '../models/product'
+import { ProductModel, ProductType } from '../types/models'
 
 export const getAddProductPage = (req: Request, res: Response): void => {
     res.render('./admin/edit-product', {
@@ -50,9 +50,11 @@ export const postAddProduct = async (
     res: Response
 ): Promise<void> => {
     if (req.user) {
-        const params = { ...req.body, userId: req.user._id } as ProductModel
-        const product = new Product(params)
-        await product.create()
+        const params = { ...req.body, userId: req.user._id } as ProductType
+        const mgProduct = new MgProduct(params)
+        await mgProduct.save()
+        // const product = new Product(params)
+        // await product.create()
         res.redirect('/admin/products')
     } else {
         res.redirect('/')

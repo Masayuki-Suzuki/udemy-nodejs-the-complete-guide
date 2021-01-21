@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import { Product } from '../models/product'
-import { UserType } from '../types/models'
+import MgProduct, { Product } from '../models/product'
+import { ProductModel, UserType } from '../types/models'
 import { User } from '../models/user'
 
 export const getCheckoutPage = (req: Request, res: Response): void => {
@@ -60,13 +60,15 @@ export const getIndexPage = async (
         role: 'admin'
     }
 
+    const products = (await MgProduct.find()) as ProductModel[]
+
     const user = new User(userData)
     await user.create()
 
     res.render('index', {
         title: 'Shops!',
         path: 'shop-index',
-        products: await Product.fetchAll()
+        products
     })
 }
 

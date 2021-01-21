@@ -1,8 +1,15 @@
+import mongoose from 'mongoose'
 import { ObjectId } from 'mongodb'
+import ProductSchema from '../Schemas/Product'
 import currencyFormatter from '../utils/currencyFormatter'
 import { database } from '../utils/database'
 import { ProductModel, ProductType } from '../types/models'
 import { Nullable } from '../types/utilities'
+
+export default mongoose.model<ProductType & mongoose.Document>(
+    'Product',
+    ProductSchema
+)
 
 export class Product {
     private title: string
