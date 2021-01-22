@@ -45,7 +45,9 @@ export const getProductDetailPage = async (
     res.render('shop/product-detail', {
         title: 'Product Detail | Shops!',
         path: 'shop-product-detail',
-        product: await Product.fetchProduct(req.params.productId)
+        product: (await MgProduct.findById(
+            req.params.productId
+        )) as ProductModel
     })
 }
 

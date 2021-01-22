@@ -1,7 +1,9 @@
+import { Document } from 'mongoose'
 import { Request, Response } from 'express'
 import { PostDeleteProductReq, PostProductRequest } from '../types/controllers'
 import MgProduct, { Product } from '../models/product'
 import { ProductModel, ProductType } from '../types/models'
+import currencyFormatter from '../utils/currencyFormatter'
 
 export const getAddProductPage = (req: Request, res: Response): void => {
     res.render('./admin/edit-product', {
@@ -16,7 +18,9 @@ export const getEditProductPage = async (
     res: Response
 ): Promise<void> => {
     const edit = req.query.edit === 'true'
-    const product = await Product.fetchProduct(req.params.productId)
+    const product = (await MgProduct.findById(
+        req.params.productId
+    )) as ProductModel
 
     if (!edit || !product) {
         res.redirect('/admin/products')
@@ -35,24 +39,35 @@ export const getProductPage = async (
     req: Request,
     res: Response
 ): Promise<void> => {
-    const result = await Product.fetchAll()
+    const products = (await MgProduct.find()) as ProductModel[]
 
     res.render('./admin/products', {
         title: 'Product List',
         path: 'products',
         pageTitle: 'Products',
-        products: result
+        products
     })
 }
 
 export const postAddProduct = async (
-    req: Request,
+    req: PostProductRequest,
     res: Response
 ): Promise<void> => {
     if (req.user) {
-        const params = { ...req.body, userId: req.user._id } as ProductType
-        const mgProduct = new MgProduct(params)
-        await mgProduct.save()
+        // const params = {
+        //     ...req.body,
+        //     price_fine: currencyFormatter(req.body.price),
+        //     userId: new ObjectId(req.user._id)
+        // } as ProductType
+        await MgProduct.create({
+            title: req.body.title,
+            description: req.body.description,
+            image_url: req.body.image_url,
+            price: req.body.price,
+            price_fine: currencyFormatter(req.body.price),
+            userId: req.user._id
+        })
+        // await mgProduct.save()
         // const product = new Product(params)
         // await product.create()
         res.redirect('/admin/products')
@@ -66,9 +81,15 @@ export const postEditProduct = async (
     res: Response
 ): Promise<void> => {
     if (req.user) {
-        const params = { ...req.body, userId: req.user._id } as ProductModel
-        const product = new Product(params)
-        await product.update(req.body._id)
+        const product = (await MgProduct.findById(
+            req.body._id
+        )) as ProductModel & Document
+        product.title = req.body.title
+        product.description = req.body.description
+        product.image_url = req.body.image_url
+        product.price = req.body.price
+        product.price_fine = currencyFormatter(req.body.price)
+        await product.save()
 
         res.redirect('/admin/products')
     } else {
@@ -80,10 +101,7 @@ export const postDeleteProduct = async (
     req: PostDeleteProductReq,
     res: Response
 ): Promise<void> => {
-    const result = await Product.delete(req.body.id)
-
-    console.info(result)
-
+    await MgProduct.findByIdAndRemove(req.body.id)
     res.redirect('/admin/products')
 }
 
