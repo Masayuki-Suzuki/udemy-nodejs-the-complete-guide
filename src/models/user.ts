@@ -1,3 +1,4 @@
+import { model, Document } from 'mongoose'
 import { ObjectId } from 'mongodb'
 import { database } from '../utils/database'
 import {
@@ -11,6 +12,9 @@ import {
     UserWithCart
 } from '../types/models'
 import { ID } from '../types/utilities'
+import UserSchema from '../Schemas/User'
+
+export default model<UserType & Document>('User', UserSchema)
 
 export class User {
     _id: string

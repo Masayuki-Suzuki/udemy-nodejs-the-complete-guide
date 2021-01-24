@@ -4,6 +4,7 @@ import { PostDeleteProductReq, PostProductRequest } from '../types/controllers'
 import MgProduct, { Product } from '../models/product'
 import { ProductModel, ProductType } from '../types/models'
 import currencyFormatter from '../utils/currencyFormatter'
+import { RequestWithUserModel } from '../types/express'
 
 export const getAddProductPage = (req: Request, res: Response): void => {
     res.render('./admin/edit-product', {

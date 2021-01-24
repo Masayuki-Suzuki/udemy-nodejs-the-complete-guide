@@ -6,12 +6,12 @@ import { User } from '../models/user'
 declare global {
     namespace Express {
         export interface Request {
-            user: User | null
+            user: UserWithCart | null
         }
     }
 }
 
 export interface RequestWithUserModel<body = unknown>
     extends Request<unknown, unknown, body, unknown> {
-    user: User | null
+    user: UserWithCart | null
 }
