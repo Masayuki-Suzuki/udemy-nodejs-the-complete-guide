@@ -1,13 +1,12 @@
 import path from 'path'
 import dotenv from 'dotenv'
-import express, { Request } from 'express'
-import { Document } from 'mongoose'
+import express from 'express'
 import bodyParser from 'body-parser'
 import adminRoutes from './routes/admin'
 import shopRoutes from './routes/shop'
 import errorController from './controller/error'
 import MgUser from './models/user'
-import { UserWithCart } from './types/models'
+import { DocumentUser, UserWithCart } from './types/models'
 import { RequestWithUserModel } from './types/express'
 
 dotenv.config()
@@ -24,17 +23,19 @@ app.use(async (req: RequestWithUserModel, res, next) => {
         '600528241f408ff2d4837824'
     )) as UserWithCart
 
-    console.log(user)
-
     if (!user) {
         req.user = new MgUser({
             first_name: 'Masayuki',
             last_name: 'Suzuki',
             email: 'example@example.com',
-            role: 'admin'
+            role: 'admin',
+            cart: {
+                items: []
+            }
         })
     } else {
-        req.user = user
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        req.user = user as DocumentUser
     }
     next()
 })

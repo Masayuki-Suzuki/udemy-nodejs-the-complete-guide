@@ -1,6 +1,7 @@
-import { Schema } from 'mongoose'
+import { Schema, Document } from 'mongoose'
+import { UserWithCart } from '../types/models'
 
-const userSchema = new Schema({
+const userSchema = new Schema<UserWithCart & Document>({
     first_name: {
         type: String,
         required: true
@@ -21,7 +22,8 @@ const userSchema = new Schema({
         items: [
             {
                 productId: {
-                    type: Schema.Types.ObjectId
+                    type: Schema.Types.ObjectId,
+                    ref: 'Product'
                 },
                 quantity: {
                     type: Number,

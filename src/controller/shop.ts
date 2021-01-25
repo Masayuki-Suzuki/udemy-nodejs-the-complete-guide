@@ -12,23 +12,23 @@ export const getCheckoutPage = (req: Request, res: Response): void => {
 
 export const getOrdersPage = (req: Request, res: Response): void => {
     if (req.user) {
-        req.user
-            .getOrders()
-            .then(orders => {
-                res.render('shop/orders', {
-                    title: 'Your Orders | Shops!',
-                    path: 'shop-orders',
-                    orders
-                })
-            })
-            .catch(err => {
-                console.error(err)
-                res.render('shop/orders', {
-                    title: 'Your Orders | Shops!',
-                    path: 'shop-orders',
-                    orders: []
-                })
-            })
+        // req.user
+        //     .getOrders()
+        //     .then(orders => {
+        //         res.render('shop/orders', {
+        //             title: 'Your Orders | Shops!',
+        //             path: 'shop-orders',
+        //             orders
+        //         })
+        //     })
+        //     .catch(err => {
+        //         console.error(err)
+        //         res.render('shop/orders', {
+        //             title: 'Your Orders | Shops!',
+        //             path: 'shop-orders',
+        //             orders: []
+        //         })
+        //     })
     } else {
         res.render('shop/orders', {
             title: 'Your Orders | Shops!',
@@ -74,12 +74,12 @@ export const getIndexPage = async (
     })
 }
 
-export const postOrder = async (req: Request, res: Response): Promise<void> => {
+export const postOrder = (req: Request, res: Response): void => {
     if (req.user) {
-        await req.user.addOrder().catch(err => {
-            console.error(err)
-            res.redirect('/cart')
-        })
+        // await req.user.addOrder().catch(err => {
+        //     console.error(err)
+        //     res.redirect('/cart')
+        // })
         res.redirect('/orders')
     }
 }

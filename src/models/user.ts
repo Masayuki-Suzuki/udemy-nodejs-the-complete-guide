@@ -14,7 +14,29 @@ import {
 import { ID } from '../types/utilities'
 import UserSchema from '../Schemas/User'
 
-export default model<UserType & Document>('User', UserSchema)
+UserSchema.methods.addToCart = function (product: ProductModel) {
+    const cartProductIndex = this.cart.items.findIndex(
+        cp => cp.productId.toString() === product._id.toString()
+    )
+
+    const updatedCarItems = [...this.cart.items]
+    let newQuantity = 1
+
+    if (cartProductIndex >= 0) {
+        newQuantity = this.cart.items[cartProductIndex].quantity + 1
+        updatedCarItems[cartProductIndex].quantity = newQuantity
+    } else {
+        updatedCarItems.push({
+            productId: product._id,
+            quantity: newQuantity
+        })
+    }
+
+    this.cart = { items: updatedCarItems }
+    void this.save()
+}
+
+export default model<UserWithCart & Document>('User', UserSchema)
 
 export class User {
     _id: string

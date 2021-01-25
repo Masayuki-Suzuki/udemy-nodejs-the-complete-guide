@@ -1,17 +1,15 @@
 import Express, { Request } from 'express'
-import { UserModel, UserWithCart } from './models'
-import { Nullable } from './utilities'
-import { User } from '../models/user'
+import { DocumentUser } from './models'
 
 declare global {
     namespace Express {
         export interface Request {
-            user: UserWithCart | null
+            user: DocumentUser | null
         }
     }
 }
 
 export interface RequestWithUserModel<body = unknown>
     extends Request<unknown, unknown, body, unknown> {
-    user: UserWithCart | null
+    user: DocumentUser | null
 }

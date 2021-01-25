@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb'
+import { Document } from 'mongoose'
 
 export type ProductType = {
     title: string
@@ -31,6 +32,11 @@ export type UserModel = {
 export type UserWithCart = {
     cart: Cart
 } & UserModel
+
+export type DocumentUser = Document &
+    UserWithCart & {
+        addToCart?: (product: ProductModel) => Promise<void>
+    }
 
 export type Cart = {
     items: CartItemModel[]
