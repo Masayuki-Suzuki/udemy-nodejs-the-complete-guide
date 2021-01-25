@@ -24,14 +24,14 @@ block content
                         tr.border-b
                             td.text-center.p-5.min-w-100px
                                 img.m-auto(
-                                    src=product.image_url
+                                    src=product.productId.image_url
                                     width="64"
                                 )
 
-                            td.text-center.p-3= product.title
+                            td.text-center.p-3= product.productId.title
                             //td.text-center.p-3= product.description
-                            td.text-center.p-3= product.price_fine
-                            td.text-center.p-3= product.quantity
+                            td.text-center.p-3= product.productId.price_fine
+                            td.text-center.p-3= product.productId.quantity
                             td.text-center.p-3
                                 .flex.items-center.h-full
                                     form.m-0(action="/cart/delete-product/" method="post")

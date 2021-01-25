@@ -36,6 +36,7 @@ export type UserWithCart = {
 export type DocumentUser = Document &
     UserWithCart & {
         addToCart?: (product: ProductModel) => Promise<void>
+        getCartItems?: () => Promise<ProductModel[]>
     }
 
 export type Cart = {

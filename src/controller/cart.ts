@@ -1,37 +1,33 @@
 import { Request, Response } from 'express'
 import { Product } from '../models/product'
 import { RequestWithUserModel } from '../types/express'
+import { User } from '../models/user'
 
 export type PostItemToCart = RequestWithUserModel<{ id: string }>
 
-export const getCartPage = (req: Request, res: Response): void => {
-    // if (req.user) {
-    //     req.user
-    //         .getCart()
-    //         .then(products => {
-    //             res.render('shop/cart', {
-    //                 title: 'Your Shopping Cart | Shops!',
-    //                 path: 'shop-cart',
-    //                 products: products || [],
-    //                 totalPrice: 0
-    //             })
-    //         })
-    //         .catch(err => {
-    //             console.error(err)
-    //             res.render('shop/cart', {
-    //                 title: 'Your Shopping Cart | Shops!',
-    //                 path: 'shop-cart',
-    //                 products: [],
-    //                 totalPrice: 0
-    //             })
-    //         })
-    // }
-    res.render('shop/cart', {
-        title: 'Your Shopping Cart | Shops!',
-        path: 'shop-cart',
-        products: [],
-        totalPrice: 0
-    })
+export const getCartPage = async (
+    req: RequestWithUserModel,
+    res: Response
+): Promise<void> => {
+    if (req.user) {
+        const {
+            cart: { items }
+        } = await req.user.populate('cart.items.productId').execPopulate()
+
+        res.render('shop/cart', {
+            title: 'Your Shopping Cart | Shops!',
+            path: 'shop-cart',
+            products: items,
+            totalPrice: 0
+        })
+    } else {
+        res.render('shop/cart', {
+            title: 'Your Shopping Cart | Shops!',
+            path: 'shop-cart',
+            products: [],
+            totalPrice: 0
+        })
+    }
 }
 
 export const addItemToCart = async (
