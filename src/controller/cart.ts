@@ -1,7 +1,7 @@
-import { Request, Response } from 'express'
-import { Product } from '../models/product'
+import { Response } from 'express'
+import Product from '../models/product'
 import { RequestWithUserModel } from '../types/express'
-import { User } from '../models/user'
+import { ProductModel } from '../types/models'
 
 export type PostItemToCart = RequestWithUserModel<{ id: string }>
 
@@ -35,7 +35,7 @@ export const addItemToCart = async (
     res: Response
 ): Promise<void> => {
     const prodId = req.body.id
-    const product = await Product.fetchProduct(prodId)
+    const product = (await Product.findById(prodId)) as ProductModel
     if (req.user && product && req.user.addToCart) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         await req.user.addToCart(product)
@@ -47,16 +47,10 @@ export const deleteItemFromCart = (
     req: PostItemToCart,
     res: Response
 ): void => {
-    if (req.user) {
-        // req.user
-        //     .deleteOne(req.body.id)
-        //     .then(() => {
-        //         res.redirect('/cart')
-        //     })
-        //     .catch(err => {
-        //         console.error(err)
-        //         res.redirect('/cart')
-        //     })
+    if (req.user && req.user.removeCartItem) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        void req.user.removeCartItem(req.body.id)
+        res.redirect('/cart')
     } else {
         res.redirect('/cart')
     }

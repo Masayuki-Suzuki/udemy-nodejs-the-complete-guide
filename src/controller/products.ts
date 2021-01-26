@@ -1,10 +1,9 @@
 import { Document } from 'mongoose'
 import { Request, Response } from 'express'
 import { PostDeleteProductReq, PostProductRequest } from '../types/controllers'
-import MgProduct, { Product } from '../models/product'
-import { ProductModel, ProductType } from '../types/models'
+import Product from '../models/product'
+import { ProductModel } from '../types/models'
 import currencyFormatter from '../utils/currencyFormatter'
-// import { RequestWithUserModel } from '../types/express'
 
 export const getAddProductPage = (req: Request, res: Response): void => {
     res.render('./admin/edit-product', {
@@ -19,7 +18,7 @@ export const getEditProductPage = async (
     res: Response
 ): Promise<void> => {
     const edit = req.query.edit === 'true'
-    const product = (await MgProduct.findById(
+    const product = (await Product.findById(
         req.params.productId
     )) as ProductModel
 
@@ -40,7 +39,7 @@ export const getProductPage = async (
     req: Request,
     res: Response
 ): Promise<void> => {
-    const products = (await MgProduct.find()) as ProductModel[]
+    const products = (await Product.find()) as ProductModel[]
 
     res.render('./admin/products', {
         title: 'Product List',
@@ -60,7 +59,7 @@ export const postAddProduct = async (
         //     price_fine: currencyFormatter(req.body.price),
         //     userId: new ObjectId(req.user._id)
         // } as ProductType
-        await MgProduct.create({
+        await Product.create({
             title: req.body.title,
             description: req.body.description,
             image_url: req.body.image_url,
@@ -82,9 +81,8 @@ export const postEditProduct = async (
     res: Response
 ): Promise<void> => {
     if (req.user) {
-        const product = (await MgProduct.findById(
-            req.body._id
-        )) as ProductModel & Document
+        const product = (await Product.findById(req.body._id)) as ProductModel &
+            Document
         product.title = req.body.title
         product.description = req.body.description
         product.image_url = req.body.image_url
@@ -102,7 +100,7 @@ export const postDeleteProduct = async (
     req: PostDeleteProductReq,
     res: Response
 ): Promise<void> => {
-    await MgProduct.findByIdAndRemove(req.body.id)
+    await Product.findByIdAndRemove(req.body.id)
     res.redirect('/admin/products')
 }
 

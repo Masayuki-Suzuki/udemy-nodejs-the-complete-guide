@@ -36,7 +36,7 @@ export type UserWithCart = {
 export type DocumentUser = Document &
     UserWithCart & {
         addToCart?: (product: ProductModel) => Promise<void>
-        getCartItems?: () => Promise<ProductModel[]>
+        removeCartItem?: (productId: string) => Promise<void>
     }
 
 export type Cart = {

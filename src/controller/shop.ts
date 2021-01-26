@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
-import MgProduct, { Product } from '../models/product'
-import { ProductModel, UserType } from '../types/models'
-import { User } from '../models/user'
+import Product from '../models/product'
+import { ProductModel } from '../types/models'
 
 export const getCheckoutPage = (req: Request, res: Response): void => {
     res.render('shop/checkout', {
@@ -45,9 +44,7 @@ export const getProductDetailPage = async (
     res.render('shop/product-detail', {
         title: 'Product Detail | Shops!',
         path: 'shop-product-detail',
-        product: (await MgProduct.findById(
-            req.params.productId
-        )) as ProductModel
+        product: (await Product.findById(req.params.productId)) as ProductModel
     })
 }
 
@@ -55,17 +52,7 @@ export const getIndexPage = async (
     req: Request,
     res: Response
 ): Promise<void> => {
-    const userData: UserType = {
-        first_name: 'Masayuki',
-        last_name: 'Suzuki',
-        email: 'm.suzuki.fp@gmail.com',
-        role: 'admin'
-    }
-
-    const products = (await MgProduct.find()) as ProductModel[]
-
-    const user = new User(userData)
-    await user.create()
+    const products = (await Product.find()) as ProductModel[]
 
     res.render('index', {
         title: 'Shops!',

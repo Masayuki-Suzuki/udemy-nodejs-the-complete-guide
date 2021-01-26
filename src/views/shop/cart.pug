@@ -14,7 +14,6 @@ block content
                     tr.border-b-2
                         td.text-center.py-4 Image
                         td.text-center.py-4 Product Name
-                        //td.text-center.py-4 Description
                         td.text-center.py-4 Price
                         td.text-center.py-4 Quantity
                         td.text-center.py-4
@@ -29,13 +28,12 @@ block content
                                 )
 
                             td.text-center.p-3= product.productId.title
-                            //td.text-center.p-3= product.description
                             td.text-center.p-3= product.productId.price_fine
-                            td.text-center.p-3= product.productId.quantity
+                            td.text-center.p-3= product.quantity
                             td.text-center.p-3
                                 .flex.items-center.h-full
                                     form.m-0(action="/cart/delete-product/" method="post")
-                                        input.hidden(type="hidden" value=product._id name="id")
+                                        input.hidden(type="hidden" value=product.productId._id name="id")
                                         button.bg-red-600.text-white.font-bold.tracking-wide.px-4.py-3.rounded(type="submit")
                                             | Delete
 
