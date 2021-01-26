@@ -16,7 +16,8 @@ export type ProductModel = {
 
 export type CartItem = {
     quantity: number
-} & ProductModel
+    productId: ProductModel
+}
 
 export type UserType = {
     first_name: string
@@ -49,6 +50,11 @@ export type CartItemModel = {
 }
 
 export type OrdersModel = {
-    items: CartItem[]
+    products: CartItem[]
     user: Pick<UserModel, '_id' | 'first_name' | 'last_name'>
+}
+
+export type OrderItem = {
+    product: ProductModel
+    quantity: number
 }
