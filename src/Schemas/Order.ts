@@ -5,7 +5,7 @@ const Schema = mongoose.Schema
 export default new Schema({
     products: [
         {
-            productData: {
+            product: {
                 type: Object,
                 required: true
             },
@@ -29,5 +29,9 @@ export default new Schema({
             type: String,
             required: true
         }
+    },
+    createdAt: {
+        type: String,
+        required: true
     }
 })

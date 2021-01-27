@@ -38,6 +38,7 @@ export type DocumentUser = Document &
     UserWithCart & {
         addToCart?: (product: ProductModel) => Promise<void>
         removeCartItem?: (productId: string) => Promise<void>
+        clearCart?: () => Promise<void>
     }
 
 export type Cart = {
@@ -45,16 +46,21 @@ export type Cart = {
 }
 
 export type CartItemModel = {
-    productId: string | number | ObjectId
+    productId: string | number | ObjectId | { _doc: ProductModel }
     quantity: number
 }
 
 export type OrdersModel = {
     products: CartItem[]
     user: Pick<UserModel, '_id' | 'first_name' | 'last_name'>
+    createdAt: string
 }
 
 export type OrderItem = {
     product: ProductModel
     quantity: number
 }
+
+export type OrderProduct = {
+    create
+} & ProductModel
