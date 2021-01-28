@@ -4,7 +4,7 @@ module.exports = {
     theme: {
         extend: {
             maxWidth: {
-                'order-image': '80px'
+                'order-image': '70px'
             }
         }
     },

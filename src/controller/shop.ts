@@ -19,10 +19,11 @@ export const getOrdersPage = async (
     res: Response
 ): Promise<void> => {
     if (req.user) {
+        // eslint-disable-next-line
         const orders = (await Order.find({
             // eslint-disable-next-line
             'user.userId': req.user._id
-        })) as OrdersModel
+        }).sort({ _id: -1 })) as OrdersModel[]
 
         res.render('shop/orders', {
             title: 'Your Orders | Shops!',
