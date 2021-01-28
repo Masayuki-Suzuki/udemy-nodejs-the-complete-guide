@@ -16,7 +16,7 @@ import {
 
 const router = express.Router()
 
-router.get('/orders', getOrdersPage)
+router.get('/orders', getOrdersPage as PromiseController)
 router.get(
     '/shop/product/:productId',
     getProductDetailPage as PromiseController<PostProductRequest>

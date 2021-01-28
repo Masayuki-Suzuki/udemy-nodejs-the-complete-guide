@@ -3,6 +3,9 @@ import { format } from 'date-fns'
 import Product from '../models/product'
 import { OrdersModel, ProductModel } from '../types/models'
 import Order from '../models/Order'
+import { PostOrderRequest } from '../types/controllers'
+import requestHasUser from '../utils/requestHasUser'
+import currencyFormatter from '../utils/currencyFormatter'
 
 export const getCheckoutPage = (req: Request, res: Response): void => {
     res.render('shop/checkout', {
@@ -59,7 +62,12 @@ export const getIndexPage = async (
     })
 }
 
-export const postOrder = async (req: Request, res: Response): Promise<void> => {
+export const postOrder = async (
+    req: PostOrderRequest,
+    res: Response
+): Promise<void> => {
+    requestHasUser(req)
+
     if (req.user) {
         // eslint-disable-next-line
         const {
@@ -82,8 +90,6 @@ export const postOrder = async (req: Request, res: Response): Promise<void> => {
             }
         })
 
-        console.log(format(new Date(), 'MMMM dd, yyyy'))
-
         // eslint-disable-next-line
         await Order.create({
             user: {
@@ -95,6 +101,7 @@ export const postOrder = async (req: Request, res: Response): Promise<void> => {
                 userId: req.user
             },
             products,
+            totalPrice: currencyFormatter(req.body.totalPrice),
             createdAt: format(new Date(), 'MMMM dd, yyyy')
         })
 

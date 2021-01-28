@@ -10,10 +10,23 @@ block content
         .container.mx-auto.pt-10.max-w-7xl.px-4(class="sm:px-6 lg:px-8")
             h2.text-gray-700.text-4xl.font-bold.mb-4 Your Orders
 
-            each order in orders
-                article.order-card
-                    .order-header.flex.rounded-t.bg-gray-100.border-t.border-r.border-l.border-gray-300.p-4
-                        .date
-                            p.text-sm.text-gray-500.mx-0.mt-0.mb-1.font-light Order Placed:
-                            p.text-sm.text-gray-500.mx-0.mt-0.mb-1.font-semibold= order.createdAt
+            each order, index in orders
+                article.order-card(class=`${ index > 0 ? 'mt-10' : ''}`)
+                    .order-header.flex.rounded-t.bg-gray-100.border-t.border-r.border-l.border-gray-300.p-4.items-center
+                        .date.mr-8
+                            p.text-xs.text-gray-600.mx-0.mt-0.mb-1.font-light.uppercase Order Placed:
+                            p.text-sm.text-gray-600.mx-0.mt-0.mb-0= order.createdAt
+
+                        .total
+                            p.text-xs.text-gray-600.mx-0.mt-0.mb-1.font-light.uppercase Total:
+                            p.text-sm.text-gray-600.mx-0.mt-0.mb-0= order.totalPrice
+
+                        .order-id.my-0.mr-0.ml-auto
+                            p.text-xs.text-gray-600.mx-0.mt-0.mb-0.font-light ORDER # #{order._id}
+
+                    .order-body.bg-white.border-l.border-r.border-b.rounded-b.border-gray-300
+                        each product in order.products
+                            .product.p-10
+                                .product-image.max-w-order-image
+                                    img(src=product.product.image_url)
 

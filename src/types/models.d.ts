@@ -55,12 +55,3 @@ export type OrdersModel = {
     user: Pick<UserModel, '_id' | 'first_name' | 'last_name'>
     createdAt: string
 }
-
-export type OrderItem = {
-    product: ProductModel
-    quantity: number
-}
-
-export type OrderProduct = {
-    create
-} & ProductModel

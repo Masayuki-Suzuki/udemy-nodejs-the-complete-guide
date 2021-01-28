@@ -1,15 +1,8 @@
 import { Response } from 'express'
-import { Document } from 'mongoose'
 import Product from '../models/product'
 import { RequestWithUserModel } from '../types/express'
-import {
-    CartItem,
-    OrderItem,
-    OrdersModel,
-    ProductModel,
-    UserWithCart
-} from '../types/models'
-import Order from '../Schemas/Order'
+import { ProductModel } from '../types/models'
+import currencyFormatter from '../utils/currencyFormatter'
 
 export type PostItemToCart = RequestWithUserModel<{ id: string }>
 
@@ -22,11 +15,21 @@ export const getCartPage = async (
             cart: { items }
         } = await req.user.populate('cart.items.productId').execPopulate()
 
+        let totalPrice = 0
+
+        items.forEach(item => {
+            if (typeof item.productId === 'object') {
+                // eslint-disable-next-line
+                totalPrice += item.quantity * (item.productId as any).price
+            }
+        })
+
         res.render('shop/cart', {
             title: 'Your Shopping Cart | Shops!',
             path: 'shop-cart',
             products: items,
-            totalPrice: 0
+            totalPrice,
+            totalPriceFine: currencyFormatter(totalPrice)
         })
     } else {
         res.render('shop/cart', {

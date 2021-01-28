@@ -57,7 +57,7 @@ mongoose
     .then(() => {
         console.info('Mongoose: connected DB.')
         app.listen(4000, () => {
-            console.log('Server started.')
+            console.info('Server started.')
         })
     })
     .catch(err => {

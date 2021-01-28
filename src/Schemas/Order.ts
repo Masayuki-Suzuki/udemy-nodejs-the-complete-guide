@@ -30,6 +30,10 @@ export default new Schema({
             required: true
         }
     },
+    totalPrice: {
+        type: String,
+        required: true
+    },
     createdAt: {
         type: String,
         required: true
