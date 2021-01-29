@@ -9,6 +9,7 @@ import {
 import {
     getCheckoutPage,
     getIndexPage,
+    getLoginPage,
     getOrdersPage,
     getProductDetailPage,
     postOrder
@@ -24,6 +25,7 @@ router.get(
 
 router.get('/cart', getCartPage as PromiseController)
 router.get('/cart/checkout', getCheckoutPage)
+router.get('/login', getLoginPage as PromiseController)
 router.get('/', getIndexPage as PromiseController)
 
 router.post('/cart', addItemToCart as PromiseController<PostItemToCart>)
