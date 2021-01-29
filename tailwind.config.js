@@ -5,6 +5,9 @@ module.exports = {
         extend: {
             maxWidth: {
                 'order-image': '70px'
+            },
+            height: {
+                'full-content': 'calc(100% - 64px)'
             }
         }
     },
