@@ -7,10 +7,6 @@ import { PostOrderRequest } from '../types/controllers'
 import requestHasUser from '../utils/requestHasUser'
 import currencyFormatter from '../utils/currencyFormatter'
 
-export const getLoginPage = (req: Request, res: Response): void => {
-    res.render('shop/login', { title: 'Log In | Shops!' })
-}
-
 export const getCheckoutPage = (req: Request, res: Response): void => {
     res.render('shop/checkout', {
         title: 'Check Out | Shops!',

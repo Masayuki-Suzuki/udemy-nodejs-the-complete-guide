@@ -9,11 +9,11 @@ import {
 import {
     getCheckoutPage,
     getIndexPage,
-    getLoginPage,
     getOrdersPage,
     getProductDetailPage,
     postOrder
 } from '../controller/shop'
+import { getLoginPage, postLogin } from '../controller/auth'
 
 const router = express.Router()
 
@@ -36,5 +36,6 @@ router.post(
 )
 
 router.post('/order-products', postOrder as PromiseController)
+router.post('/login', postLogin)
 
 export default router
