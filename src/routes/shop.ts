@@ -36,6 +36,6 @@ router.post(
 )
 
 router.post('/order-products', postOrder as PromiseController)
-router.post('/login', postLogin)
+router.post('/login', postLogin as PromiseController)
 
 export default router

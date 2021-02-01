@@ -3,6 +3,8 @@ import dotenv from 'dotenv'
 import express from 'express'
 import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
+import session from 'express-session'
+import ConnectMongoDbSession from 'connect-mongodb-session'
 import adminRoutes from './routes/admin'
 import shopRoutes from './routes/shop'
 import errorController from './controller/error'
@@ -12,11 +14,25 @@ import { RequestWithUserModel } from './types/express'
 
 dotenv.config()
 const app = express()
+const MongoDbStore = ConnectMongoDbSession(session)
+const store = new MongoDbStore({
+    uri: process.env.MONGO_URL as string,
+    collection: 'sessions',
+    databaseName: process.env.MDB_NAME as string
+})
 
 app.set('view engine', 'pug')
 app.set('views', 'src/views')
 
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(
+    session({
+        secret: 'My Secret',
+        resave: false,
+        saveUninitialized: false,
+        store
+    })
+)
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use(async (req: RequestWithUserModel, res, next) => {
