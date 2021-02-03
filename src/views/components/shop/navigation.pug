@@ -8,12 +8,28 @@ header
                         span.text-white.font-bold.text-lg.tracking-wide.pl-2 Shops!
 
                     .flex.items-center
-                        a.font-bold.py-3.px-4.rounded(
-                            href="/orders"
-                            class=(path === "shop-orders" ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white")
-                        )
-                            | Orders
-                        a.ml-4(href="/cart/")
-                            i.fas.fa-shopping-basket.text-2xl.text-white
+                        if user
+                            form.flex.items-center.my-0.ml-4(action="/logout" method="post")
+                                button.font-bold.py-3.px-4.rounded(
+                                    class=(path === "shop-orders" ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white")
+                                )
+                                    | Log Out
+
+                            a.font-bold.py-3.px-4.rounded(
+                                href="/orders"
+                                class=(path === "shop-orders" ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white")
+                            )
+                                | Orders
+
+                            a.ml-4(href="/cart/")
+                                i.fas.fa-shopping-basket.text-2xl.text-white
+
+                        else
+                            a.font-bold.py-3.px-4.rounded(
+                                href="/login"
+                                class=(path === "shop-orders" ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white")
+                            )
+                                | Login
+
 
 

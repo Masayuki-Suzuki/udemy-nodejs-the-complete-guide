@@ -8,9 +8,6 @@ import ConnectMongoDbSession from 'connect-mongodb-session'
 import adminRoutes from './routes/admin'
 import shopRoutes from './routes/shop'
 import errorController from './controller/error'
-import User from './models/user'
-import { DocumentUser, UserWithCart } from './types/models'
-import { RequestWithUserModel } from './types/express'
 
 dotenv.config()
 const app = express()
@@ -35,24 +32,17 @@ app.use(
 )
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.use(async (req: RequestWithUserModel, res, next) => {
-    const user = (await User.findById(
-        '600528241f408ff2d4837824'
-    )) as UserWithCart
-
-    if (!user) {
-        req.user = new User({
-            first_name: 'Masayuki',
-            last_name: 'Suzuki',
-            email: 'example@example.com',
-            role: 'admin',
-            cart: {
-                items: []
-            }
-        })
+app.use('/admin', (req, res, next) => {
+    if (req.session.user) {
+        next()
     } else {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        req.user = user as DocumentUser
+        res.redirect('/')
+    }
+})
+
+app.use((req, res, next) => {
+    if (req.session.user) {
+        res.locals.user = req.session.user
     }
     next()
 })

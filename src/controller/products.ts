@@ -53,11 +53,11 @@ export const postAddProduct = async (
     req: PostProductRequest,
     res: Response
 ): Promise<void> => {
-    if (req.user) {
+    if (req.session.user) {
         // const params = {
         //     ...req.body,
         //     price_fine: currencyFormatter(req.body.price),
-        //     userId: new ObjectId(req.user._id)
+        //     userId: new ObjectId(req.session.user._id)
         // } as ProductType
         await Product.create({
             title: req.body.title,
@@ -65,7 +65,7 @@ export const postAddProduct = async (
             image_url: req.body.image_url,
             price: req.body.price,
             price_fine: currencyFormatter(req.body.price),
-            userId: req.user
+            userId: req.session.user
         })
         // await mgProduct.save()
         // const product = new Product(params)
@@ -80,7 +80,7 @@ export const postEditProduct = async (
     req: PostProductRequest,
     res: Response
 ): Promise<void> => {
-    if (req.user) {
+    if (req.session.user) {
         const product = (await Product.findById(req.body._id)) as ProductModel &
             Document
         product.title = req.body.title

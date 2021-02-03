@@ -1,26 +1,34 @@
-import { Response } from 'express'
+import { Request, Response } from 'express'
 import Product from '../models/product'
-import { RequestWithUserModel } from '../types/express'
+import { RequestWithCustomSession } from '../types/express'
 import { ProductModel } from '../types/models'
 import currencyFormatter from '../utils/currencyFormatter'
 
-export type PostItemToCart = RequestWithUserModel<{ id: string }>
+export type PostItemToCart = Request<unknown, unknown, { id: string }>
+
+const isProductItem = (val: any): val is ProductModel => {
+    if (typeof val.productId === 'object' && '_id' in val && 'title' in val) {
+        return true
+    }
+    return false
+}
 
 export const getCartPage = async (
-    req: RequestWithUserModel,
+    req: RequestWithCustomSession,
     res: Response
 ): Promise<void> => {
-    if (req.user) {
+    if (req.session.user) {
         const {
             cart: { items }
-        } = await req.user.populate('cart.items.productId').execPopulate()
+        } = await req.session.user
+            .populate('cart.items.productId')
+            .execPopulate()
 
         let totalPrice = 0
 
         items.forEach(item => {
-            if (typeof item.productId === 'object') {
-                // eslint-disable-next-line
-                totalPrice += item.quantity * (item.productId as any).price
+            if (isProductItem(item.productId)) {
+                totalPrice += item.quantity * item.productId.price
             }
         })
 
@@ -47,9 +55,9 @@ export const addItemToCart = async (
 ): Promise<void> => {
     const prodId = req.body.id
     const product = (await Product.findById(prodId)) as ProductModel
-    if (req.user && product && req.user.addToCart) {
+    if (req.session.user && product && req.session.user.addToCart) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        await req.user.addToCart(product)
+        await req.session.user.addToCart(product)
     }
     res.redirect('/cart')
 }
@@ -58,9 +66,9 @@ export const deleteItemFromCart = (
     req: PostItemToCart,
     res: Response
 ): void => {
-    if (req.user && req.user.removeCartItem) {
+    if (req.session.user && req.session.user.removeCartItem) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        void req.user.removeCartItem(req.body.id)
+        void req.session.user.removeCartItem(req.body.id)
         res.redirect('/cart')
     } else {
         res.redirect('/cart')

@@ -42,6 +42,8 @@ module.exports = {
         '@typescript-eslint/no-var-requires': 0,
         '@typescript-eslint/prefer-regexp-exec': 0,
         '@typescript-eslint/no-unsafe-member-access': 0,
+        '@typescript-eslint/no-unsafe-call': 0,
+        '@typescript-eslint/no-unsafe-assignment': 0,
         'arrow-parens': [2, 'as-needed'],
         'brace-style': [0, 'never'],
         'comma-dangle': [2, 'never'],

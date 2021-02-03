@@ -6,20 +6,26 @@ interface ICustomSessionType extends Partial<SessionData> {
     isLoggedIn: boolean
 }
 
+declare module 'express-session' {
+    interface SessionData {
+        isLoggedIn: boolean
+        user: DocumentUser | null
+    }
+}
+
 declare global {
     namespace Express {
         export interface Request {
-            user: DocumentUser | null
-            isLoggedIn: boolean
+            session: Session & Partial<SessionData>
         }
     }
 }
 
-export interface RequestWithUserModel<body = unknown>
-    extends Request<unknown, unknown, body, unknown> {
-    user: DocumentUser | null
-}
-
 export type RequestWithCustomSession<body = unknown> = {
-    session: ICustomSessionType
+    session: ICustomSessionType & Session
 } & Request<unknown, unknown, body, unknown>
+
+export interface RequestWithUserAndSession<body = unknown>
+    extends Request<unknown, unknown, body, unknown> {
+    session: Session & ICustomSessionType
+}

@@ -13,7 +13,7 @@ import {
     getProductDetailPage,
     postOrder
 } from '../controller/shop'
-import { getLoginPage, postLogin } from '../controller/auth'
+import { getLoginPage, postLogin, postLogOut } from '../controller/auth'
 
 const router = express.Router()
 
@@ -37,5 +37,6 @@ router.post(
 
 router.post('/order-products', postOrder as PromiseController)
 router.post('/login', postLogin as PromiseController)
+router.post('/logout', postLogOut as PromiseController)
 
 export default router
