@@ -1,20 +1,13 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { RequestWithCustomSession } from '../types/express'
 import User from '../models/user'
-import { DocumentUser, UserWithCart } from '../types/models'
+import { DocumentUser } from '../types/models'
 
 export const getLoginPage = (
     req: RequestWithCustomSession,
     res: Response
 ): void => {
-    // const rawCookieStr = (req.get('Cookie') as string) || ''
-    // console.log(rawCookieStr)
-    // if (rawCookieStr) {
-    //     const isLoggedIn = rawCookieStr.match(/loggedIn=true$/g) || ''
-    //     console.log(isLoggedIn[0].split('=')[1])
-    // }
-
-    res.render('shop/login', { title: 'Log In | Shops!' })
+    res.render('shop/login', { title: 'Log In | Shops!', path: 'login' })
 }
 
 export const postLogin = async (
@@ -44,7 +37,10 @@ export const postLogin = async (
     res.redirect('/')
 }
 
-export const postLogOut = (req, res): void => {
+export const postLogOut = (
+    req: RequestWithCustomSession,
+    res: Response
+): void => {
     req.session.destroy(err => {
         console.error(err)
     })

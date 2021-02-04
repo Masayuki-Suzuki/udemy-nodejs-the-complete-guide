@@ -6,8 +6,9 @@ import currencyFormatter from '../utils/currencyFormatter'
 
 export type PostItemToCart = Request<unknown, unknown, { id: string }>
 
+// eslint-disable-next-line
 const isProductItem = (val: any): val is ProductModel => {
-    if (typeof val.productId === 'object' && '_id' in val && 'title' in val) {
+    if (typeof val === 'object' && '_id' in val && 'title' in val) {
         return true
     }
     return false
@@ -17,12 +18,10 @@ export const getCartPage = async (
     req: RequestWithCustomSession,
     res: Response
 ): Promise<void> => {
-    if (req.session.user) {
+    if (req.user) {
         const {
             cart: { items }
-        } = await req.session.user
-            .populate('cart.items.productId')
-            .execPopulate()
+        } = await req.user.populate('cart.items.productId').execPopulate()
 
         let totalPrice = 0
 
@@ -55,9 +54,8 @@ export const addItemToCart = async (
 ): Promise<void> => {
     const prodId = req.body.id
     const product = (await Product.findById(prodId)) as ProductModel
-    if (req.session.user && product && req.session.user.addToCart) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        await req.session.user.addToCart(product)
+    if (req.user && product && req.user.addToCart) {
+        await req.user.addToCart(product)
     }
     res.redirect('/cart')
 }
@@ -66,9 +64,8 @@ export const deleteItemFromCart = (
     req: PostItemToCart,
     res: Response
 ): void => {
-    if (req.session.user && req.session.user.removeCartItem) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        void req.session.user.removeCartItem(req.body.id)
+    if (req.user && req.user.removeCartItem) {
+        void req.user.removeCartItem(req.body.id)
         res.redirect('/cart')
     } else {
         res.redirect('/cart')

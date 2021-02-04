@@ -66,13 +66,11 @@ export const postOrder = async (
     req: PostOrderRequest,
     res: Response
 ): Promise<void> => {
-    if (req.session.user) {
+    if (req.user && req.session.user) {
         // eslint-disable-next-line
         const {
             cart: { items }
-        } = await req.session.user
-            .populate('cart.items.productId')
-            .execPopulate()
+        } = await req.user.populate('cart.items.productId').execPopulate()
 
         const products = items.map(item => {
             if (
@@ -105,9 +103,9 @@ export const postOrder = async (
             createdAt: format(new Date(), 'MMMM dd, yyyy')
         })
 
-        if (req.session.user.clearCart) {
+        if (req.user && req.user.clearCart) {
             // eslint-disable-next-line
-            await req.session.user.clearCart()
+            await req.user.clearCart()
         }
     }
     res.redirect('/orders')

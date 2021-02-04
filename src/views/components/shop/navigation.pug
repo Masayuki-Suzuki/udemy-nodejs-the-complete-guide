@@ -11,7 +11,7 @@ header
                         if user
                             form.flex.items-center.my-0.ml-4(action="/logout" method="post")
                                 button.font-bold.py-3.px-4.rounded(
-                                    class=(path === "shop-orders" ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white")
+                                    class="text-gray-300 hover:bg-gray-700 hover:text-white"
                                 )
                                     | Log Out
 
@@ -27,7 +27,7 @@ header
                         else
                             a.font-bold.py-3.px-4.rounded(
                                 href="/login"
-                                class=(path === "shop-orders" ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white")
+                                class=(path === "login" ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white")
                             )
                                 | Login
 

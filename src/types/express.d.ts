@@ -1,6 +1,6 @@
 import Express, { Request } from 'express'
 import { Session, SessionData } from 'express-session'
-import { DocumentUser } from './models'
+import { DocumentUser, UserWithCart } from './models'
 
 interface ICustomSessionType extends Partial<SessionData> {
     isLoggedIn: boolean
@@ -16,16 +16,16 @@ declare module 'express-session' {
 declare global {
     namespace Express {
         export interface Request {
+            user: DocumentUser | null
             session: Session & Partial<SessionData>
         }
     }
 }
 
+export type RequestWithUserModel<body = unknown> = {
+    user: DocumentUser | null
+} & Request<unknown, unknown, body, unknown>
+
 export type RequestWithCustomSession<body = unknown> = {
     session: ICustomSessionType & Session
 } & Request<unknown, unknown, body, unknown>
-
-export interface RequestWithUserAndSession<body = unknown>
-    extends Request<unknown, unknown, body, unknown> {
-    session: Session & ICustomSessionType
-}

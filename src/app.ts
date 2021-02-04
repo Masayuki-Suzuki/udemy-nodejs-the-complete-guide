@@ -8,6 +8,8 @@ import ConnectMongoDbSession from 'connect-mongodb-session'
 import adminRoutes from './routes/admin'
 import shopRoutes from './routes/shop'
 import errorController from './controller/error'
+import User from './models/User'
+import { DocumentUser } from './types/models'
 
 dotenv.config()
 const app = express()
@@ -32,7 +34,7 @@ app.use(
 )
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.use('/admin', (req, res, next) => {
+app.use('/admin', (req, res, next): void => {
     if (req.session.user) {
         next()
     } else {
@@ -40,12 +42,24 @@ app.use('/admin', (req, res, next) => {
     }
 })
 
-app.use((req, res, next) => {
-    if (req.session.user) {
-        res.locals.user = req.session.user
+app.use(
+    async (req, res, next): Promise<void> => {
+        if (req.session.user) {
+            const user = (await User.findById(req.session.user._id).catch(
+                err => {
+                    console.error(err)
+                }
+            )) as DocumentUser
+
+            req.user = user
+            res.locals.user = req.session.user
+
+            next()
+        } else {
+            next()
+        }
     }
-    next()
-})
+)
 
 app.use('/admin', adminRoutes)
 app.use(shopRoutes)

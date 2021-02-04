@@ -8,6 +8,9 @@ module.exports = {
             },
             height: {
                 'full-content': 'calc(100% - 64px)'
+            },
+            minHeight: {
+                'full-content': 'calc(100% - 64px)'
             }
         }
     },
