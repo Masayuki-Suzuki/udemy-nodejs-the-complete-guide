@@ -11,8 +11,9 @@ block content
                 p.text-gray-600.text-2xl.font-semibold= product.price_fine
                 pre.text-gray-600.leading-tight.mt-4.whitespace-pre-wrap= product.description
 
-                form.w-full.mt-6(action="/cart" method="post")
-                    input(type="hidden" name="id" value=product._id)
-                    button.bg-green-600.text-white.font-bold.uppercase.px-5.py-3.tracking-wide.rounded(type="submit")
-                        | add cart
+                if user
+                    form.w-full.mt-6(action="/cart" method="post")
+                        input(type="hidden" name="id" value=product._id)
+                        button.bg-green-600.text-white.font-bold.uppercase.px-5.py-3.tracking-wide.rounded(type="submit")
+                            | add cart
 

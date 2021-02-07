@@ -1,35 +1,32 @@
 extends ../partials/layout
 
 block content
-    .container.m-auto.px-8.pt-10.w-full.h-full.flex.items-center.justify-center
-        .bg-white.p-6.rounded.w-80
+    .container.m-auto.px-8.pt-10.w-full.h-full-container.flex.items-center.justify-center
+        .bg-white.p-6.rounded.w-400
             h1.text-2xl.text-gray-700.font-semibold.text-center.mb-5 Sign In
-            form.login-form.block(action="/signin" method="post")
+            form.login-form.block(action="/signup" method="post")
                 .grid.grid-cols-6.gap-6
 
                     .col-span-6
-                        .grid.grid-cols-6.gap-6
-                            .col-span-3.flex.items-center
-                                label.block.text-sm.font-medium.text-gray-700(for="firstName")
-                                    | First Name:
-                                input(
-                                    type="text"
-                                    name="firstName"
-                                    id="firstName"
-                                    placeholder="John"
-                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
-                                )
-
-                            .col-span-3.flex.items-center
-                                label.block.text-sm.font-medium.text-gray-700(for="lastName")
-                                    | Last Name:
-                                input(
-                                    type="text"
-                                    name="lastName"
-                                    id="lastName"
-                                    placeholder="Snow"
-                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
-                                )
+                        label.block.text-sm.font-medium.text-gray-700(for="firstName")
+                            | First Name:
+                        input(
+                            type="text"
+                            name="firstName"
+                            id="firstName"
+                            placeholder="John"
+                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
+                        )
+                    .col-span-6
+                        label.block.text-sm.font-medium.text-gray-700(for="lastName")
+                            | Last Name:
+                        input(
+                            type="text"
+                            name="lastName"
+                            id="lastName"
+                            placeholder="Snow"
+                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
+                        )
 
                     //- Email
                     .col-span-6

@@ -23,7 +23,8 @@ export type UserType = {
     first_name: string
     last_name: string
     email: string
-    role: 'admin' | 'customer'
+    role: 'admin' | 'customer' | 'root'
+    password: string
 }
 
 export type UserModel = {

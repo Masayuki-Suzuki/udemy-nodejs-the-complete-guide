@@ -13,7 +13,13 @@ import {
     getProductDetailPage,
     postOrder
 } from '../controller/shop'
-import { getLoginPage, postLogin, postLogOut } from '../controller/auth'
+import {
+    getLoginPage,
+    getSignUpPage,
+    postLogin,
+    postLogOut,
+    postSignUp
+} from '../controller/auth'
 
 const router = express.Router()
 
@@ -26,6 +32,7 @@ router.get(
 router.get('/cart', getCartPage as PromiseController)
 router.get('/cart/checkout', getCheckoutPage)
 router.get('/login', getLoginPage as PromiseController)
+router.get('/signup', getSignUpPage)
 router.get('/', getIndexPage as PromiseController)
 
 router.post('/cart', addItemToCart as PromiseController<PostItemToCart>)
@@ -37,6 +44,7 @@ router.post(
 
 router.post('/order-products', postOrder as PromiseController)
 router.post('/login', postLogin as PromiseController)
+router.post('/signup', postSignUp as PromiseController)
 router.post('/logout', postLogOut as PromiseController)
 
 export default router

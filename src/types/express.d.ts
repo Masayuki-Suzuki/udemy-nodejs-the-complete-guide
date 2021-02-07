@@ -1,6 +1,6 @@
 import Express, { Request } from 'express'
 import { Session, SessionData } from 'express-session'
-import { DocumentUser, UserWithCart } from './models'
+import { DocumentUser } from './models'
 
 interface ICustomSessionType extends Partial<SessionData> {
     isLoggedIn: boolean

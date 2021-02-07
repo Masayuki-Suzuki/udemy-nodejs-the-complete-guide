@@ -20,7 +20,8 @@ block content
                             href=`/shop/product/${product._id}`
                         ) details
 
-                        form.m-0(action="/cart" method="post")
-                            input.hidden(type="hidden" name="id" value=product._id)
-                            button.bg-green-600.text-white.font-bold.uppercase.px-5.py-3.tracking-wide.rounded(type="submit")
-                                | add cart
+                        if user
+                            form.m-0(action="/cart" method="post")
+                                input.hidden(type="hidden" name="id" value=product._id)
+                                button.bg-green-600.text-white.font-bold.uppercase.px-5.py-3.tracking-wide.rounded(type="submit")
+                                    | add cart

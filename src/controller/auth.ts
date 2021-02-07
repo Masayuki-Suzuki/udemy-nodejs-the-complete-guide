@@ -1,8 +1,10 @@
-import { Response } from 'express'
+import { Request, Response } from 'express'
+import bcrypt from 'bcryptjs'
 import { RequestWithCustomSession } from '../types/express'
 import User from '../models/user'
 import { DocumentUser } from '../types/models'
 import { PostSignUpRequest } from '../types/controllers'
+import { LoginBody } from '../types/auth'
 
 export const getLoginPage = (
     req: RequestWithCustomSession,
@@ -11,32 +13,35 @@ export const getLoginPage = (
     res.render('shop/login', { title: 'Log In | Shops!', path: 'login' })
 }
 
+export const getSignUpPage = (req: Request, res: Response): void => {
+    res.render('shop/signup', { title: 'Sign Up | Shops!', path: 'signup' })
+}
+
 export const postLogin = async (
-    req: RequestWithCustomSession,
+    req: RequestWithCustomSession<LoginBody>,
     res: Response
 ): Promise<void> => {
     req.session.isLoggedIn = true
 
-    const user = (await User.findById(
-        '600528241f408ff2d4837824'
-    )) as DocumentUser
+    const user = (await User.findOne({ email: req.body.email })) as DocumentUser
 
-    if (!user) {
-        req.session.user = new User({
-            first_name: 'Masayuki',
-            last_name: 'Suzuki',
-            email: 'example@example.com',
-            role: 'admin',
-            password: '123456',
-            cart: {
-                items: []
-            }
-        })
+    if (user) {
+        const isMatchPassword = await bcrypt
+            .compare(req.body.password, user.password)
+            .catch(err => {
+                console.error(err)
+                res.redirect('/login')
+            })
+        if (isMatchPassword) {
+            req.session.user = user
+            res.redirect('/')
+        } else {
+            req.session.user = null
+            res.redirect('/login')
+        }
     } else {
-        req.session.user = user
+        res.redirect('/login')
     }
-
-    res.redirect('/')
 }
 
 export const postLogOut = (
@@ -59,9 +64,13 @@ export const postSignUp = async (
     const isValidPassword = password === confirmPassword
 
     if (!userDoc && isValidPassword) {
+        const hashPassword = await bcrypt.hash(password, 16).catch(err => {
+            console.error(err)
+            res.redirect('/signup')
+        })
         const user = new User({
             email,
-            password,
+            password: hashPassword,
             first_name: firstName,
             last_name: lastName,
             role: 'customer',
@@ -70,6 +79,8 @@ export const postSignUp = async (
 
         await user.save()
         res.redirect('/')
+    } else if (!isValidPassword) {
+        res.redirect('/signup')
     } else {
         res.redirect('/login')
     }
