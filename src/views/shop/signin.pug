@@ -1,0 +1,74 @@
+extends ../partials/layout
+
+block content
+    .container.m-auto.px-8.pt-10.w-full.h-full.flex.items-center.justify-center
+        .bg-white.p-6.rounded.w-80
+            h1.text-2xl.text-gray-700.font-semibold.text-center.mb-5 Sign In
+            form.login-form.block(action="/signin" method="post")
+                .grid.grid-cols-6.gap-6
+
+                    .col-span-6
+                        .grid.grid-cols-6.gap-6
+                            .col-span-3.flex.items-center
+                                label.block.text-sm.font-medium.text-gray-700(for="firstName")
+                                    | First Name:
+                                input(
+                                    type="text"
+                                    name="firstName"
+                                    id="firstName"
+                                    placeholder="John"
+                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
+                                )
+
+                            .col-span-3.flex.items-center
+                                label.block.text-sm.font-medium.text-gray-700(for="lastName")
+                                    | Last Name:
+                                input(
+                                    type="text"
+                                    name="lastName"
+                                    id="lastName"
+                                    placeholder="Snow"
+                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
+                                )
+
+                    //- Email
+                    .col-span-6
+                        label.block.text-sm.font-medium.text-gray-700(for="email")
+                            | Email:
+                        input(
+                            type="email"
+                            name="email"
+                            id="email"
+                            placeholder="example@example.com"
+                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
+                        )
+
+                    //- Password
+                    .col-span-6
+                        label.block.text-sm.font-medium.text-gray-700(for="password")
+                            | Password:
+                        input(
+                            type="password"
+                            name="password"
+                            id="password"
+                            placeholder="**********"
+                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
+                        )
+
+                    //- Confirm Password
+                    .col-span-6
+                        label.block.text-sm.font-medium.text-gray-700(for="confirmPassword")
+                            | Confirm Password:
+                        input(
+                            type="password"
+                            name="confirmPassword"
+                            id="confirmPassword"
+                            placeholder="**********"
+                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
+                        )
+
+                //- Submit Button
+                .grid.grid-cols-7.gap-6.mt-7
+                    .col-span-3.col-start-3
+                        button.bg-indigo-700.text-white.font-bold.text-center.w-full.py-2.px-6.rounded(type="submit")
+                            | Log in

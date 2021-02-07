@@ -2,6 +2,7 @@ import { Response } from 'express'
 import { RequestWithCustomSession } from '../types/express'
 import User from '../models/user'
 import { DocumentUser } from '../types/models'
+import { PostSignUpRequest } from '../types/controllers'
 
 export const getLoginPage = (
     req: RequestWithCustomSession,
@@ -26,6 +27,7 @@ export const postLogin = async (
             last_name: 'Suzuki',
             email: 'example@example.com',
             role: 'admin',
+            password: '123456',
             cart: {
                 items: []
             }
@@ -45,4 +47,30 @@ export const postLogOut = (
         console.error(err)
     })
     res.redirect('/')
+}
+
+export const postSignUp = async (
+    req: PostSignUpRequest,
+    res: Response
+): Promise<void> => {
+    const { email, password, confirmPassword, firstName, lastName } = req.body
+    const userDoc = await User.findOne({ email })
+
+    const isValidPassword = password === confirmPassword
+
+    if (!userDoc && isValidPassword) {
+        const user = new User({
+            email,
+            password,
+            first_name: firstName,
+            last_name: lastName,
+            role: 'customer',
+            cart: { items: [] }
+        })
+
+        await user.save()
+        res.redirect('/')
+    } else {
+        res.redirect('/login')
+    }
 }
