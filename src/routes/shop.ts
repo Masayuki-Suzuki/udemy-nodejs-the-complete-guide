@@ -1,5 +1,6 @@
 import express from 'express'
 import { PostProductRequest, PromiseController } from 'src/types/controllers'
+import { authenticated } from '../middleware/authentication'
 import {
     addItemToCart,
     deleteItemFromCart,
@@ -23,14 +24,14 @@ import {
 
 const router = express.Router()
 
-router.get('/orders', getOrdersPage as PromiseController)
+router.get('/orders', authenticated, getOrdersPage as PromiseController)
 router.get(
     '/shop/product/:productId',
     getProductDetailPage as PromiseController<PostProductRequest>
 )
 
-router.get('/cart', getCartPage as PromiseController)
-router.get('/cart/checkout', getCheckoutPage)
+router.get('/cart', authenticated, getCartPage as PromiseController)
+router.get('/cart/checkout', authenticated, getCheckoutPage)
 router.get('/login', getLoginPage as PromiseController)
 router.get('/signup', getSignUpPage)
 router.get('/', getIndexPage as PromiseController)
@@ -42,7 +43,7 @@ router.post(
     deleteItemFromCart as PromiseController<PostItemToCart>
 )
 
-router.post('/order-products', postOrder as PromiseController)
+router.post('/order-products', authenticated, postOrder as PromiseController)
 router.post('/login', postLogin as PromiseController)
 router.post('/signup', postSignUp as PromiseController)
 router.post('/logout', postLogOut as PromiseController)

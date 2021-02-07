@@ -10,6 +10,7 @@ import shopRoutes from './routes/shop'
 import errorController from './controller/error'
 import User from './models/User'
 import { DocumentUser } from './types/models'
+import { isAdminUser } from './middleware/authentication'
 
 dotenv.config()
 const app = express()
@@ -34,13 +35,7 @@ app.use(
 )
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.use('/admin', (req, res, next): void => {
-    if (req.session.user) {
-        next()
-    } else {
-        res.redirect('/')
-    }
-})
+app.use('/admin', isAdminUser)
 
 app.use(
     async (req, res, next): Promise<void> => {
@@ -76,6 +71,7 @@ mongoose
     })
     .then(() => {
         console.info('Mongoose: connected DB.')
+
         app.listen(4000, () => {
             console.info('Server started.')
         })

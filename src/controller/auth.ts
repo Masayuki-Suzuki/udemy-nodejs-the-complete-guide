@@ -48,6 +48,7 @@ export const postLogOut = (
     req: RequestWithCustomSession,
     res: Response
 ): void => {
+    req.session.isLoggedIn = false
     req.session.destroy(err => {
         console.error(err)
     })
@@ -68,6 +69,7 @@ export const postSignUp = async (
             console.error(err)
             res.redirect('/signup')
         })
+
         const user = new User({
             email,
             password: hashPassword,
@@ -78,6 +80,9 @@ export const postSignUp = async (
         })
 
         await user.save()
+        req.session.user = user
+        req.session.isLoggedIn = true
+
         res.redirect('/')
     } else if (!isValidPassword) {
         res.redirect('/signup')

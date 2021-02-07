@@ -8,7 +8,7 @@ header
                             img.h-8.w-8(src="/images/logo.png" alt="Logo")
                             span.text-white.font-bold.text-lg.tracking-wide.pl-2 Shops!
 
-                        if user && user.role === 'admin'
+                        if user && (user.role === 'admin' || user.role === 'root')
                             a.font-bold.py-3.px-4.rounded.ml-4(
                                 href="/admin/dashboard"
                                 class="text-gray-300 hover:bg-gray-700 hover:text-white"
