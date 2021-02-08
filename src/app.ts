@@ -5,6 +5,7 @@ import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 import session from 'express-session'
 import ConnectMongoDbSession from 'connect-mongodb-session'
+import csurf from 'csurf'
 import adminRoutes from './routes/admin'
 import shopRoutes from './routes/shop'
 import errorController from './controller/error'
@@ -20,6 +21,7 @@ const store = new MongoDbStore({
     collection: 'sessions',
     databaseName: process.env.MDB_NAME as string
 })
+const csrfProtection = csurf()
 
 app.set('view engine', 'pug')
 app.set('views', 'src/views')
@@ -33,12 +35,15 @@ app.use(
         store
     })
 )
+app.use(csrfProtection)
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/admin', isAdminUser)
 
 app.use(
     async (req, res, next): Promise<void> => {
+        res.locals.csrfToken = req.csrfToken()
+
         if (req.session.user) {
             const user = (await User.findById(req.session.user._id).catch(
                 err => {
@@ -65,6 +70,7 @@ mongoose
     .connect(process.env.MONGO_URL as string, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
+        useFindAndModify: false,
         user: process.env.db_user,
         pass: process.env.db_password,
         dbName: process.env.db_database

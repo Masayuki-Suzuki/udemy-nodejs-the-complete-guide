@@ -35,6 +35,7 @@ block content
                                 )
                                     | Edit
                                 form.m-0(action="/admin/delete-product/" method="post")
+                                    input.hidden(type="hidden" value=csrfToken name="_csrf")
                                     input.hiden(type="hidden" value=product._id name="id")
                                     button.bg-red-600.text-white.font-bold.tracking-wide.px-4.py-3.rounded(type="submit")
                                         | Delete

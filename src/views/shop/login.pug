@@ -5,6 +5,7 @@ block content
         .bg-white.p-6.rounded.w-80
             h1.text-2xl.text-gray-700.font-semibold.text-center.mb-5 Log In
             form.login-form.block(action="/login" method="post")
+                input.hidden(type="hidden" value=csrfToken name="_csrf")
                 .grid.grid-cols-6.gap-6
 
                     //- Email

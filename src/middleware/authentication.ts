@@ -1,22 +1,11 @@
-import { Response, NextFunction } from 'express'
-import { RequestWithCustomSession } from '../types/express'
-
-export const authenticated = (
-    req: RequestWithCustomSession,
-    res: Response,
-    next: NextFunction
-): void => {
+export const authenticated = (req, res, next): void => {
     if (!req.session.isLoggedIn) {
         res.status(401).redirect('/login')
     }
     next()
 }
 
-export const isAdminUser = (
-    req: RequestWithCustomSession,
-    res: Response,
-    next: NextFunction
-): void => {
+export const isAdminUser = (req, res, next): void => {
     const { isLoggedIn, user } = req.session
 
     if (!isLoggedIn || !user) {

@@ -39,6 +39,7 @@ block content
                                         ) #{prod.title}
                                     .product__cta.mt-2
                                         form.m-0(action="/cart" method="post")
+                                            input.hidden(type="hidden" value=csrfToken name="_csrf")
                                             input(type="hidden" name="id" value=prod._id)
                                             button.bg-green-700.text-white.font-semibold.uppercase.px-4.py-2.tracking-wide.rounded.text-xs(
                                                 type="submit"
