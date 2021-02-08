@@ -1,16 +1,17 @@
 import { Request, Response } from 'express'
 import bcrypt from 'bcryptjs'
-import { RequestWithCustomSession } from '../types/express'
+import { CustomRequest, RequestWithCustomSession } from '../types/express'
 import User from '../models/user'
 import { DocumentUser } from '../types/models'
 import { PostSignUpRequest } from '../types/controllers'
 import { LoginBody } from '../types/auth'
 
-export const getLoginPage = (
-    req: RequestWithCustomSession,
-    res: Response
-): void => {
-    res.render('shop/login', { title: 'Log In | Shops!', path: 'login' })
+export const getLoginPage = (req: CustomRequest, res: Response): void => {
+    res.render('shop/login', {
+        title: 'Log In | Shops!',
+        path: 'login',
+        errorMessage: req.flash('error')
+    })
 }
 
 export const getSignUpPage = (req: Request, res: Response): void => {
@@ -40,6 +41,7 @@ export const postLogin = async (
             res.redirect('/login')
         }
     } else {
+        req.flash('error', 'Invalid email or password.')
         res.redirect('/login')
     }
 }

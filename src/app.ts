@@ -6,6 +6,7 @@ import bodyParser from 'body-parser'
 import session from 'express-session'
 import ConnectMongoDbSession from 'connect-mongodb-session'
 import csurf from 'csurf'
+import flash from 'connect-flash'
 import adminRoutes from './routes/admin'
 import shopRoutes from './routes/shop'
 import errorController from './controller/error'
@@ -36,6 +37,7 @@ app.use(
     })
 )
 app.use(csrfProtection)
+app.use(flash())
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/admin', isAdminUser)
