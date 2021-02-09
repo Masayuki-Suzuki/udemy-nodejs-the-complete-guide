@@ -33,7 +33,7 @@ router.get(
 router.get('/cart', authenticated, getCartPage as PromiseController)
 router.get('/cart/checkout', authenticated, getCheckoutPage)
 router.get('/login', getLoginPage as PromiseController)
-router.get('/signup', getSignUpPage)
+router.get('/signup', getSignUpPage as PromiseController)
 router.get('/', getIndexPage as PromiseController)
 
 router.post('/cart', addItemToCart as PromiseController<PostItemToCart>)

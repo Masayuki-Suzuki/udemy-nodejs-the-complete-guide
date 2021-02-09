@@ -4,8 +4,12 @@ block content
     .container.m-auto.px-8.pt-10.w-full.h-full-container.flex.items-center.justify-center
         .bg-white.p-6.rounded.w-400
             h1.text-2xl.text-gray-700.font-semibold.text-center.mb-5 Sign In
+
+            if errorMessage
+                p.text-red-700.text-center.mb-4= errorMessage
+
             form.login-form.block(action="/signup" method="post")
-                input.hidden(type="hidden" value=`csrfToken` name="_csrf")
+                input.hidden(type="hidden" value=csrfToken name="_csrf")
                 .grid.grid-cols-6.gap-6
 
                     .col-span-6
