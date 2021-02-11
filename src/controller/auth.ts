@@ -1,11 +1,24 @@
 import { Response } from 'express'
+import dotenv from 'dotenv'
 import bcrypt from 'bcryptjs'
-import { CustomRequest, RequestWithCustomSession } from '../types/express'
+import nodemailer from 'nodemailer'
+import sendgridTransport from 'nodemailer-sendgrid-transport'
 import User from '../models/user'
+import getFlashErrorMessage from '../utils/getFlashErrorMessage'
+import { CustomRequest, RequestWithCustomSession } from '../types/express'
 import { DocumentUser } from '../types/models'
 import { PostSignUpRequest } from '../types/controllers'
 import { LoginBody } from '../types/auth'
-import getFlashErrorMessage from '../utils/getFlashErrorMessage'
+
+dotenv.config()
+
+const transporter = nodemailer.createTransport(
+    sendgridTransport({
+        auth: {
+            api_key: process.env.SENDGRID_API_KEY
+        }
+    })
+)
 
 export const getLoginPage = (req: CustomRequest, res: Response): void => {
     res.render('shop/login', {
@@ -101,6 +114,17 @@ export const postSignUp = async (
             await user.save()
             req.session.user = user
             req.session.isLoggedIn = true
+
+            await transporter
+                .sendMail({
+                    to: email,
+                    from: 'shops@shops.masa.works',
+                    subject: 'Thank you for signing up to Shops!',
+                    html: '<h1>You successfully signed up!!</h1>'
+                })
+                .catch(err => {
+                    console.error(err)
+                })
 
             res.redirect('/')
         } else if (!userDoc && !isValidPassword) {
