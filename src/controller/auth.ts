@@ -36,6 +36,17 @@ export const getSignUpPage = (req: CustomRequest, res: Response): void => {
     })
 }
 
+export const getResetPasswordPage = (
+    req: CustomRequest,
+    res: Response
+): void => {
+    res.render('shop/reset-password', {
+        title: 'Reset Password | Shops!',
+        path: 'signup',
+        errorMessage: getFlashErrorMessage(req)
+    })
+}
+
 export const postLogin = async (
     req: RequestWithCustomSession<LoginBody>,
     res: Response

@@ -16,6 +16,7 @@ import {
 } from '../controller/shop'
 import {
     getLoginPage,
+    getResetPasswordPage,
     getSignUpPage,
     postLogin,
     postLogOut,
@@ -34,6 +35,7 @@ router.get('/cart', authenticated, getCartPage as PromiseController)
 router.get('/cart/checkout', authenticated, getCheckoutPage)
 router.get('/login', getLoginPage as PromiseController)
 router.get('/signup', getSignUpPage as PromiseController)
+router.get('/reset-password', getResetPasswordPage as PromiseController)
 router.get('/', getIndexPage as PromiseController)
 
 router.post('/cart', addItemToCart as PromiseController<PostItemToCart>)
