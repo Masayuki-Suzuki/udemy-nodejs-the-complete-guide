@@ -35,7 +35,9 @@ const userSchema = new Schema<UserWithCart & Document>({
                 }
             }
         ]
-    }
+    },
+    resetToken: String,
+    resetTokenExpiration: Date
 })
 
 export default userSchema

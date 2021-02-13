@@ -20,6 +20,7 @@ import {
     getSignUpPage,
     postLogin,
     postLogOut,
+    postResetPassword,
     postSignUp
 } from '../controller/auth'
 
@@ -49,5 +50,6 @@ router.post('/order-products', authenticated, postOrder as PromiseController)
 router.post('/login', postLogin as PromiseController)
 router.post('/signup', postSignUp as PromiseController)
 router.post('/logout', postLogOut as PromiseController)
+router.post('/reset-password', postResetPassword as PromiseController)
 
 export default router

@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb'
 import { Document } from 'mongoose'
+import { Nullable } from './utilities'
 
 export type ProductType = {
     title: string
@@ -25,6 +26,8 @@ export type UserType = {
     email: string
     role: 'admin' | 'customer' | 'root'
     password: string
+    resetToken?: Nullable<string>
+    resetTokenExpiration?: Nullable<number>
 }
 
 export type UserModel = {

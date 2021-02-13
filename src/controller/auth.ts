@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import { Response } from 'express'
 import dotenv from 'dotenv'
 import bcrypt from 'bcryptjs'
@@ -146,4 +147,31 @@ export const postSignUp = async (
             res.redirect('/signup')
         }
     }
+}
+
+export const postResetPassword = (
+    req: PostSignUpRequest,
+    res: Response
+): void => {
+    crypto.randomBytes(32, (err, buffer): void => {
+        if (err) {
+            console.error(err)
+            res.redirect('/reset-password')
+        }
+        const token = buffer.toString('hex')
+        User.findOne({ email: req.body.email })
+            .then((user: DocumentUser) => {
+                if (!user) {
+                    req.flash('error', `Email address couldn't find.`)
+                    return res.redirect('/reset-password')
+                } else {
+                    user.resetToken = token
+                    user.resetTokenExpiration = Date.now() + 3600000
+                    return user.save()
+                }
+            })
+            .catch(err => {
+                console.error(err)
+            })
+    })
 }
