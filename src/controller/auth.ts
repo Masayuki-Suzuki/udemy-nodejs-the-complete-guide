@@ -84,7 +84,9 @@ export const postLogOut = (
 ): void => {
     req.session.isLoggedIn = false
     req.session.destroy(err => {
-        console.error(err)
+        if (err) {
+            console.error(err)
+        }
     })
     res.redirect('/')
 }
@@ -127,10 +129,10 @@ export const postSignUp = async (
             req.session.user = user
             req.session.isLoggedIn = true
 
-            await transporter
+            const result = await transporter
                 .sendMail({
                     to: email,
-                    from: 'shops@shops.masa.works',
+                    from: process.env.SENDER_EMAIL_ADDRESS,
                     subject: 'Thank you for signing up to Shops!',
                     html: '<h1>You successfully signed up!!</h1>'
                 })
@@ -158,17 +160,32 @@ export const postResetPassword = (
             console.error(err)
             res.redirect('/reset-password')
         }
+
         const token = buffer.toString('hex')
         User.findOne({ email: req.body.email })
-            .then((user: DocumentUser) => {
+            .then(user => {
                 if (!user) {
                     req.flash('error', `Email address couldn't find.`)
-                    return res.redirect('/reset-password')
+                    res.redirect('/reset-password')
                 } else {
                     user.resetToken = token
                     user.resetTokenExpiration = Date.now() + 3600000
                     return user.save()
                 }
+            })
+            .then(async () => {
+                res.redirect('/login')
+
+                await transporter
+                    .sendMail({
+                        to: req.body.email,
+                        from: process.env.SENDER_EMAIL_ADDRESS,
+                        subject: 'Shops! | Reset Password',
+                        html: `<p>You requested a password reset.</p><p>Click this <a href="http://localhost:4000/reset-password/${token}">link</a> to set a new password</p>`
+                    })
+                    .catch(err => {
+                        console.error(err)
+                    })
             })
             .catch(err => {
                 console.error(err)
