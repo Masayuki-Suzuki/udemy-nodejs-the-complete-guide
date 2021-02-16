@@ -8,10 +8,16 @@ import User from '../models/user'
 import getFlashErrorMessage from '../utils/getFlashErrorMessage'
 import { CustomRequest, RequestWithCustomSession } from '../types/express'
 import { DocumentUser } from '../types/models'
-import { PostSignUpRequest } from '../types/controllers'
+import { GetNewPasswordRequest, PostSignUpRequest } from '../types/controllers'
 import { LoginBody } from '../types/auth'
 
 dotenv.config()
+
+type NewPasswordRequestBody = {
+    userId: string
+    password: string
+    resetToken: string
+}
 
 const transporter = nodemailer.createTransport(
     sendgridTransport({
@@ -43,9 +49,37 @@ export const getResetPasswordPage = (
 ): void => {
     res.render('shop/reset-password', {
         title: 'Reset Password | Shops!',
-        path: 'signup',
+        path: 'reset-password',
         errorMessage: getFlashErrorMessage(req)
     })
+}
+
+export const getNewPasswordPage = async (
+    req: GetNewPasswordRequest,
+    res: Response
+): Promise<void> => {
+    const { resetToken } = req.params
+    console.log(resetToken)
+
+    const user = await User.findOne({
+        resetToken,
+        resetTokenExpiration: { $gt: Date.now() }
+    }).catch(err => console.error(err))
+
+    if (user) {
+        res.render('shop/new-password', {
+            title: 'Reset Password | Shops!',
+            path: 'reset-password',
+            errorMessage: getFlashErrorMessage(req),
+            userId: user._id,
+            resetToken
+        })
+    } else {
+        res.render('shop/reset-password', {
+            title: 'Reset Password | Shops!',
+            path: 'reset-password'
+        })
+    }
 }
 
 export const postLogin = async (
@@ -129,7 +163,7 @@ export const postSignUp = async (
             req.session.user = user
             req.session.isLoggedIn = true
 
-            const result = await transporter
+            await transporter
                 .sendMail({
                     to: email,
                     from: process.env.SENDER_EMAIL_ADDRESS,
@@ -181,7 +215,7 @@ export const postResetPassword = (
                         to: req.body.email,
                         from: process.env.SENDER_EMAIL_ADDRESS,
                         subject: 'Shops! | Reset Password',
-                        html: `<p>You requested a password reset.</p><p>Click this <a href="http://localhost:4000/reset-password/${token}">link</a> to set a new password</p>`
+                        html: `<p>You requested a password reset.</p><p>Click this <a href="http://localhost:4000/new-password/${token}">link</a> to set a new password</p>`
                     })
                     .catch(err => {
                         console.error(err)
@@ -191,4 +225,45 @@ export const postResetPassword = (
                 console.error(err)
             })
     })
+}
+
+export const postNewPassword = async (
+    req: CustomRequest<NewPasswordRequestBody>,
+    res: Response
+): Promise<void> => {
+    const { password, userId, resetToken } = req.body
+
+    const user = await User.findOne({
+        _id: userId,
+        resetToken,
+        resetTokenExpiration: { $gt: Date.now() }
+    }).catch(err => {
+        console.error(err)
+    })
+
+    if (user) {
+        const newPassword = await bcrypt
+            .hash(password, 12)
+            .catch(err => console.error(err))
+        if (newPassword) {
+            user.password = newPassword
+            user.resetToken = null
+            user.resetTokenExpiration = null
+
+            await user.save()
+
+            await transporter
+                .sendMail({
+                    to: user.email,
+                    from: process.env.SENDER_EMAIL_ADDRESS,
+                    subject: 'Successfully updated your password',
+                    html: `<h1 style="font-size: 24px;">You successfully updated password.</h1><p><b>If you don't know anything about that, please contact support centre as soon as possible.</b></p>`
+                })
+                .catch(err => {
+                    console.error(err)
+                })
+
+            res.redirect('/login')
+        }
+    }
 }

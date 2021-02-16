@@ -1,5 +1,10 @@
 import express from 'express'
-import { PostProductRequest, PromiseController } from 'src/types/controllers'
+import {
+    GetNewPasswordController,
+    GetNewPasswordRequest,
+    PostProductRequest,
+    PromiseController
+} from 'src/types/controllers'
 import { authenticated } from '../middleware/authentication'
 import {
     addItemToCart,
@@ -16,13 +21,16 @@ import {
 } from '../controller/shop'
 import {
     getLoginPage,
+    getNewPasswordPage,
     getResetPasswordPage,
     getSignUpPage,
     postLogin,
     postLogOut,
+    postNewPassword,
     postResetPassword,
     postSignUp
 } from '../controller/auth'
+import { CustomRequestWithParam } from '../types/express'
 
 const router = express.Router()
 
@@ -37,19 +45,21 @@ router.get('/cart/checkout', authenticated, getCheckoutPage)
 router.get('/login', getLoginPage as PromiseController)
 router.get('/signup', getSignUpPage as PromiseController)
 router.get('/reset-password', getResetPasswordPage as PromiseController)
+// eslint-disable-next-line
+router.get('/new-password/:resetToken', getNewPasswordPage as any)
 router.get('/', getIndexPage as PromiseController)
 
 router.post('/cart', addItemToCart as PromiseController<PostItemToCart>)
-
 router.post(
     '/cart/delete-product',
     deleteItemFromCart as PromiseController<PostItemToCart>
 )
-
 router.post('/order-products', authenticated, postOrder as PromiseController)
 router.post('/login', postLogin as PromiseController)
 router.post('/signup', postSignUp as PromiseController)
 router.post('/logout', postLogOut as PromiseController)
 router.post('/reset-password', postResetPassword as PromiseController)
+// eslint-disable-next-line
+router.post('/new-password', postNewPassword as any)
 
 export default router

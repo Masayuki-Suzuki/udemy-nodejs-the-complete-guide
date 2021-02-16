@@ -42,3 +42,9 @@ export type CustomRequest<body = unknown> = {
     session: ICustomSessionType & Session
     flash: Flash
 } & Request<unknown, unknown, body, unknown>
+
+export type CustomRequestWithParam<P = unknown, body = unknown> = {
+    user: DocumentUser | null
+    session: ICustomSessionType & Session
+    flash: Flash
+} & Request<P, unknown, body, unknown>

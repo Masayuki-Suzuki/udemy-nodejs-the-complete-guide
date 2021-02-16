@@ -24,7 +24,7 @@ export type UserType = {
     first_name: string
     last_name: string
     email: string
-    role: 'admin' | 'customer' | 'root'
+    role: 'supervisor' | 'admin' | 'customer' | 'root'
     password: string
     resetToken?: Nullable<string>
     resetTokenExpiration?: Nullable<number>
