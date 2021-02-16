@@ -7,9 +7,10 @@ import sendgridTransport from 'nodemailer-sendgrid-transport'
 import User from '../models/user'
 import getFlashErrorMessage from '../utils/getFlashErrorMessage'
 import { CustomRequest, RequestWithCustomSession } from '../types/express'
-import { DocumentUser } from '../types/models'
+import { DocumentUser, UserWithCart } from '../types/models'
 import { GetNewPasswordRequest, PostSignUpRequest } from '../types/controllers'
 import { LoginBody } from '../types/auth'
+import { Nullable } from '../types/utilities'
 
 dotenv.config()
 
@@ -98,6 +99,9 @@ export const postLogin = async (
                 res.redirect('/login')
             })
         if (isMatchPassword) {
+            user.lastLoggedIn = Date.now()
+            await user.save()
+
             req.session.isLoggedIn = true
             req.session.user = user
             res.redirect('/')
@@ -264,6 +268,88 @@ export const postNewPassword = async (
                 })
 
             res.redirect('/login')
+        }
+    }
+}
+
+export const postAdminSignup = async (
+    req: PostSignUpRequest,
+    res: Response
+): Promise<void> => {
+    const { email, password, confirmPassword, firstName, lastName } = req.body
+
+    if (!email.length) {
+        req.flash('error', 'Email address is empty')
+        res.redirect('/admin/add-new-user')
+    } else if (!(firstName.length && lastName.length)) {
+        req.flash('error', 'First Name and/or Last Name is empty.')
+        res.redirect('/admin/add-new-user')
+    } else if (!(password.length && confirmPassword.length)) {
+        req.flash('error', 'Password is empty.')
+        res.redirect('/admin/add-new-user')
+    } else {
+        const userDoc = await User.findOne({ email })
+        const isValidPassword = password === confirmPassword
+
+        let loggedInUser: Nullable<UserWithCart>
+        if (req.session.user) {
+            if (req.session.user._doc) {
+                loggedInUser = req.session.user._doc
+            } else {
+                loggedInUser = req.session.user
+            }
+        } else {
+            loggedInUser = null
+        }
+
+        if (!userDoc && isValidPassword) {
+            const hashPassword = await bcrypt.hash(password, 16).catch(err => {
+                console.error(err)
+                res.redirect('/admin/add-new-user')
+            })
+
+            const user = new User({
+                email,
+                password: hashPassword,
+                first_name: firstName,
+                last_name: lastName,
+                role: 'admin',
+                cart: { items: [] }
+            })
+
+            await user.save()
+            req.session.user = user
+            req.session.isLoggedIn = true
+
+            const emailMessage = loggedInUser
+                ? ` by ${loggedInUser.first_name} ${loggedInUser.last_name}`
+                : ''
+
+            await transporter
+                .sendMail({
+                    to: email,
+                    from: process.env.SENDER_EMAIL_ADDRESS,
+                    subject: 'You invited Shops admin',
+                    html: `
+<h1 style="font-size: 24px;">Hello ${user.first_name}!</h1>
+<p>You invited to <a href="http://localhost:4000">Shops!</a>
+admin${emailMessage}.</p>
+<p>Temporary Password: <b>${password}</b></p>
+<p>Please log in <a href="http://localhost:4000/login">here</a></p>
+<p>Cheers!</p>
+`
+                })
+                .catch(err => {
+                    console.error(err)
+                })
+
+            res.redirect('/admin/users')
+        } else if (!userDoc && !isValidPassword) {
+            req.flash('error', 'Do not match passwords.')
+            res.redirect('/admin/add-new-user')
+        } else {
+            req.flash('error', 'Email address has already been taken.')
+            res.redirect('/admin/add-new-user')
         }
     }
 }

@@ -1,25 +1,27 @@
 extends ../partials/layout-admin
 
 block content
-    .container.mx-auto.max-w-4xl
+    .container.mx-auto.max-w-6xl
         .flex.justify-end.mt-10
-            a.px-4.py-3.bg-blue-800.text-white.font-bold.rounded(href="/admin/add-user")
+            a.px-4.py-3.bg-blue-800.text-white.font-bold.rounded(href="/admin/add-new-user")
                 | Add User
 
-    .container.mx-auto.shadow.overflow-hidden.bg-white.rounded.mt-10.p-8.max-w-4xl
+    .container.mx-auto.shadow.overflow-hidden.bg-white.rounded.mt-10.p-8.max-w-6xl
         table.w-full
             thead
                 tr.border-b-2.bg-gray-50
                     th.p-3.text-left User Name
                     th.p-3.text-left Role
+                    th.p-3.text-left Last Logged In
                     th.text-center.py-4 Actions
 
             tbody
                 each user, index in users
                     tr.border-b(class=`${index % 2 !== 0 ? 'bg-gray-50' : ''}`)
-                        td.p-3(class="w-3/6") #{user.first_name} #{user.last_name}
-                        td.p-3.capitalize(class="w-1/6")= user.role
-                        td.text-center.p-3(class="w-2/6")
+                        td.p-3(class="w-4/12") #{user.first_name} #{user.last_name}
+                        td.p-3.capitalize(class="w-2/12")= user.role
+                        td.p-3.capitalize(class="w-3/12")= user.lastLoggedIn
+                        td.text-center.p-3(class="w-3/12")
                             .flex.items-center.justify-center.h-full
                                 a.bg-blue-800.text-white.font-bold.tracking-wide.px-6.py-3.mr-2.rounded(
                                     href=`/admin/edit-user/${user._id}?edit=true`

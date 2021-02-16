@@ -37,7 +37,11 @@ const userSchema = new Schema<UserWithCart & Document>({
         ]
     },
     resetToken: String,
-    resetTokenExpiration: Date
+    resetTokenExpiration: Date,
+    isSuspended: Boolean,
+    isDeleted: Boolean,
+    lastLoggedIn: Date,
+    createdAt: Date
 })
 
 export default userSchema

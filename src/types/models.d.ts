@@ -28,7 +28,15 @@ export type UserType = {
     password: string
     resetToken?: Nullable<string>
     resetTokenExpiration?: Nullable<number>
+    isSuspended: boolean
+    isDeleted: boolean
+    lastLoggedIn: number
+    createdAt: number
 }
+
+export type UserTypeForViews = {
+    lastLoggedIn: string
+} & Omit<UserType, 'lastLoggedIn'>
 
 export type UserModel = {
     _id: string
@@ -40,6 +48,7 @@ export type UserWithCart = {
 
 export type DocumentUser = Document &
     UserWithCart & {
+        _doc?: UserWithCart
         addToCart?: (product: ProductModel) => Promise<void>
         removeCartItem?: (productId: string) => Promise<void>
         clearCart?: () => Promise<void>

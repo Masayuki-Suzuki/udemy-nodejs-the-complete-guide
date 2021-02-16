@@ -1,6 +1,7 @@
 import express from 'express'
 import ProductsController from '../controller/products'
 import AdminController from '../controller/admin'
+import { postAdminSignup } from '../controller/auth'
 import {
     PostDeleteProductReq,
     PostProductRequest,
@@ -17,6 +18,7 @@ router.get(
 router.get('/users', AdminController.getUsersPage as PromiseController)
 router.get('/products', ProductsController.getProductPage as PromiseController)
 router.get('/dashboard', AdminController.getDashboardPage)
+router.get('/add-new-user', AdminController.getAddNewUserPage)
 router.get('/', AdminController.redirectToDashboard)
 
 router.post(
@@ -31,5 +33,6 @@ router.post(
     '/delete-product',
     ProductsController.postDeleteProduct as PromiseController<PostDeleteProductReq>
 )
+router.post('/add-new-user', postAdminSignup as PromiseController)
 
 export default router

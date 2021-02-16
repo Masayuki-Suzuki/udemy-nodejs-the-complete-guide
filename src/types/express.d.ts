@@ -4,6 +4,7 @@ import { DocumentUser } from './models'
 
 interface ICustomSessionType extends Partial<SessionData> {
     isLoggedIn: boolean
+    user: DocumentUser | null
 }
 
 declare module 'express-session' {
