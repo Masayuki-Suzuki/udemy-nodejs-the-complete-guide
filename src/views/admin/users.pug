@@ -1,0 +1,40 @@
+extends ../partials/layout-admin
+
+block content
+    .container.mx-auto.max-w-4xl
+        .flex.justify-end.mt-10
+            a.px-4.py-3.bg-blue-800.text-white.font-bold.rounded(href="/admin/add-user")
+                | Add User
+
+    .container.mx-auto.shadow.overflow-hidden.bg-white.rounded.mt-10.p-8.max-w-4xl
+        table.w-full
+            thead
+                tr.border-b-2.bg-gray-50
+                    th.p-3.text-left User Name
+                    th.p-3.text-left Role
+                    th.text-center.py-4 Actions
+
+            tbody
+                each user, index in users
+                    tr.border-b(class=`${index % 2 !== 0 ? 'bg-gray-50' : ''}`)
+                        td.p-3(class="w-3/6") #{user.first_name} #{user.last_name}
+                        td.p-3.capitalize(class="w-1/6")= user.role
+                        td.text-center.p-3(class="w-2/6")
+                            .flex.items-center.justify-center.h-full
+                                a.bg-blue-800.text-white.font-bold.tracking-wide.px-6.py-3.mr-2.rounded(
+                                    href=`/admin/edit-user/${user._id}?edit=true`
+                                )
+                                    | Edit
+
+                                form.m-0.mr-2(action="/admin/suspend-user/" method="post")
+                                    input.hidden(type="hidden" value=csrfToken name="_csrf")
+                                    input.hiden(type="hidden" value=user._id name="id")
+                                    button.bg-gray-600.text-white.font-bold.tracking-wide.px-4.py-3.rounded(type="submit")
+                                        | Suspend
+
+                                form.m-0.mr-2(action="/admin/delete-user/" method="post")
+                                    input.hidden(type="hidden" value=csrfToken name="_csrf")
+                                    input.hiden(type="hidden" value=user._id name="id")
+                                    button.bg-red-600.text-white.font-bold.tracking-wide.px-4.py-3.rounded(type="submit")
+                                        | Delete
+

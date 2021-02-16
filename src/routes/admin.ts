@@ -14,6 +14,7 @@ router.get(
     '/edit-product/:productId',
     ProductsController.getEditProductPage as PromiseController<PostProductRequest>
 )
+router.get('/users', AdminController.getUsersPage as PromiseController)
 router.get('/products', ProductsController.getProductPage as PromiseController)
 router.get('/dashboard', AdminController.getDashboardPage)
 router.get('/', AdminController.redirectToDashboard)
