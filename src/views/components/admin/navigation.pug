@@ -2,28 +2,36 @@ header
     nav.bg-gray-800
         .max-w-7xl.mx-auto.px-4(class="sm:px-6 lg:px-8")
             .flex.items-center.justify-between.h-16
-                .flex.itemscenter
+                .flex.items-center.w-full
                     .flex-shrinl-0
                         a.flex-shrinl-0.flex.items-center(href="/")
                             img.h-8.w-8(src="/images/logo.png" alt="Logo")
                             span.text-white.font-bold.text-lg.tracking-wide.pl-2 Shops!
-                    .hidden(class="md:block")
-                        .ml-10.flex.items-baseline.space-x-4
-                            a.px-3.py-2.rounded-md.text-sm(
-                                href="/admin/dashboard"
-                                class=(path === "dashboard" ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white")
-                            )
-                                | Dashboard
-                            a.px-3.py-2.rounded-md.text-sm.font-medium(
-                                href="/admin/products"
-                                class=(path === "products" ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white")
-                            )
-                                | Products
-                            a.px-3.py-2.rounded-md.text-sm.font-medium(
-                                href="/admin/users"
-                                class=(path === "users" ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white")
-                            )
-                                | Users
+                    .ml-10.flex.items-baseline.space-x-4
+                        a.px-3.py-2.rounded-md.text-sm(
+                            href="/admin/dashboard"
+                            class=(path === "dashboard" ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white")
+                        )
+                            | Dashboard
+                        a.px-3.py-2.rounded-md.text-sm.font-medium(
+                            href="/admin/products"
+                            class=(path === "products" ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white")
+                        )
+                            | Products
+                        a.px-3.py-2.rounded-md.text-sm.font-medium(
+                            href="/admin/users"
+                            class=(path === "users" ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white")
+                        )
+                            | Users
+                    .flex.items-center.ml-auto.mr-0
+                        if user
+                            form.flex.items-center.my-0.ml-4(action="/logout" method="post")
+                                input.hidden(type="hidden" value=csrfToken name="_csrf")
+                                button.font-bold.py-3.px-4.rounded(
+                                    class="text-gray-300 hover:bg-gray-700 hover:text-white"
+                                )
+                                    | Log Out
+
     .bg-white.shadow
         .max-w-7xl.mx-auto.py-6.px-4(class="sm:px-6 lg:px-8")
             h1.text-3xl.font-bold.leading-tight.text-gray-800

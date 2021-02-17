@@ -69,6 +69,19 @@ block content
                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
                         )
 
+                    //- User Role
+                    .col-span-6
+                        label.block.text-sm.font-medium.text-gray-700(for="userRole")
+                            | User Role:
+
+                        select(
+                            id="userRole"
+                            name="role"
+                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
+                        )
+                            option(value="supervisor") Supervisor
+                            option(value="admin" selected) Admin
+
                 //- Submit Button
                 .grid.grid-cols-7.gap-6.mt-7
                     .col-span-3.col-start-3
