@@ -36,18 +36,21 @@ export const getUsersPage = async (
     })
 
     res.render('admin/users', {
-        title: 'Admin Users',
+        title: 'Users',
         path: 'admin-users',
-        pageTitle: 'Admin Users',
+        pageTitle: 'Users',
         users: users || []
     })
 }
 
 export const getAddNewUserPage = (req: Request, res: Response): void => {
-    res.render('admin/add-new-user', {
+    res.render('admin/edit-user', {
         title: 'Add New User',
         path: 'add-new-user',
-        pageTitle: 'Add New Admin User'
+        pageTitle: 'Add New Admin User',
+        password: null,
+        user: null,
+        editMode: false
     })
 }
 

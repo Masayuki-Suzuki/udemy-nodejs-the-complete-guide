@@ -8,6 +8,7 @@ export type SignUpDataType = {
     confirmPassword: string
     firstName: string
     lastName: string
+    role?: 'supervisor' | 'admin' | 'customer'
 }
 
 export type PromiseController<Req = Request, Res = Response, Rt = void> = (

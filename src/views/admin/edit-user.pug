@@ -10,6 +10,7 @@ block content
 
             form.login-form.block(action="/admin/add-new-user" method="post")
                 input.hidden(type="hidden" value=csrfToken name="_csrf")
+                input.hidden(type="hidden" value=editMode name="editMode")
                 .grid.grid-cols-6.gap-6
 
                     .col-span-6
@@ -20,6 +21,7 @@ block content
                             name="firstName"
                             id="firstName"
                             placeholder="John"
+                            value=`${editMode ? user.first_name : null}`
                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
                         )
                     .col-span-6
@@ -30,6 +32,7 @@ block content
                             name="lastName"
                             id="lastName"
                             placeholder="Snow"
+                            value=`${editMode ? user.last_name : null}`
                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
                         )
 
@@ -42,6 +45,7 @@ block content
                             name="email"
                             id="email"
                             placeholder="example@example.com"
+                            value=`${editMode ? user.email : null}`
                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
                         )
 
@@ -54,6 +58,7 @@ block content
                             name="password"
                             id="password"
                             placeholder="**********"
+                            value=`${editMode ? password : null}`
                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
                         )
 
@@ -66,6 +71,7 @@ block content
                             name="confirmPassword"
                             id="confirmPassword"
                             placeholder="**********"
+                            value=`${editMode ? password : null}`
                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
                         )
 
@@ -79,11 +85,14 @@ block content
                             name="role"
                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
                         )
-                            option(value="supervisor") Supervisor
-                            option(value="admin" selected) Admin
+                            option(value="supervisor" selected=`${editMode && user.role === 'supervisor'}`) Supervisor
+                            option(value="admin" selected=`${editMode && user.role === 'admin'}`) Admin
 
                 //- Submit Button
                 .grid.grid-cols-7.gap-6.mt-7
                     .col-span-3.col-start-3
                         button.bg-indigo-700.text-white.font-bold.text-center.w-full.py-2.px-6.rounded(type="submit")
-                            | Create
+                            if editMode
+                                | Update
+                            else
+                                | Create

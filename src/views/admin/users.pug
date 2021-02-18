@@ -18,35 +18,36 @@ block content
 
             tbody
                 each userData, index in users
-                    tr.border-b(class=`${index % 2 !== 0 ? 'bg-gray-50' : ''}`)
-                        td.p-6(class="w-4/12") #{userData.first_name} #{userData.last_name}
-                        td.p-6.capitalize(class="w-2/12")= userData.role
-                        td.p-6.capitalize(class="w-3/12")= userData.lastLoggedIn
+                    if userData.role !== 'root'
+                        tr.border-b(class=`${index % 2 === 0 ? 'bg-gray-50' : ''}`)
+                            td.p-6(class="w-4/12") #{userData.first_name} #{userData.last_name}
+                            td.p-6.capitalize(class="w-2/12")= userData.role
+                            td.p-6.capitalize(class="w-3/12")= userData.lastLoggedIn
 
-                        if user.role === 'supervisor' || user.role === 'root'
-                            td.text-center.p-6(class="w-3/12")
-                                .flex.items-center.justify-center.h-full
-                                    a.bg-blue-800.text-white.font-bold.tracking-wide.px-6.py-3.mr-2.rounded(
-                                        href=`/admin/edit-user/${userData._id}?edit=true`
-                                    )
-                                        | Edit
+                            if user.role === 'supervisor' || user.role === 'root'
+                                td.text-center.p-6(class="w-3/12")
+                                    .flex.items-center.justify-center.h-full
+                                        a.bg-blue-800.text-white.font-bold.tracking-wide.px-6.py-3.mr-2.rounded(
+                                            href=`/admin/edit-user/${userData._id}?edit=true`
+                                        )
+                                            | Edit
 
-                                    form.m-0.mr-2(action="/admin/suspend-user/" method="post")
-                                        input.hidden(type="hidden" value=csrfToken name="_csrf")
-                                        input.hiden(type="hidden" value=userData._id name="id")
-                                        button.bg-gray-600.text-white.font-bold.tracking-wide.px-4.py-3.rounded(type="submit")
-                                            | Suspend
+                                        form.m-0.mr-2(action="/admin/suspend-user/" method="post")
+                                            input.hidden(type="hidden" value=csrfToken name="_csrf")
+                                            input.hiden(type="hidden" value=userData._id name="id")
+                                            button.bg-gray-600.text-white.font-bold.tracking-wide.px-4.py-3.rounded(type="submit")
+                                                | Suspend
 
-                                    form.m-0.mr-2(action="/admin/delete-user/" method="post")
-                                        input.hidden(type="hidden" value=csrfToken name="_csrf")
-                                        input.hiden(type="hidden" value=userData._id name="id")
-                                        button.bg-red-600.text-white.font-bold.tracking-wide.px-4.py-3.rounded(type="submit")
-                                            | Delete
+                                        form.m-0.mr-2(action="/admin/delete-user/" method="post")
+                                            input.hidden(type="hidden" value=csrfToken name="_csrf")
+                                            input.hiden(type="hidden" value=userData._id name="id")
+                                            button.bg-red-600.text-white.font-bold.tracking-wide.px-4.py-3.rounded(type="submit")
+                                                | Delete
 
-                        else
-                            td.text-center.p-6(class="w-1/12")
-                                if user._id.toString() == userData._id.toString()
-                                    a.bg-blue-800.text-white.font-bold.tracking-wide.px-6.py-3.mr-2.rounded(
-                                        href=`/admin/edit-user/${ userData._id }?edit=true`
-                                    )
-                                        | Edit
+                            else
+                                td.text-center.p-6(class="w-1/12")
+                                    if user._id.toString() == userData._id.toString()
+                                        a.bg-blue-800.text-white.font-bold.tracking-wide.px-6.py-3.mr-2.rounded(
+                                            href=`/admin/edit-user/${ userData._id }?edit=true`
+                                        )
+                                            | Edit

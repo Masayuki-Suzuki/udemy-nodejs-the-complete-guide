@@ -10,7 +10,14 @@ export const isAdminUser = (req, res, next): void => {
 
     if (!isLoggedIn || !user) {
         res.status(401).redirect('/login')
-    } else if (user && !(user.role === 'admin' || user.role === 'root')) {
+    } else if (
+        user &&
+        !(
+            user.role === 'admin' ||
+            user.role === 'root' ||
+            user.role === 'supervisor'
+        )
+    ) {
         res.status(401).redirect('/')
     } else {
         next()

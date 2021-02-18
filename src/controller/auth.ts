@@ -276,7 +276,14 @@ export const postAdminSignup = async (
     req: PostSignUpRequest,
     res: Response
 ): Promise<void> => {
-    const { email, password, confirmPassword, firstName, lastName } = req.body
+    const {
+        email,
+        password,
+        confirmPassword,
+        firstName,
+        lastName,
+        role
+    } = req.body
 
     if (!email.length) {
         req.flash('error', 'Email address is empty')
@@ -313,7 +320,7 @@ export const postAdminSignup = async (
                 password: hashPassword,
                 first_name: firstName,
                 last_name: lastName,
-                role: 'admin',
+                role: role || 'admin',
                 cart: { items: [] }
             })
 
