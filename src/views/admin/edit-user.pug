@@ -1,14 +1,18 @@
-extends ../partials/layout
+extends ../partials/layout-admin
 
 block content
     .container.m-auto.px-8.pt-10.w-full.h-full-container.flex.items-center.justify-center
         .bg-white.p-6.rounded.w-400
-            h1.text-2xl.text-gray-700.font-semibold.text-center.mb-5 Add New User
+            h1.text-2xl.text-gray-700.font-semibold.text-center.mb-5
+                if editMode
+                    | Edit User
+                else
+                    | Add New User
 
             if errorMessage
                 p.text-red-700.text-center.mb-4= errorMessage
 
-            form.login-form.block(action="/admin/add-new-user" method="post")
+            form.login-form.block(action="/admin/edit-user" method="post")
                 input.hidden(type="hidden" value=csrfToken name="_csrf")
                 input.hidden(type="hidden" value=editMode name="editMode")
                 .grid.grid-cols-6.gap-6
@@ -21,7 +25,7 @@ block content
                             name="firstName"
                             id="firstName"
                             placeholder="John"
-                            value=`${editMode ? user.first_name : null}`
+                            value=`${editMode ? user.first_name : ''}`
                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
                         )
                     .col-span-6
@@ -32,7 +36,7 @@ block content
                             name="lastName"
                             id="lastName"
                             placeholder="Snow"
-                            value=`${editMode ? user.last_name : null}`
+                            value=`${editMode ? user.last_name : ''}`
                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
                         )
 
@@ -45,7 +49,7 @@ block content
                             name="email"
                             id="email"
                             placeholder="example@example.com"
-                            value=`${editMode ? user.email : null}`
+                            value=`${editMode ? user.email : ''}`
                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
                         )
 
@@ -58,7 +62,6 @@ block content
                             name="password"
                             id="password"
                             placeholder="**********"
-                            value=`${editMode ? password : null}`
                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
                         )
 
@@ -71,22 +74,21 @@ block content
                             name="confirmPassword"
                             id="confirmPassword"
                             placeholder="**********"
-                            value=`${editMode ? password : null}`
                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
                         )
 
                     //- User Role
                     .col-span-6
                         label.block.text-sm.font-medium.text-gray-700(for="userRole")
-                            | User Role:
+                            | User Role: #{editMode && user.role === 'supervisor'}
 
                         select(
                             id="userRole"
                             name="role"
                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
                         )
-                            option(value="supervisor" selected=`${editMode && user.role === 'supervisor'}`) Supervisor
-                            option(value="admin" selected=`${editMode && user.role === 'admin'}`) Admin
+                            option(value="supervisor" selected=(editMode && user.role === 'supervisor')) Supervisor
+                            option(value="admin" selected=(!editMode || editMode && user.role === 'admin')) Admin
 
                 //- Submit Button
                 .grid.grid-cols-7.gap-6.mt-7

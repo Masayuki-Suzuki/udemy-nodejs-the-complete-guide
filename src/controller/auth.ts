@@ -11,6 +11,7 @@ import { DocumentUser, UserWithCart } from '../types/models'
 import { GetNewPasswordRequest, PostSignUpRequest } from '../types/controllers'
 import { LoginBody } from '../types/auth'
 import { Nullable } from '../types/utilities'
+import user from '../models/user'
 
 dotenv.config()
 
@@ -89,7 +90,7 @@ export const postLogin = async (
 ): Promise<void> => {
     const user = (await User.findOne({ email: req.body.email })) as DocumentUser
 
-    if (user) {
+    if (user && !user.isSuspended && !!user.isDeleted) {
         const isMatchPassword = await bcrypt
             .compare(req.body.password, user.password)
             .catch(err => {
@@ -278,25 +279,47 @@ export const postAdminSignup = async (
 ): Promise<void> => {
     const {
         email,
-        password,
         confirmPassword,
         firstName,
         lastName,
-        role
+        password,
+        role,
+        editMode
     } = req.body
+
+    const redirectPath = editMode ? '/admin/users' : '/admin/add-new-user'
 
     if (!email.length) {
         req.flash('error', 'Email address is empty')
-        res.redirect('/admin/add-new-user')
+        res.redirect(redirectPath)
     } else if (!(firstName.length && lastName.length)) {
         req.flash('error', 'First Name and/or Last Name is empty.')
-        res.redirect('/admin/add-new-user')
+        res.redirect(redirectPath)
     } else if (!(password.length && confirmPassword.length)) {
         req.flash('error', 'Password is empty.')
-        res.redirect('/admin/add-new-user')
+        res.redirect(redirectPath)
     } else {
         const userDoc = await User.findOne({ email })
-        const isValidPassword = password === confirmPassword
+        let hashPassword = await bcrypt.hash(password, 16).catch(err => {
+            console.error(err)
+            res.redirect('/admin/add-new-user')
+        })
+        let isValidPassword = false
+
+        if (editMode) {
+            if (password.length > 0) {
+                isValidPassword = password === confirmPassword
+            } else {
+                isValidPassword = true
+
+                if (userDoc) {
+                    hashPassword = userDoc.password
+                } else {
+                    req.flash('error', 'User does not exit on Database.')
+                    res.redirect(redirectPath)
+                }
+            }
+        }
 
         let loggedInUser: Nullable<UserWithCart>
         if (req.session.user) {
@@ -310,11 +333,6 @@ export const postAdminSignup = async (
         }
 
         if (!userDoc && isValidPassword) {
-            const hashPassword = await bcrypt.hash(password, 16).catch(err => {
-                console.error(err)
-                res.redirect('/admin/add-new-user')
-            })
-
             const user = new User({
                 email,
                 password: hashPassword,
@@ -354,6 +372,15 @@ admin${emailMessage}.</p>
         } else if (!userDoc && !isValidPassword) {
             req.flash('error', 'Do not match passwords.')
             res.redirect('/admin/add-new-user')
+        } else if (userDoc && isValidPassword && editMode) {
+            userDoc.first_name = firstName
+            userDoc.last_name = lastName
+            userDoc.email = email
+            userDoc.password = hashPassword || '123456'
+            userDoc.role = role || 'admin'
+
+            await userDoc.save()
+            res.redirect('/admin/users')
         } else {
             req.flash('error', 'Email address has already been taken.')
             res.redirect('/admin/add-new-user')

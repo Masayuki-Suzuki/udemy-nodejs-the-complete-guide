@@ -18,7 +18,14 @@ router.get(
 router.get('/users', AdminController.getUsersPage as PromiseController)
 router.get('/products', ProductsController.getProductPage as PromiseController)
 router.get('/dashboard', AdminController.getDashboardPage)
-router.get('/add-new-user', AdminController.getAddNewUserPage)
+router.get(
+    '/add-new-user',
+    AdminController.getEditUserPage as PromiseController
+)
+router.get(
+    '/edit-user/:id',
+    AdminController.getEditUserPage as PromiseController
+)
 router.get('/', AdminController.redirectToDashboard)
 
 router.post(
@@ -33,6 +40,6 @@ router.post(
     '/delete-product',
     ProductsController.postDeleteProduct as PromiseController<PostDeleteProductReq>
 )
-router.post('/add-new-user', postAdminSignup as PromiseController)
+router.post('/edit-user', postAdminSignup as PromiseController)
 
 export default router
