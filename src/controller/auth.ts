@@ -427,3 +427,20 @@ export const postActivateUser = async (
 
     res.redirect('/admin/users')
 }
+
+export const deleteUser = async (
+    req: Request<unknown, unknown, { id: string }, unknown>,
+    res: Response
+): Promise<void> => {
+    const targetUser = await User.findOne({ _id: req.body.id }).catch(err => {
+        console.error(err)
+        res.redirect('/admin/users')
+    })
+
+    if (targetUser) {
+        targetUser.isDeleted = true
+        await targetUser.save()
+    }
+
+    res.redirect('/admin/users')
+}

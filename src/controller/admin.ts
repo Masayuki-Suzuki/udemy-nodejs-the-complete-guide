@@ -18,8 +18,10 @@ export const getUsersPage = async (
     res: Response
 ): Promise<void> => {
     const usersData = (await User.find({
-        isDeleted: { $ne: false }
+        isDeleted: { $ne: true }
     })) as DocumentUser[]
+
+    console.log(usersData)
 
     const users = usersData.map(user => {
         if (

@@ -2,6 +2,7 @@ import express from 'express'
 import ProductsController from '../controller/products'
 import AdminController from '../controller/admin'
 import {
+    deleteUser,
     postActivateUser,
     postAdminSignup,
     postSuspendUser
@@ -47,5 +48,6 @@ router.post(
 router.post('/edit-user', postAdminSignup as PromiseController)
 router.post('/suspend-user', postSuspendUser as PromiseController)
 router.post('/activate-user', postActivateUser as PromiseController)
+router.post('/delete-user', deleteUser as PromiseController)
 
 export default router
