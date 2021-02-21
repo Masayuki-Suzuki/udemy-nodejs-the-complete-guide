@@ -1,7 +1,11 @@
 import express from 'express'
 import ProductsController from '../controller/products'
 import AdminController from '../controller/admin'
-import { postAdminSignup } from '../controller/auth'
+import {
+    postActivateUser,
+    postAdminSignup,
+    postSuspendUser
+} from '../controller/auth'
 import {
     PostDeleteProductReq,
     PostProductRequest,
@@ -41,5 +45,7 @@ router.post(
     ProductsController.postDeleteProduct as PromiseController<PostDeleteProductReq>
 )
 router.post('/edit-user', postAdminSignup as PromiseController)
+router.post('/suspend-user', postSuspendUser as PromiseController)
+router.post('/activate-user', postActivateUser as PromiseController)
 
 export default router

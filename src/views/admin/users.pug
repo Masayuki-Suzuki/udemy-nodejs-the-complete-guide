@@ -32,11 +32,19 @@ block content
                                         )
                                             | Edit
 
-                                        form.m-0.mr-2(action="/admin/suspend-user/" method="post")
-                                            input.hidden(type="hidden" value=csrfToken name="_csrf")
-                                            input.hiden(type="hidden" value=userData._id name="id")
-                                            button.bg-gray-600.text-white.font-bold.tracking-wide.px-4.py-3.rounded(type="submit")
-                                                | Suspend
+                                        if userData.isSuspended
+                                            form.m-0.mr-2(action="/admin/activate-user/" method="post")
+                                                input.hidden(type="hidden" value=csrfToken name="_csrf")
+                                                input.hiden(type="hidden" value=userData._id name="id")
+                                                button.bg-green-600.text-white.font-bold.tracking-wide.px-4.py-3.rounded(type="submit")
+                                                    | Activate
+
+                                        else
+                                            form.m-0.mr-2(action="/admin/suspend-user/" method="post")
+                                                input.hidden(type="hidden" value=csrfToken name="_csrf")
+                                                input.hiden(type="hidden" value=userData._id name="id")
+                                                button.bg-gray-600.text-white.font-bold.tracking-wide.px-4.py-3.rounded(type="submit")
+                                                    | Suspend
 
                                         form.m-0.mr-2(action="/admin/delete-user/" method="post")
                                             input.hidden(type="hidden" value=csrfToken name="_csrf")

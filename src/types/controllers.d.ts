@@ -9,7 +9,7 @@ export type SignUpDataType = {
     firstName: string
     lastName: string
     role?: 'supervisor' | 'admin' | 'customer'
-    editMode: boolean
+    editMode: 'true' | 'false'
 }
 
 export type PromiseController<Req = Request, Res = Response, Rt = void> = (

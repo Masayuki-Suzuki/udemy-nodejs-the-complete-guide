@@ -14,7 +14,7 @@ block content
 
             form.login-form.block(action="/admin/edit-user" method="post")
                 input.hidden(type="hidden" value=csrfToken name="_csrf")
-                input.hidden(type="hidden" value=editMode name="editMode")
+                input.hidden(type="hidden" value=`${editMode}` name="editMode")
                 .grid.grid-cols-6.gap-6
 
                     .col-span-6
@@ -89,6 +89,7 @@ block content
                         )
                             option(value="supervisor" selected=(editMode && user.role === 'supervisor')) Supervisor
                             option(value="admin" selected=(!editMode || editMode && user.role === 'admin')) Admin
+                            option(value="customer" selected=(!editMode || editMode && user.role === 'customer')) Customer
 
                 //- Submit Button
                 .grid.grid-cols-7.gap-6.mt-7

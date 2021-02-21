@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { Response } from 'express'
+import { Request, Response } from 'express'
 import dotenv from 'dotenv'
 import bcrypt from 'bcryptjs'
 import nodemailer from 'nodemailer'
@@ -11,7 +11,6 @@ import { DocumentUser, UserWithCart } from '../types/models'
 import { GetNewPasswordRequest, PostSignUpRequest } from '../types/controllers'
 import { LoginBody } from '../types/auth'
 import { Nullable } from '../types/utilities'
-import user from '../models/user'
 
 dotenv.config()
 
@@ -284,10 +283,10 @@ export const postAdminSignup = async (
         firstName,
         lastName,
         password,
-        role,
-        editMode
+        role
     } = req.body
 
+    const editMode = req.body.editMode === 'true'
     const redirectPath = editMode ? '/admin/users' : '/admin/add-new-user'
 
     if (!email.length) {
@@ -296,11 +295,14 @@ export const postAdminSignup = async (
     } else if (!(firstName.length && lastName.length)) {
         req.flash('error', 'First Name and/or Last Name is empty.')
         res.redirect(redirectPath)
-    } else if (!(password.length && confirmPassword.length)) {
+    } else if (!editMode && !(password.length && confirmPassword.length)) {
         req.flash('error', 'Password is empty.')
         res.redirect(redirectPath)
     } else {
         const userDoc = await User.findOne({ email })
+
+        console.log(userDoc)
+
         let hashPassword = await bcrypt.hash(password, 16).catch(err => {
             console.error(err)
             res.redirect('/admin/add-new-user')
@@ -387,4 +389,41 @@ admin${emailMessage}.</p>
             res.redirect('/admin/add-new-user')
         }
     }
+}
+
+export const postSuspendUser = async (
+    req: Request<unknown, unknown, { id: string }, unknown>,
+    res: Response
+): Promise<void> => {
+    console.log(req.body.id)
+    const targetUser = await User.findOne({ _id: req.body.id }).catch(err => {
+        console.error(err)
+        res.redirect('/admin/users')
+    })
+
+    console.log(targetUser)
+
+    if (targetUser) {
+        targetUser.isSuspended = true
+        await targetUser.save()
+    }
+
+    res.redirect('/admin/users')
+}
+
+export const postActivateUser = async (
+    req: Request<unknown, unknown, { id: string }, unknown>,
+    res: Response
+): Promise<void> => {
+    const targetUser = await User.findOne({ _id: req.body.id }).catch(err => {
+        console.error(err)
+        res.redirect('/admin/users')
+    })
+
+    if (targetUser) {
+        targetUser.isSuspended = false
+        await targetUser.save()
+    }
+
+    res.redirect('/admin/users')
 }
