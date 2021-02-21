@@ -90,7 +90,7 @@ export const postLogin = async (
 ): Promise<void> => {
     const user = (await User.findOne({ email: req.body.email })) as DocumentUser
 
-    if (user && !user.isSuspended && !!user.isDeleted) {
+    if (user && !user.isSuspended && !user.isDeleted) {
         const isMatchPassword = await bcrypt
             .compare(req.body.password, user.password)
             .catch(err => {
@@ -99,6 +99,7 @@ export const postLogin = async (
                 req.flash('error', 'Invalid email or password.')
                 res.redirect('/login')
             })
+
         if (isMatchPassword) {
             user.lastLoggedIn = Date.now()
             await user.save()
