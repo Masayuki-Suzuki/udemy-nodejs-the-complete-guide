@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import bcrypt from 'bcryptjs'
 import nodemailer from 'nodemailer'
 import sendgridTransport from 'nodemailer-sendgrid-transport'
+import { validationResult } from 'express-validator/check'
 import User from '../models/user'
 import getFlashErrorMessage from '../utils/getFlashErrorMessage'
 import { CustomRequest, RequestWithCustomSession } from '../types/express'
@@ -135,10 +136,17 @@ export const postSignUp = async (
     res: Response
 ): Promise<void> => {
     const { email, password, confirmPassword, firstName, lastName } = req.body
+    const errors = validationResult(req as Request)
 
-    if (!email.length) {
-        req.flash('error', 'Email address is empty')
-        res.redirect('/signup')
+    if (!errors.isEmpty()) {
+        // I don't use following code but left them to know how to use express-validator later.
+        const errorMessage = errors.array()[0]
+        console.error(errorMessage)
+        res.status(422).render('shop/signup', {
+            title: 'Sign Up | Shops!',
+            path: 'signup',
+            errorMessage: errorMessage.msg
+        })
     } else if (!(firstName.length && lastName.length)) {
         req.flash('error', 'First Name and/or Last Name is empty.')
         res.redirect('/signup')

@@ -1,4 +1,5 @@
 import express from 'express'
+import { check, body } from 'express-validator/check'
 import {
     GetNewPasswordController,
     GetNewPasswordRequest,
@@ -56,7 +57,25 @@ router.post(
 )
 router.post('/order-products', authenticated, postOrder as PromiseController)
 router.post('/login', postLogin as PromiseController)
-router.post('/signup', postSignUp as PromiseController)
+router.post(
+    '/signup',
+    [
+        check('email').isEmail().withMessage('Email address is empty'),
+        body(
+            'password',
+            'Please enter a password with only number and text and at least 5 characters.'
+        )
+            .isLength({ min: 6 })
+            .isAlphanumeric(),
+        body('confirmPassword').custom((value, { req }) => {
+            if (value !== req.body.password) {
+                throw new Error('Password does not match.')
+            }
+            return true
+        })
+    ],
+    postSignUp as PromiseController
+)
 router.post('/logout', postLogOut as PromiseController)
 router.post('/reset-password', postResetPassword as PromiseController)
 // eslint-disable-next-line
