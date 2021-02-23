@@ -6,6 +6,7 @@ import {
     PostProductRequest,
     PromiseController
 } from 'src/types/controllers'
+import User from '../models/user'
 import { authenticated } from '../middleware/authentication'
 import {
     addItemToCart,
@@ -31,7 +32,7 @@ import {
     postResetPassword,
     postSignUp
 } from '../controller/auth'
-import { CustomRequestWithParam } from '../types/express'
+import checkMatchPassword from '../utils/validations/checkMatchPassword'
 
 const router = express.Router()
 
@@ -56,11 +57,28 @@ router.post(
     deleteItemFromCart as PromiseController<PostItemToCart>
 )
 router.post('/order-products', authenticated, postOrder as PromiseController)
-router.post('/login', postLogin as PromiseController)
+router.post(
+    '/login',
+    [check('email').isEmail().withMessage('Please enter valid email address.')],
+    postLogin as PromiseController
+)
 router.post(
     '/signup',
     [
-        check('email').isEmail().withMessage('Email address is empty'),
+        check('email')
+            .isEmail()
+            .withMessage('Email address is empty')
+            .custom(value => {
+                return User.findOne({ email: value })
+                    .then(user => {
+                        if (user) {
+                            return Promise.reject(
+                                'Email address has already been taken.'
+                            )
+                        }
+                    })
+                    .catch(err => console.error(err))
+            }),
         body(
             'password',
             'Please enter a password with only number and text and at least 5 characters.'
@@ -79,6 +97,24 @@ router.post(
 router.post('/logout', postLogOut as PromiseController)
 router.post('/reset-password', postResetPassword as PromiseController)
 // eslint-disable-next-line
-router.post('/new-password', postNewPassword as any)
+router.post(
+    '/new-password',
+    [
+        body(
+            'password',
+            'Please enter a password with only number and text and at least 5 characters.'
+        )
+            .isLength({ min: 6 })
+            .isAlphanumeric(),
+        body('confirmPassword').custom((value, { req }) => {
+            console.log(value, req.body.password, value !== req.body.password)
+            if (value !== req.body.password) {
+                throw new Error('Password does not match.')
+            }
+            return true
+        })
+    ],
+    postNewPassword as any
+)
 
 export default router
