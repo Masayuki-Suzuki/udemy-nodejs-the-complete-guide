@@ -19,6 +19,7 @@ block content
                             type="text"
                             name="firstName"
                             id="firstName"
+                            value=`${oldInput ? oldInput.firstName : ''}`
                             placeholder="John"
                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
                         )
@@ -29,6 +30,7 @@ block content
                             type="text"
                             name="lastName"
                             id="lastName"
+                            value=`${oldInput ? oldInput.lastName : ''}`
                             placeholder="Snow"
                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
                         )
@@ -41,8 +43,9 @@ block content
                             type="email"
                             name="email"
                             id="email"
+                            value=`${oldInput ? oldInput.email : ''}`
                             placeholder="example@example.com"
-                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
+                            class=`mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border p-2 ${ validationErrors && validationErrors.email ? 'border-red-800': 'border-gray-200' }`
                         )
 
                     //- Password
@@ -53,8 +56,9 @@ block content
                             type="password"
                             name="password"
                             id="password"
+                            value=`${oldInput ? oldInput.password : ''}`
                             placeholder="**********"
-                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
+                            class=`mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border p-2 ${ validationErrors && validationErrors.password ? 'border-red-600': 'border-gray-200' }`
                         )
 
                     //- Confirm Password
@@ -73,4 +77,4 @@ block content
                 .grid.grid-cols-7.gap-6.mt-7
                     .col-span-3.col-start-3
                         button.bg-indigo-700.text-white.font-bold.text-center.w-full.py-2.px-6.rounded(type="submit")
-                            | Log in
+                            | Sign Up
