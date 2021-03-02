@@ -150,25 +150,26 @@ export const postSignUp = async (
     const errors = validationResult(req as Request)
 
     if (!errors.isEmpty()) {
-        const errorMessage = errors.array()[0]
-
         const emailError = errors.array().find(err => err.param === 'email')
         const passwordError = errors
             .array()
-            .find(
-                err =>
-                    err.param === 'password' || err.param === 'confirmPassword'
-            )
+            .find(err => err.param === 'password')
+        const confirmPasswordError = errors
+            .array()
+            .find(err => err.param === 'confirmPassword')
+
+        const validationErrors = {
+            email: emailError && emailError.msg,
+            password: passwordError && passwordError.msg,
+            confirmPassword: confirmPasswordError && confirmPasswordError.msg
+        }
 
         res.status(422).render('shop/signup', {
             title: 'Sign Up | Shops!',
             path: 'signup',
-            errorMessage: errorMessage.msg,
+            errorMessage: null,
             oldInput: req.body,
-            validationErrors: {
-                email: emailError,
-                password: passwordError
-            }
+            validationErrors
         })
     } else if (!(firstName.length && lastName.length)) {
         req.flash('error', 'First Name and/or Last Name is empty.')

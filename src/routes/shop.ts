@@ -77,7 +77,10 @@ router.post(
                             )
                         }
                     })
-                    .catch(err => console.error(err))
+                    .catch(err => {
+                        console.error(err)
+                        throw new Error(err)
+                    })
             }),
         body(
             'password',
