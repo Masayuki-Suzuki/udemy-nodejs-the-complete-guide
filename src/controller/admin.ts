@@ -21,8 +21,6 @@ export const getUsersPage = async (
         isDeleted: { $ne: true }
     })) as DocumentUser[]
 
-    console.log(usersData)
-
     const users = usersData.map(user => {
         if (
             user._doc &&

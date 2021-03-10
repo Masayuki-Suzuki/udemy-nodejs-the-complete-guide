@@ -1,4 +1,5 @@
 import express from 'express'
+import { body } from 'express-validator/check'
 import ProductsController from '../controller/products'
 import AdminController from '../controller/admin'
 import {
@@ -35,10 +36,50 @@ router.get('/', AdminController.redirectToDashboard)
 
 router.post(
     '/add-product',
+    [
+        body('title')
+            .isAlphanumeric()
+            .isLength({ min: 3 })
+            .trim()
+            .withMessage(
+                'Product title must be alphanumeric and at least 3 characters.'
+            ),
+        body('imageURL').isEmpty().isURL().withMessage('In valid URL'),
+        body('price')
+            .isFloat()
+            .custom(val => {
+                const price = parseFloat(val)
+                if (price < 0) {
+                    throw new Error('Price must be positive number.')
+                }
+                return true
+            }),
+        body('descriptions').trim()
+    ],
     ProductsController.postAddProduct as PromiseController<PostProductRequest>
 )
 router.post(
     '/edit-product',
+    [
+        body('title')
+            .isAlphanumeric()
+            .isLength({ min: 3 })
+            .trim()
+            .withMessage(
+                'Product title must be alphanumeric and at least 3 characters.'
+            ),
+        body('imageURL').isEmpty().isURL().withMessage('In valid URL'),
+        body('price')
+            .isFloat()
+            .custom(val => {
+                const price = parseFloat(val)
+                if (price < 0) {
+                    throw new Error('Price must be positive number.')
+                }
+                return true
+            }),
+        body('descriptions').trim()
+    ],
     ProductsController.postEditProduct as PromiseController<PostProductRequest>
 )
 router.post(

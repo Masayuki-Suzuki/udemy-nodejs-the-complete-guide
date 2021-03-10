@@ -1,8 +1,9 @@
-import { Document } from 'mongoose'
+import { CreateQuery, Document } from 'mongoose'
 import { Request, Response } from 'express'
+import { validationResult } from 'express-validator'
 import { PostDeleteProductReq, PostProductRequest } from '../types/controllers'
 import Product from '../models/product'
-import { ProductModel } from '../types/models'
+import { ProductModel, ProductType } from '../types/models'
 import currencyFormatter from '../utils/currencyFormatter'
 
 export const getAddProductPage = (req: Request, res: Response): void => {
@@ -53,26 +54,42 @@ export const postAddProduct = async (
     req: PostProductRequest,
     res: Response
 ): Promise<void> => {
-    if (req.session.user) {
-        // const params = {
-        //     ...req.body,
-        //     price_fine: currencyFormatter(req.body.price),
-        //     userId: new ObjectId(req.session.user._id)
-        // } as ProductType
-        await Product.create({
+    const errors = validationResult(req as Request)
+
+    if (req.session.user && errors.isEmpty()) {
+        const doc = {
             title: req.body.title,
             description: req.body.description,
             image_url: req.body.image_url,
             price: req.body.price,
             price_fine: currencyFormatter(req.body.price),
             userId: req.session.user
-        })
-        // await mgProduct.save()
-        // const product = new Product(params)
-        // await product.create()
+        }
+        await Product.create(doc)
         res.redirect('/admin/products')
     } else {
-        res.redirect('/')
+        const errorMessages = {
+            title: '',
+            description: '',
+            imageURL: '',
+            price: ''
+        }
+
+        errors.array().find(err => {
+            errorMessages[err.param] = err.msg
+        })
+
+        console.log(errorMessages)
+
+        res.render('./admin/edit-product', {
+            title: 'Add Product',
+            path: 'edit-product',
+            pageTitle: 'Add Product',
+            product: req.body,
+            edit: false,
+            errors: errors.array()
+        })
+        // res.redirect('/')
     }
 }
 

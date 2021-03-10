@@ -1,11 +1,6 @@
 import express from 'express'
 import { check, body } from 'express-validator/check'
-import {
-    GetNewPasswordController,
-    GetNewPasswordRequest,
-    PostProductRequest,
-    PromiseController
-} from 'src/types/controllers'
+import { PostProductRequest, PromiseController } from 'src/types/controllers'
 import User from '../models/user'
 import { authenticated } from '../middleware/authentication'
 import {
@@ -32,7 +27,6 @@ import {
     postResetPassword,
     postSignUp
 } from '../controller/auth'
-import checkMatchPassword from '../utils/validations/checkMatchPassword'
 
 const router = express.Router()
 
@@ -87,7 +81,8 @@ router.post(
             'Please enter a password with only number and text and at least 5 characters.'
         )
             .isLength({ min: 6 })
-            .isAlphanumeric(),
+            .isAlphanumeric()
+            .trim(),
         body('confirmPassword').custom((value, { req }) => {
             if (value !== req.body.password) {
                 throw new Error('Password does not match.')
@@ -110,7 +105,6 @@ router.post(
             .isLength({ min: 6 })
             .isAlphanumeric(),
         body('confirmPassword').custom((value, { req }) => {
-            console.log(value, req.body.password, value !== req.body.password)
             if (value !== req.body.password) {
                 throw new Error('Password does not match.')
             }
