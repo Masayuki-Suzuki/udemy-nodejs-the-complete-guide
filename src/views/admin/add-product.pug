@@ -22,8 +22,10 @@ block content
                                     name="title"
                                     id="product-name"
                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
-                                    value=``
+                                    value=`${errorMessages.title ? product.title : ''}`
                                 )
+                                if errorMessages.title
+                                    p.text-red-700= errorMessages.title
 
                             //- Product Image URL (ToDo: Will be image uploader)
                             .col-span-6
@@ -34,7 +36,10 @@ block content
                                     name="image_url"
                                     id="product-image"
                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
+                                    value=`${errorMessages ? product.image_url : ''}`
                                 )
+                                if errorMessages.imageURL
+                                    p.text-red-700= errorMessages.imageURL
 
                             //- Product Description
                             .col-span-6
@@ -45,6 +50,7 @@ block content
                                     id="product-description"
                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
                                     rows=3
+                                    value=`${errorMessages ? product.description : ''}`
                                 )
 
                             //- Product Price
@@ -59,6 +65,8 @@ block content
                                         id="product-price"
                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border border-gray-200 p-2"
                                     )
+                                    if errorMessages.price
+                                        p.text-red-700= errorMessages.price
 
                         //- Submit Button
                         .grid.grid-cols-6.gap-6.mt-7

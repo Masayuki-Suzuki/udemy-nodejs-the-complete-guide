@@ -1,10 +1,17 @@
-import { CreateQuery, Document } from 'mongoose'
+import { Document } from 'mongoose'
 import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import { PostDeleteProductReq, PostProductRequest } from '../types/controllers'
 import Product from '../models/product'
-import { ProductModel, ProductType } from '../types/models'
+import { ProductModel } from '../types/models'
 import currencyFormatter from '../utils/currencyFormatter'
+import { Nullable } from '../types/utilities'
+
+type AddProductErrorMessage = {
+    title: Nullable<string>
+    imageURL: Nullable<string>
+    price: Nullable<string>
+}
 
 export const getAddProductPage = (req: Request, res: Response): void => {
     res.render('./admin/edit-product', {
@@ -68,18 +75,17 @@ export const postAddProduct = async (
         await Product.create(doc)
         res.redirect('/admin/products')
     } else {
-        const errorMessages = {
-            title: '',
-            description: '',
-            imageURL: '',
-            price: ''
+        const errorMessages: AddProductErrorMessage = {
+            title: null,
+            imageURL: null,
+            price: null
         }
 
         errors.array().find(err => {
-            errorMessages[err.param] = err.msg
+            if (errorMessages) {
+                errorMessages[err.param] = err.msg
+            }
         })
-
-        console.log(errorMessages)
 
         res.render('./admin/edit-product', {
             title: 'Add Product',
@@ -87,9 +93,8 @@ export const postAddProduct = async (
             pageTitle: 'Add Product',
             product: req.body,
             edit: false,
-            errors: errors.array()
+            errorMessages
         })
-        // res.redirect('/')
     }
 }
 
