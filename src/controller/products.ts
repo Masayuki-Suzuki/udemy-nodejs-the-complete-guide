@@ -30,6 +30,12 @@ export const getEditProductPage = async (
         req.params.productId
     )) as ProductModel
 
+    const errorMessages: Nullable<AddProductErrorMessage> = {
+        title: req.flash('errorMessage-title')[0],
+        imageURL: req.flash('errorMessage-imageURL')[0],
+        price: req.flash('errorMessage-title')[0]
+    }
+
     if (!edit || !product) {
         res.redirect('/admin/products')
     }
@@ -39,7 +45,8 @@ export const getEditProductPage = async (
         path: 'edit-product',
         pageTitle: 'Edit Product',
         product,
-        editMode: edit
+        editMode: edit,
+        errorMessages
     })
 }
 
@@ -87,12 +94,21 @@ export const postAddProduct = async (
             }
         })
 
+        const product = {
+            _id: req.body._id,
+            title: req.body.title,
+            image_url: req.body.image_url,
+            description: req.body.description,
+            price: req.body.price
+        }
+
         res.render('./admin/edit-product', {
             title: 'Add Product',
             path: 'edit-product',
             pageTitle: 'Add Product',
-            product: req.body,
             edit: false,
+            hasError: true,
+            product,
             errorMessages
         })
     }
@@ -102,7 +118,9 @@ export const postEditProduct = async (
     req: PostProductRequest,
     res: Response
 ): Promise<void> => {
-    if (req.session.user) {
+    const errors = validationResult(req as Request)
+
+    if (req.session.user && errors.isEmpty()) {
         const product = (await Product.findById(req.body._id)) as ProductModel &
             Document
         product.title = req.body.title
@@ -114,7 +132,11 @@ export const postEditProduct = async (
 
         res.redirect('/admin/products')
     } else {
-        res.redirect('/')
+        errors.array().find(err => {
+            req.flash(`errorMessage-${err.param}`, err.msg)
+        })
+
+        res.redirect(`/admin/edit-product/${req.body._id}?edit=true`)
     }
 }
 

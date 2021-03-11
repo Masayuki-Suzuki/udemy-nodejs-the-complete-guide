@@ -38,13 +38,11 @@ router.post(
     '/add-product',
     [
         body('title')
-            .isAlphanumeric()
             .isLength({ min: 3 })
-            .trim()
             .withMessage(
                 'Product title must be alphanumeric and at least 3 characters.'
             ),
-        body('imageURL').isEmpty().isURL().withMessage('In valid URL'),
+        body('imageURL').isEmpty().withMessage('In valid URL'),
         body('price')
             .isFloat()
             .custom(val => {
@@ -62,13 +60,11 @@ router.post(
     '/edit-product',
     [
         body('title')
-            .isAlphanumeric()
             .isLength({ min: 3 })
-            .trim()
             .withMessage(
                 'Product title must be alphanumeric and at least 3 characters.'
             ),
-        body('imageURL').isEmpty().isURL().withMessage('In valid URL'),
+        body('imageURL').isEmpty().withMessage('In valid URL'),
         body('price')
             .isFloat()
             .custom(val => {
