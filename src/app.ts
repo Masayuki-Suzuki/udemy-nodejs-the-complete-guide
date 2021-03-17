@@ -7,6 +7,8 @@ import session from 'express-session'
 import ConnectMongoDbSession from 'connect-mongodb-session'
 import csurf from 'csurf'
 import flash from 'connect-flash'
+import multer from 'multer'
+import { v4 as uuidV4 } from 'uuid'
 import adminRoutes from './routes/admin'
 import shopRoutes from './routes/shop'
 import errorController from './controller/error'
@@ -24,10 +26,20 @@ const store = new MongoDbStore({
 })
 const csrfProtection = csurf()
 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'images')
+    },
+    filename(req, file, cb) {
+        cb(null, `${uuidV4()} -file.originalname`)
+    }
+})
+
 app.set('view engine', 'pug')
 app.set('views', 'src/views')
 
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(multer({ storage }).single('image'))
 app.use(
     session({
         secret: 'My Secret',
