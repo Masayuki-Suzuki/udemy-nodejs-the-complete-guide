@@ -1,5 +1,8 @@
-import { Request, Response } from 'express'
+import path from 'path'
+import fs from 'fs'
+import { Request, Response, NextFunction } from 'express'
 import { format } from 'date-fns'
+import pdfkit from 'pdfkit'
 import Product from '../models/product'
 import { OrdersModel, ProductModel } from '../types/models'
 import Order from '../models/Order'
@@ -60,6 +63,43 @@ export const getIndexPage = async (
         path: 'shop-index',
         products
     })
+}
+
+export const getInvoice = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    const orderId = req.params.orderId
+
+    const order = await Order.findById(orderId).catch(err => {
+        console.error(err)
+        next(new Error('No order found.'))
+    })
+    if (order) {
+        if (req.user && order.user._id.toString() !== req.user._id.toString()) {
+            next(new Error('Unauthorised.'))
+        }
+        const invoiceName = `invoice-${orderId}.pdf`
+        const invoicePath = path.join(
+            'data',
+            'invoices',
+            order.user._id,
+            invoiceName
+        )
+
+        res.setHeader('Content-Type', 'application/pdf')
+        res.setHeader(
+            'Content-Disposition',
+            `inline; filename="${invoiceName}"`
+        )
+
+        const pdfDoc = new pdfkit()
+        pdfDoc.pipe(fs.createWriteStream(invoicePath))
+        pdfDoc.pipe(res)
+        pdfDoc.text('Hello World!')
+        pdfDoc.end()
+    }
 }
 
 export const postOrder = async (

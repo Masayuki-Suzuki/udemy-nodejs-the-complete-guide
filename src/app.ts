@@ -1,4 +1,5 @@
 import path from 'path'
+import fs from 'fs-extra'
 import dotenv from 'dotenv'
 import express from 'express'
 import mongoose from 'mongoose'
@@ -28,10 +29,16 @@ const csrfProtection = csurf()
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'images')
+        const dest = './src/public/images/products/'
+        try {
+            fs.statSync(dest)
+        } catch (_) {
+            fs.mkdirSync(dest)
+        }
+        cb(null, dest)
     },
     filename(req, file, cb) {
-        cb(null, `${uuidV4()} -file.originalname`)
+        cb(null, `${uuidV4()}.${file.mimetype.split('/')[1]}`)
     }
 })
 

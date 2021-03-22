@@ -74,7 +74,7 @@ export const postAddProduct = async (
         const doc = {
             title: req.body.title,
             description: req.body.description,
-            image_url: req.body.image_url,
+            image_url: req.file.path.replace('src/public', ''),
             price: req.body.price,
             price_fine: currencyFormatter(req.body.price),
             userId: req.session.user
@@ -125,9 +125,12 @@ export const postEditProduct = async (
             Document
         product.title = req.body.title
         product.description = req.body.description
-        product.image_url = req.body.image_url
         product.price = req.body.price
         product.price_fine = currencyFormatter(req.body.price)
+
+        if (req.file && req.file.path) {
+            product.image_url = req.body.image_url.replace('src/images', '')
+        }
         await product.save()
 
         res.redirect('/admin/products')
