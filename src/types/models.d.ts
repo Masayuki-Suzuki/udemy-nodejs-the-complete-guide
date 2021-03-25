@@ -65,6 +65,6 @@ export type CartItemModel = {
 
 export type OrdersModel = {
     products: CartItem[]
-    user: Pick<UserModel, '_id' | 'first_name' | 'last_name'>
+    user: { userId: string } & Pick<UserModel, 'first_name' | 'last_name'>
     createdAt: string
 }

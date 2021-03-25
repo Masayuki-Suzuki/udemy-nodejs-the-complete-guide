@@ -14,6 +14,7 @@ import {
     getIndexPage,
     getOrdersPage,
     getProductDetailPage,
+    getInvoice,
     postOrder
 } from '../controller/shop'
 import {
@@ -43,6 +44,7 @@ router.get('/signup', getSignUpPage as PromiseController)
 router.get('/reset-password', getResetPasswordPage as PromiseController)
 // eslint-disable-next-line
 router.get('/new-password/:resetToken', getNewPasswordPage as any)
+router.get('/orders/invoice/:orderId', getInvoice as any)
 router.get('/', getIndexPage as PromiseController)
 
 router.post('/cart', addItemToCart as PromiseController<PostItemToCart>)

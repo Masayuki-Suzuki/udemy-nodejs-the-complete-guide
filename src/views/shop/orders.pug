@@ -23,6 +23,8 @@ block content
 
                         .order-id.my-0.mr-0.ml-auto
                             p.text-xs.text-gray-600.mx-0.mt-0.mb-0.font-light ORDER # #{order._id}
+                            p.text-xs.text-blue-600.mx-0.mt-1.mb-0.font-light.text-right
+                                a(href=`/orders/invoice/${order._id}` target="_blank") INVOICE
 
                     .order-body.bg-white.border-l.border-r.border-b.rounded-b.border-gray-300
                         each product, index in order.products

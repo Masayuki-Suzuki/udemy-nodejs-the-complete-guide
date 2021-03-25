@@ -76,15 +76,19 @@ export const getInvoice = async (
         console.error(err)
         next(new Error('No order found.'))
     })
+
     if (order) {
-        if (req.user && order.user._id.toString() !== req.user._id.toString()) {
+        if (
+            req.user &&
+            order.user.userId.toString() !== req.user._id.toString()
+        ) {
             next(new Error('Unauthorised.'))
         }
         const invoiceName = `invoice-${orderId}.pdf`
         const invoicePath = path.join(
             'data',
             'invoices',
-            order.user._id,
+            order.user.userId.toString(),
             invoiceName
         )
 
@@ -99,6 +103,8 @@ export const getInvoice = async (
         pdfDoc.pipe(res)
         pdfDoc.text('Hello World!')
         pdfDoc.end()
+    } else {
+        next()
     }
 }
 
