@@ -101,7 +101,12 @@ export const getInvoice = async (
         const pdfDoc = new pdfkit()
         pdfDoc.pipe(fs.createWriteStream(invoicePath))
         pdfDoc.pipe(res)
-        pdfDoc.text('Hello World!')
+        pdfDoc
+            .fillColor('#323232')
+            .font('Helvetica-Bold')
+            .fontSize(32)
+            .text('Invoice')
+        pdfDoc.moveTo(72, 130).lineTo(530, 130).lineWidth(1).stroke('#ccc')
         pdfDoc.end()
     } else {
         next()
