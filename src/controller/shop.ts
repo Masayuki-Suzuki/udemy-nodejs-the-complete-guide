@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from 'express'
 import { format } from 'date-fns'
 import pdfkit from 'pdfkit'
 import Product from '../models/product'
-import { OrdersModel, ProductModel } from '../types/models'
+import { CartItemDoc, OrdersModel, ProductModel } from '../types/models'
 import Order from '../models/Order'
 import { PostOrderRequest } from '../types/controllers'
 import currencyFormatter from '../utils/currencyFormatter'
@@ -14,6 +14,10 @@ export const getCheckoutPage = (req: Request, res: Response): void => {
         title: 'Check Out | Shops!',
         path: 'shop-checkout'
     })
+}
+
+const isCartItemDoc = (val: any): val is CartItemDoc => {
+    return 'product' in val
 }
 
 export const getOrdersPage = async (
@@ -106,7 +110,34 @@ export const getInvoice = async (
             .font('Helvetica-Bold')
             .fontSize(32)
             .text('Invoice')
-        pdfDoc.moveTo(72, 130).lineTo(530, 130).lineWidth(1).stroke('#ccc')
+        pdfDoc.moveTo(72, 110).lineTo(530, 110).lineWidth(1).stroke('#ccc')
+
+        let productsHeight = 0
+
+        order.products.forEach((prod, index) => {
+            if (isCartItemDoc(prod)) {
+                pdfDoc
+                    .fillColor('#323232')
+                    .font('Helvetica-Bold')
+                    .fontSize(14)
+                    .text(
+                        `${prod.product.title} x ${prod.quantity} : $${
+                            prod.product.price * prod.quantity
+                        }`,
+                        72,
+                        130 + 30 * index
+                    )
+            }
+            productsHeight = 130 + 30 * index
+        })
+        pdfDoc
+            .fillColor('#323232')
+            .font('Helvetica-Bold')
+            .fontSize(14)
+            // eslint-disable-next-line
+            .text(`Total: $${order.totalPrice}`, {
+                align: 'right'
+            })
         pdfDoc.end()
     } else {
         next()

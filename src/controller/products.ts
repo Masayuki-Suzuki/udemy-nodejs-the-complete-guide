@@ -1,11 +1,13 @@
 import { Document } from 'mongoose'
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import { PostDeleteProductReq, PostProductRequest } from '../types/controllers'
 import Product from '../models/product'
-import { ProductModel } from '../types/models'
 import currencyFormatter from '../utils/currencyFormatter'
+import { deleteFile } from '../utils/file'
+import { ProductModel } from '../types/models'
 import { Nullable } from '../types/utilities'
+import product from '../models/product'
 
 type AddProductErrorMessage = {
     title: Nullable<string>
@@ -129,6 +131,7 @@ export const postEditProduct = async (
         product.price_fine = currencyFormatter(req.body.price)
 
         if (req.file && req.file.path) {
+            deleteFile(product.image_url)
             product.image_url = req.body.image_url.replace('src/images', '')
         }
         await product.save()
@@ -145,8 +148,19 @@ export const postEditProduct = async (
 
 export const postDeleteProduct = async (
     req: PostDeleteProductReq,
-    res: Response
+    res: Response,
+    next: NextFunction
 ): Promise<void> => {
+    const product = await Product.findById(req.body.id).catch(err => {
+        console.error(err)
+        next()
+    })
+    if (product) {
+        deleteFile(product.image_url)
+    } else {
+        next(new Error('Product not found.'))
+    }
+
     await Product.findByIdAndRemove(req.body.id)
     res.redirect('/admin/products')
 }

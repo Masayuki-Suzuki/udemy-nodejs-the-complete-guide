@@ -20,6 +20,11 @@ export type CartItem = {
     productId: ProductModel
 }
 
+export type CartItemDoc = {
+    quantity: number
+    product: ProductType
+}
+
 export type UserType = {
     first_name: string
     last_name: string
@@ -63,8 +68,15 @@ export type CartItemModel = {
     quantity: number
 }
 
-export type OrdersModel = {
-    products: CartItem[]
+export type OrdersDoc = {
+    products: CartItemDoc[]
     user: { userId: string } & Pick<UserModel, 'first_name' | 'last_name'>
     createdAt: string
+}
+
+export type OrdersModel = {
+    products: CartItem[] | CartItemDoc[]
+    user: { userId: string } & Pick<UserModel, 'first_name' | 'last_name'>
+    createdAt: string
+    totalPrice: string
 }
