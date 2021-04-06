@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { CustomRequestWithParam, RequestWithUserModel } from './express'
 import { ProductModel } from './models'
 
@@ -14,7 +14,8 @@ export type SignUpDataType = {
 
 export type PromiseController<Req = Request, Res = Response, Rt = void> = (
     req: Req,
-    res: Res
+    res: Res,
+    next?: NextFunction
 ) => Rt
 export type PostProductRequest = RequestWithUserModel<ProductModel>
 export type PostDeleteProductReq = Request<unknown, unknown, { id: string }>
@@ -27,4 +28,11 @@ export type GetNewPasswordController = PromiseController<
     GetNewPasswordRequest,
     Response,
     Promise<void>
+>
+
+export type IndexPageRequest = Request<
+    unknown,
+    unknown,
+    unknown,
+    { page: number }
 >

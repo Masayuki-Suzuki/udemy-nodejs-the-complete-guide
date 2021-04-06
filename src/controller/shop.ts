@@ -6,8 +6,10 @@ import pdfkit from 'pdfkit'
 import Product from '../models/product'
 import { CartItemDoc, OrdersModel, ProductModel } from '../types/models'
 import Order from '../models/Order'
-import { PostOrderRequest } from '../types/controllers'
+import { IndexPageRequest, PostOrderRequest } from '../types/controllers'
 import currencyFormatter from '../utils/currencyFormatter'
+
+const ITEMS_PER_PAGE = 1
 
 export const getCheckoutPage = (req: Request, res: Response): void => {
     res.render('shop/checkout', {
@@ -57,15 +59,32 @@ export const getProductDetailPage = async (
 }
 
 export const getIndexPage = async (
-    req: Request,
+    req: IndexPageRequest,
     res: Response
 ): Promise<void> => {
-    const products = (await Product.find()) as ProductModel[]
+    let page = 1
+
+    if (typeof req.query.page === 'string') {
+        page = parseInt(req.query.page)
+    } else if (req.query.page) {
+        page = req.query.page
+    }
+
+    const totalProducts = await Product.find().countDocuments()
+    const products = (await Product.find()
+        .skip((page - 1) * ITEMS_PER_PAGE)
+        .limit(ITEMS_PER_PAGE)) as ProductModel[]
 
     res.render('index', {
         title: 'Shops!',
         path: 'shop-index',
-        products
+        products,
+        totalProducts,
+        hasNextPage: ITEMS_PER_PAGE * page < totalProducts,
+        hasPrevPage: page > 1,
+        nextPage: page + 1,
+        prevPage: page - 1,
+        lastPage: Math.ceil(totalProducts / ITEMS_PER_PAGE)
     })
 }
 

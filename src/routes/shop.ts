@@ -1,6 +1,10 @@
 import express from 'express'
 import { check, body } from 'express-validator/check'
-import { PostProductRequest, PromiseController } from 'src/types/controllers'
+import {
+    IndexPageRequest,
+    PostProductRequest,
+    PromiseController
+} from 'src/types/controllers'
 import User from '../models/user'
 import { authenticated } from '../middleware/authentication'
 import {
@@ -45,7 +49,7 @@ router.get('/reset-password', getResetPasswordPage as PromiseController)
 // eslint-disable-next-line
 router.get('/new-password/:resetToken', getNewPasswordPage as any)
 router.get('/orders/invoice/:orderId', getInvoice as any)
-router.get('/', getIndexPage as PromiseController)
+router.get('/', getIndexPage as PromiseController<IndexPageRequest>)
 
 router.post('/cart', addItemToCart as PromiseController<PostItemToCart>)
 router.post(
