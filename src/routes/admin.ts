@@ -9,6 +9,7 @@ import {
     postSuspendUser
 } from '../controller/auth'
 import {
+    IndexPageRequest,
     PostDeleteProductReq,
     PostProductRequest,
     PromiseController
@@ -22,7 +23,10 @@ router.get(
     ProductsController.getEditProductPage as PromiseController<PostProductRequest>
 )
 router.get('/users', AdminController.getUsersPage as PromiseController)
-router.get('/products', ProductsController.getProductPage as PromiseController)
+router.get(
+    '/products',
+    ProductsController.getProductPage as PromiseController<IndexPageRequest>
+)
 router.get('/dashboard', AdminController.getDashboardPage)
 router.get(
     '/add-new-user',

@@ -40,3 +40,9 @@ block content
                                     button.bg-red-600.text-white.font-bold.tracking-wide.px-4.py-3.rounded(type="submit")
                                         | Delete
 
+        section.pagination.mt-3
+            ul.pagination__body.flex.items-center.justify-center.mx-auto.w-full
+                - let i = 1
+                while i <= lastPage
+                    li.pagination__item.m-1
+                        a.pagination__link(href=`/admin/products?page=${ i }` class=`${ i === currentPage ? 'pagination__link--active' : '' }`)= i++

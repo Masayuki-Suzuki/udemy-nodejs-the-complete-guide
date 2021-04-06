@@ -1,13 +1,18 @@
 import { Document } from 'mongoose'
 import { NextFunction, Request, Response } from 'express'
 import { validationResult } from 'express-validator'
-import { PostDeleteProductReq, PostProductRequest } from '../types/controllers'
+import {
+    IndexPageRequest,
+    PostDeleteProductReq,
+    PostProductRequest
+} from '../types/controllers'
 import Product from '../models/product'
 import currencyFormatter from '../utils/currencyFormatter'
 import { deleteFile } from '../utils/file'
 import { ProductModel } from '../types/models'
 import { Nullable } from '../types/utilities'
-import product from '../models/product'
+
+const ITEMS_PER_PAGE = 10
 
 type AddProductErrorMessage = {
     title: Nullable<string>
@@ -53,16 +58,29 @@ export const getEditProductPage = async (
 }
 
 export const getProductPage = async (
-    req: Request,
+    req: IndexPageRequest,
     res: Response
 ): Promise<void> => {
-    const products = (await Product.find()) as ProductModel[]
+    let page = 1
+
+    if (typeof req.query.page === 'string') {
+        page = parseInt(req.query.page)
+    } else if (req.query.page) {
+        page = req.query.page
+    }
+
+    const totalProducts = await Product.find().countDocuments()
+    const products = (await Product.find()
+        .skip((page - 1) * ITEMS_PER_PAGE)
+        .limit(ITEMS_PER_PAGE)) as ProductModel[]
 
     res.render('./admin/products', {
         title: 'Product List',
         path: 'products',
         pageTitle: 'Products',
-        products
+        products,
+        currentPage: page,
+        lastPage: Math.ceil(totalProducts / ITEMS_PER_PAGE)
     })
 }
 

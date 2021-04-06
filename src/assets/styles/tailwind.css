@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.pagination__link {
+    @apply border border-gray-500 text-gray-500 no-underline py-2 px-3 rounded bg-white hover:bg-gray-700 hover:text-white hover:border-gray-900 transition duration-300;
+}
+
+.pagination__link--active {
+    @apply bg-gray-700 text-white border-gray-900
+}

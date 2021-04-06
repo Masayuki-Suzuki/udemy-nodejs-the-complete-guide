@@ -9,7 +9,7 @@ import Order from '../models/Order'
 import { IndexPageRequest, PostOrderRequest } from '../types/controllers'
 import currencyFormatter from '../utils/currencyFormatter'
 
-const ITEMS_PER_PAGE = 1
+const ITEMS_PER_PAGE = 9
 
 export const getCheckoutPage = (req: Request, res: Response): void => {
     res.render('shop/checkout', {
@@ -79,11 +79,7 @@ export const getIndexPage = async (
         title: 'Shops!',
         path: 'shop-index',
         products,
-        totalProducts,
-        hasNextPage: ITEMS_PER_PAGE * page < totalProducts,
-        hasPrevPage: page > 1,
-        nextPage: page + 1,
-        prevPage: page - 1,
+        currentPage: page,
         lastPage: Math.ceil(totalProducts / ITEMS_PER_PAGE)
     })
 }
