@@ -58,7 +58,7 @@ app.use(
 app.use(csrfProtection)
 app.use(flash())
 app.use(express.static(path.join(__dirname, 'public')))
-
+app.use(express.static('/dist/src/public'))
 app.use('/admin', isAdminUser)
 
 app.use(

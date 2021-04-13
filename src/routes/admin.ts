@@ -82,9 +82,9 @@ router.post(
     ],
     ProductsController.postEditProduct as PromiseController<PostProductRequest>
 )
-router.post(
-    '/delete-product',
-    ProductsController.postDeleteProduct as PromiseController<PostDeleteProductReq>
+router.delete(
+    '/delete-product/:id',
+    ProductsController.deleteProduct as PromiseController<PostDeleteProductReq>
 )
 router.post('/edit-user', postAdminSignup as PromiseController)
 router.post('/suspend-user', postSuspendUser as PromiseController)

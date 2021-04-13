@@ -164,23 +164,23 @@ export const postEditProduct = async (
     }
 }
 
-export const postDeleteProduct = async (
+export const deleteProduct = async (
     req: PostDeleteProductReq,
     res: Response,
     next: NextFunction
 ): Promise<void> => {
-    const product = await Product.findById(req.body.id).catch(err => {
+    const product = await Product.findById(req.params.id).catch(err => {
         console.error(err)
         next()
     })
     if (product) {
         deleteFile(product.image_url)
     } else {
-        next(new Error('Product not found.'))
+        res.status(500).json({ message: 'Product not found.' })
     }
 
-    await Product.findByIdAndRemove(req.body.id)
-    res.redirect('/admin/products')
+    await Product.findByIdAndRemove(req.params.id)
+    res.status(200).json({ message: 'Success' })
 }
 
 export default {
@@ -189,5 +189,5 @@ export default {
     getProductPage,
     postAddProduct,
     postEditProduct,
-    postDeleteProduct
+    deleteProduct
 }

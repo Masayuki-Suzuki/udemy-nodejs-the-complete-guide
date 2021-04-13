@@ -18,7 +18,7 @@ export type PromiseController<Req = Request, Res = Response, Rt = void> = (
     next?: NextFunction
 ) => Rt
 export type PostProductRequest = RequestWithUserModel<ProductModel>
-export type PostDeleteProductReq = Request<unknown, unknown, { id: string }>
+export type PostDeleteProductReq = Request<{ id: string }, unknown, unknown>
 export type PostOrderRequest = Request<unknown, unknown, { totalPrice: number }>
 export type PostSignUpRequest = Request<unknown, unknown, SignUpDataType>
 export type GetNewPasswordRequest = CustomRequestWithParam<{

@@ -1,6 +1,7 @@
 # Directories
 dist
 src/types
+src/public
 
 # Files
 tailwind.config.js
