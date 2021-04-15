@@ -11,13 +11,6 @@ import currencyFormatter from '../utils/currencyFormatter'
 
 const ITEMS_PER_PAGE = 9
 
-export const getCheckoutPage = (req: Request, res: Response): void => {
-    res.render('shop/checkout', {
-        title: 'Check Out | Shops!',
-        path: 'shop-checkout'
-    })
-}
-
 const isCartItemDoc = (val: any): val is CartItemDoc => {
     return 'product' in val
 }

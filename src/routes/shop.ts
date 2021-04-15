@@ -11,10 +11,10 @@ import {
     addItemToCart,
     deleteItemFromCart,
     getCartPage,
+    getCheckoutPage,
     PostItemToCart
 } from '../controller/cart'
 import {
-    getCheckoutPage,
     getIndexPage,
     getOrdersPage,
     getProductDetailPage,
@@ -43,6 +43,8 @@ router.get(
 
 router.get('/cart', authenticated, getCartPage as PromiseController)
 router.get('/cart/checkout', authenticated, getCheckoutPage)
+router.get('/cart/checkout/success', authenticated, postOrder)
+router.get('/cart/checkout/cancel', authenticated, getCheckoutPage)
 router.get('/login', getLoginPage as PromiseController)
 router.get('/signup', getSignUpPage as PromiseController)
 router.get('/reset-password', getResetPasswordPage as PromiseController)
@@ -56,7 +58,7 @@ router.post(
     '/cart/delete-product',
     deleteItemFromCart as PromiseController<PostItemToCart>
 )
-router.post('/order-products', authenticated, postOrder as PromiseController)
+// router.post('/order-products', authenticated, postOrder as PromiseController)
 router.post(
     '/login',
     [check('email').isEmail().withMessage('Please enter valid email address.')],
